@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # https://stackoverflow.com/questions/57133810/changing-tab-widgets-from-another-tab-in-tkinter
+# https://www.abstractapi.com/guides/validate-phone-number-python
 
 
 def exit_tk():
@@ -16,8 +17,44 @@ def exit_tk():
         app.deiconify()
 
 
-def create_order():
-    tab_view.select(tab_id=1)
+def delete_record():
+    selected_item = treeview_db.focus()
+
+    if selected_item:
+        row_dict = treeview_db.item(selected_item)
+        row_values = row_dict["values"]
+        phone = row_values[1]
+
+        treeview_db.delete(selected_item)
+
+        cursor.execute(f"""DELETE FROM Customers where Phone = '{phone}'""")
+        database.commit()
+
+        _ = len(treeview_db.get_children())
+
+        if _:
+            total_customer_label.config(text=f"{_} customer(s) found!")
+
+        else:
+            total_customer_label.config(text="No customer(s) found!")
+
+        app.withdraw()
+        showinfo(
+            title=f"SRM Fashion {__version__}", message="1 Row deleted successfully..."
+        )
+        app.deiconify()
+        return
+
+    else:
+        print(f"INFO: Please select a customer record!")
+
+        app.withdraw()
+        showinfo(
+            title=f"SRM Fashion {__version__}",
+            message="Please select a customer record!",
+        )
+        app.deiconify()
+        return
 
 
 def validate_and_save():
@@ -37,45 +74,79 @@ def validate_and_save():
     gender: str = gender_var.get()
 
     if name == "":
+        name_label.config(fg="red")
         app.withdraw()
         showinfo(
             title=f"SRM Fashion {__version__}",
             message="Please enter customer name.",
         )
-        name_label.config(fg="red")
         app.deiconify()
         return
 
-    elif phone == "":
+    if phone == "":
+        phone_label.config(fg="red")
         app.withdraw()
         showinfo(
             title=f"SRM Fashion {__version__}",
             message="Please enter contact number.",
         )
-        phone_label.config(fg="red")
         app.deiconify()
         return
 
-    elif email != "":
+    try:
+        number_object = parse(number=phone)
+
+    except NumberParseException as number_parse_exception:
+        print(f"ERROR: {number_parse_exception}")
+        phone_label.config(fg="red")
+        app.withdraw()
+        showinfo(
+            title=f"SRM Fashion {__version__}",
+            message=f"{number_parse_exception} Use with country codes. eg. +1-XXX-XXX-XXXX",
+        )
+        app.deiconify()
+        return
+
+    if not is_possible_number(numobj=number_object):
+        phone_label.config(fg="red")
+        app.withdraw()
+        showinfo(
+            title=f"SRM Fashion {__version__}",
+            message="Please enter the correct mobile number.",
+        )
+        app.deiconify()
+        return
+
+    if email != "":
         split_email = email.split(sep="@")
         if len(split_email) == 2:
             if not len(split_email[0]) or not len(split_email[1]):
+                email_label.config(fg="red")
                 app.withdraw()
                 showinfo(
                     title=f"SRM Fashion {__version__}",
                     message="Invalid email address, Try again...",
                 )
-                email_label.config(fg="red")
                 app.deiconify()
                 return
 
         else:
+            email_label.config(fg="red")
             app.withdraw()
             showinfo(
                 title=f"SRM Fashion {__version__}",
                 message="Invalid email address, Try again...",
             )
-            email_label.config(fg="red")
+            app.deiconify()
+            return
+
+    cursor.execute("""SELECT Phone FROM Customers""")
+    for _ in cursor.fetchall():
+        if _[0] == phone:
+            app.withdraw()
+            showinfo(
+                title=f"SRM Fashion {__version__}", message="Contact already exists!"
+            )
             app.deiconify()
             return
 
@@ -85,11 +156,27 @@ def validate_and_save():
     )"""
     )
     database.commit()
-    cursor.execute("""SELECT * FROM Customers""")
 
-    total_customer_label.config(text=f"{len(cursor.fetchall())} customer(s) found!")
+    total_customer_label.config(
+        text=f"{len(treeview_db.get_children()) + 1} customer(s) found!"
+    )
+    print(type(phone))
+    treeview_db.insert(parent="", index="end", values=[name, phone, email, dob, gender])
 
+    name_entry.delete(first=0, last=END)
+    phone_entry.delete(first=0, last=END)
+    email_entry.delete(first=0, last=END)
+    dob_entry.delete(first=0, last=END)
+    gender_var.set(value=gender_options[0])
+
+    name_entry.focus()
+
+    print("INFO: Database appended successfully...")
+
+    app.withdraw()
     showinfo(title=f"SRM Fashion {__version__}", message="Data saved successfully!")
+    app.deiconify()
+    return
 
 
 try:
@@ -101,7 +188,10 @@ try:
     from tkinter import (
         BOTH,
         BOTTOM,
+        CENTER,
+        END,
         LEFT,
+        RIGHT,
         TOP,
         Button,
         Entry,
@@ -111,14 +201,17 @@ try:
         OptionMenu,
         StringVar,
         Tk,
-        Toplevel,
         W,
         X,
     )
     from tkinter.messagebox import askyesno, showinfo
-    from tkinter.ttk import Notebook
+    from tkinter.ttk import Notebook, Treeview
 
-    __version__: str = "v.20220709"
+    print("INFO: Importing third party libraries...")
+    from phonenumbers import is_possible_number, parse
+    from phonenumbers.phonenumberutil import NumberParseException
+
+    __version__: str = "v.20220711"
     accent_color_light: str = "lightsteelblue2"
     total_orders: int = 0
     username: str = getuser()
@@ -132,7 +225,7 @@ try:
         cursor.execute(
             """CREATE TABLE Customers (
              Name TEXT,
-             Phone INTEGER,
+             Phone TEXT,
              Email TEXT,
              DOB TEXT,
              Gender TEXT
@@ -141,14 +234,15 @@ try:
         database.commit()
         database.close()
 
+    print("INFO: Reading database file...")
     database = connect(database=database_path)
     cursor = database.cursor()
     cursor.execute("""SELECT * FROM Customers""")
-    total_customers: int = len(cursor.fetchall())
+    customers_data: list = cursor.fetchall()
 
     print("INFO: Loading GUI application...")
     app: Tk = Tk()
-    # app.geometry("500x500")
+    app.resizable(width=False, height=False)
     app.title(string=f"SRM Fashion {__version__}")
     app.protocol(name="WM_DELETE_WINDOW", func=exit_tk)
     app.bind(sequence="<Escape>", func=lambda event: exit_tk())
@@ -195,9 +289,9 @@ try:
         bg="black",
         fg="white",
         width=14,
-        command=create_order,
+        command=lambda: tab_view.select(tab_id=1),
     )
-    order_button.bind(sequence="<Return>", func=lambda event: create_order())
+    order_button.bind(sequence="<Return>", func=lambda event: tab_view.select(tab_id=1))
     order_button.grid(row=0, column=0, padx=5)
 
     exit_button: Button = Button(
@@ -231,14 +325,46 @@ try:
         bg=accent_color_light,
     ).pack(pady=10)
 
-    total_customer_label: Label = Label(master=customer_labelframe_1, fg="red", bg=accent_color_light)
+    total_customer_label: Label = Label(
+        master=customer_labelframe_1, fg="red", bg=accent_color_light
+    )
     total_customer_label.pack()
 
-    if total_customers == 0:
-        total_customer_label.config(text="No customer(s) found!")
+    header_list: list = ["Name", "Phone", "Email", "D.O.B", "Gender"]
+    treeview_db: Treeview = Treeview(
+        master=customer_labelframe_1, show="headings", columns=header_list
+    )
+
+    for _ in header_list:
+        treeview_db.heading(column=_, text=_)
+
+    treeview_db.column(column=0, width=130, minwidth=130, anchor=W)
+    treeview_db.column(column=1, width=120, minwidth=120, anchor=CENTER)
+    treeview_db.column(column=2, width=225, minwidth=225, anchor=W)
+    treeview_db.column(column=3, width=100, minwidth=100, anchor=CENTER)
+    treeview_db.column(column=4, width=80, minwidth=80, anchor=W)
+
+    for _ in customers_data:
+        treeview_db.insert(parent="", index="end", values=_)
+
+    treeview_db.pack(padx=20, pady=5)
+
+    total_customers: int = len(treeview_db.get_children())
+
+    delete_button: Button = Button(
+        master=customer_labelframe_1,
+        text="Delete Record",
+        bg="red",
+        fg="white",
+        command=delete_record,
+    )
+    delete_button.pack(side=RIGHT, padx=10, pady=5)
+
+    if total_customers:
+        total_customer_label.config(text=f"{total_customers} customer(s) found!")
 
     else:
-        total_customer_label.config(text=f"{total_customers} customer(s) found!")
+        total_customer_label.config(text="No customer(s) found!")
 
     Label(master=customers_frame, text="or", bg=accent_color_light).pack()
 
@@ -265,21 +391,21 @@ try:
         bg=accent_color_light,
     )
     name_label.grid(row=0, column=0, padx=5)
-    name_entry: Entry = Entry(master=customer_entry_frame)
+    name_entry: Entry = Entry(master=customer_entry_frame, width=25)
     name_entry.grid(row=0, column=1, padx=5)
 
     phone_label: Label = Label(
         master=customer_entry_frame, text="Contact Number:", bg=accent_color_light
     )
     phone_label.grid(row=1, column=0)
-    phone_entry: Entry = Entry(master=customer_entry_frame)
+    phone_entry: Entry = Entry(master=customer_entry_frame, width=25)
     phone_entry.grid(row=1, column=1)
 
     email_label: Label = Label(
         master=customer_entry_frame, text="Email (Optional):", bg=accent_color_light
     )
     email_label.grid(row=2, column=0)
-    email_entry: Entry = Entry(master=customer_entry_frame)
+    email_entry: Entry = Entry(master=customer_entry_frame, width=25)
     email_entry.grid(row=2, column=1)
 
     Label(
@@ -287,7 +413,7 @@ try:
         text="Date of Birth (Optional):",
         bg=accent_color_light,
     ).grid(row=3, column=0)
-    dob_entry: Entry = Entry(customer_entry_frame)
+    dob_entry: Entry = Entry(customer_entry_frame, width=25)
     dob_entry.grid(row=3, column=1)
 
     Label(master=customer_entry_frame, text="Gender:", bg=accent_color_light).grid(
@@ -306,16 +432,16 @@ try:
         fg="white",
         command=validate_and_save,
     )
-    save_button.pack(pady=15)
+    save_button.pack(padx=10, pady=5, side=RIGHT)
 
     customer_labelframe: LabelFrame = LabelFrame(
-        master=customers_frame, text="Add Customer", fg="red", bg=accent_color_light
+        master=customers_frame, text="Select Customer", fg="red", bg=accent_color_light
     )
     customer_labelframe.pack(side=BOTTOM, padx=10, pady=5, ipady=3, fill=X)
 
     customer_button: Button = Button(
         master=customer_labelframe,
-        text="Add New Contact",
+        text="Select Contact",
         bg="black",
         fg="white",
         width=14,
@@ -344,4 +470,8 @@ try:
 
 except KeyboardInterrupt:
     print("ERROR: KeyboardInterrupt occurred! Bye...")
+    terminate()
+
+except ModuleNotFoundError as module_not_found_error:
+    print(f"ERROR: {module_not_found_error}")
     terminate()
