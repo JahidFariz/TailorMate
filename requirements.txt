@@ -1,3 +1,6 @@
+# mandatory
+phonenumbers==8.12.51
+
 # optional
 black==22.6.0
 isort==5.10.1
