@@ -228,7 +228,6 @@ try:
     init(autoreset=True)
 
     __version__: str = "v.20220712"
-    accent_color_light: str = "lightsteelblue2"
     total_orders: int = 0
     username: str = getuser()
     base_path: str = split(p=__file__)[0]
@@ -262,7 +261,7 @@ try:
     app.title(string=f"SRM Fashion {__version__}")
     app.protocol(name="WM_DELETE_WINDOW", func=exit_tk)
     app.bind(sequence="<Escape>", func=lambda event: exit_tk())
-    app.config(bg=accent_color_light)
+    app.config(bg="lightsteelblue2")
 
     Label(
         master=app,
@@ -274,7 +273,7 @@ try:
     tab_view: Notebook = Notebook(master=app)
     tab_view.pack(fill=BOTH, expand=True)
 
-    orders_frame: Frame = Frame(master=tab_view, bg=accent_color_light)
+    orders_frame: Frame = Frame(master=tab_view, bg="lightsteelblue2")
     orders_frame.pack()
 
     tab_view.add(child=orders_frame, text="Orders")
@@ -283,7 +282,7 @@ try:
         master=orders_frame,
         text="Order List",
         font=("Times New Roman", 22, "underline"),
-        bg=accent_color_light,
+        bg="lightsteelblue2",
     ).pack(pady=10)
 
     if total_orders == 0:
@@ -291,11 +290,11 @@ try:
             master=orders_frame,
             text="You have zero orders!",
             fg="red",
-            bg=accent_color_light,
+            bg="lightsteelblue2",
         ).pack()
 
     order_labelframe: LabelFrame = LabelFrame(
-        master=orders_frame, text="Add Order", fg="red", bg=accent_color_light
+        master=orders_frame, text="Add Order", fg="red", bg="lightsteelblue2"
     )
     order_labelframe.pack(side=BOTTOM, padx=10, pady=5, ipady=3, fill=X)
 
@@ -321,7 +320,7 @@ try:
     exit_button.bind(sequence="<Return>", func=lambda event: exit_tk())
     exit_button.grid(row=0, column=1, padx=5)
 
-    customers_frame: Frame = Frame(master=tab_view, bg=accent_color_light)
+    customers_frame: Frame = Frame(master=tab_view, bg="lightsteelblue2")
     customers_frame.pack()
 
     tab_view.add(child=customers_frame, text="Customers")
@@ -330,7 +329,7 @@ try:
         master=customers_frame,
         text="Select a Customers",
         fg="red",
-        bg=accent_color_light,
+        bg="lightsteelblue2",
     )
     customer_labelframe_1.pack(padx=10, pady=3, ipady=3, fill=X)
 
@@ -338,11 +337,11 @@ try:
         master=customer_labelframe_1,
         text="Select Customer",
         font=("Times New Roman", 22, "underline"),
-        bg=accent_color_light,
+        bg="lightsteelblue2",
     ).pack(pady=10)
 
     total_customer_label: Label = Label(
-        master=customer_labelframe_1, fg="red", bg=accent_color_light
+        master=customer_labelframe_1, fg="red", bg="lightsteelblue2"
     )
     total_customer_label.pack()
 
@@ -386,10 +385,10 @@ try:
     else:
         total_customer_label.config(text="No customer(s) found!")
 
-    Label(master=customers_frame, text="or", bg=accent_color_light).pack()
+    Label(master=customers_frame, text="or", bg="lightsteelblue2").pack()
 
     customer_labelframe_2: LabelFrame = LabelFrame(
-        master=customers_frame, text="Add New Customer", fg="red", bg=accent_color_light
+        master=customers_frame, text="Add New Customer", fg="red", bg="lightsteelblue2"
     )
     customer_labelframe_2.pack(padx=10, pady=3, ipady=3, fill=X)
 
@@ -397,32 +396,32 @@ try:
         master=customer_labelframe_2,
         text="Enter Details",
         font=("Times New Roman", 22, "underline"),
-        bg=accent_color_light,
+        bg="lightsteelblue2",
     ).pack(pady=10)
 
     customer_entry_frame: Frame = Frame(
-        master=customer_labelframe_2, bg=accent_color_light
+        master=customer_labelframe_2, bg="lightsteelblue2"
     )
     customer_entry_frame.pack(padx=10)
 
     name_label: Label = Label(
         master=customer_entry_frame,
         text="Enter Customer Name:",
-        bg=accent_color_light,
+        bg="lightsteelblue2",
     )
     name_label.grid(row=0, column=0, padx=5, sticky=W)
     name_entry: Entry = Entry(master=customer_entry_frame, width=25)
     name_entry.grid(row=0, column=1, padx=5)
 
     phone_label: Label = Label(
-        master=customer_entry_frame, text="Contact Number:", bg=accent_color_light
+        master=customer_entry_frame, text="Contact Number:", bg="lightsteelblue2"
     )
     phone_label.grid(row=1, column=0, sticky=W)
     phone_entry: Entry = Entry(master=customer_entry_frame, width=25)
     phone_entry.grid(row=1, column=1)
 
     email_label: Label = Label(
-        master=customer_entry_frame, text="Email (Optional):", bg=accent_color_light
+        master=customer_entry_frame, text="Email (Optional):", bg="lightsteelblue2"
     )
     email_label.grid(row=2, column=0, sticky=W)
     email_entry: Entry = Entry(master=customer_entry_frame, width=25)
@@ -431,12 +430,12 @@ try:
     Label(
         master=customer_entry_frame,
         text="Date of Birth (Optional):",
-        bg=accent_color_light,
+        bg="lightsteelblue2",
     ).grid(row=3, column=0, sticky=W)
     dob_entry: Entry = Entry(customer_entry_frame, width=25)
     dob_entry.grid(row=3, column=1)
 
-    Label(master=customer_entry_frame, text="Gender:", bg=accent_color_light).grid(
+    Label(master=customer_entry_frame, text="Gender:", bg="lightsteelblue2").grid(
         row=4, column=0, sticky=W
     )
     gender_options: list = ["Female", "Male", "Other"]
@@ -460,7 +459,7 @@ try:
     save_button.pack(padx=10, pady=5, side=RIGHT)
 
     customer_labelframe: LabelFrame = LabelFrame(
-        master=customers_frame, text="Select Customer", fg="red", bg=accent_color_light
+        master=customers_frame, text="Select Customer", fg="red", bg="lightsteelblue2"
     )
     customer_labelframe.pack(side=BOTTOM, padx=10, pady=5, ipady=3, fill=X)
 
