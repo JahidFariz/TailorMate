@@ -368,6 +368,7 @@ try:
         fg="white",
         command=delete_record,
     )
+    delete_button.bind(sequence="<Return>", func=lambda event: delete_record())
     delete_button.pack(side=RIGHT, padx=10, pady=5)
 
     if total_customers:
@@ -442,6 +443,7 @@ try:
         fg="white",
         command=validate_and_save,
     )
+    save_button.bind(sequence="<Return>", func=lambda event: validate_and_save())
     save_button.pack(padx=10, pady=5, side=RIGHT)
 
     customer_labelframe: LabelFrame = LabelFrame(
