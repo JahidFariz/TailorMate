@@ -8,7 +8,7 @@ def clrscr() -> None:
     if os_env() == "Linux":
         terminal(command="clear")
 
-    elif os_env == "Windows":
+    elif os_env() == "Windows":
         terminal(command="cls")
 
     return
@@ -28,7 +28,7 @@ def exit_tk() -> None:
         app.deiconify()
 
 
-def delete_record():
+def delete_record() -> None:
     selected_item = treeview_db.focus()
     row_dict = treeview_db.item(selected_item)
     row_values = row_dict.get("values")
@@ -75,7 +75,7 @@ def delete_record():
         return
 
 
-def validate_and_save():
+def validate_and_save() -> None:
     if name_label["fg"] == "red":
         name_label.config(fg="black")
 
