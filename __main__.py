@@ -7,7 +7,7 @@
 def exit_tk():
     app.withdraw()
 
-    if askyesno(title="SRM Fashion", message="Are you sure do you want to quit?"):
+    if askyesno(title="SRM Fashion", message="Are you sure? Do you want to quit?"):
         print(Fore.RED + "Bye!!!")
         database.close()
         app.destroy()
@@ -21,29 +21,34 @@ def delete_record():
     selected_item = treeview_db.focus()
 
     if selected_item:
-        row_dict = treeview_db.item(selected_item)
-        row_values = row_dict.get("values")
-        phone: str = row_values[1]
+        app.withdraw()
+        if askyesno(
+            title=f"SRM Fashion {__version__}",
+            message="Are you sure? Do you really want to delete the selected record?",
+        ):
+            app.deiconify()
+            row_dict = treeview_db.item(selected_item)
+            row_values = row_dict.get("values")
+            phone: str = row_values[1]
 
-        treeview_db.delete(selected_item)
+            treeview_db.delete(selected_item)
 
-        cursor.execute(f"""DELETE FROM Customers where Phone = '{phone}'""")
-        database.commit()
+            cursor.execute(f"""DELETE FROM Customers where Phone = '{phone}'""")
+            database.commit()
 
-        _ = len(treeview_db.get_children())
+            _ = len(treeview_db.get_children())
 
-        if _:
-            total_customer_label.config(text=f"{_} customer(s) found!")
+            if _:
+                total_customer_label.config(text=f"{_} customer(s) found!")
+
+            else:
+                total_customer_label.config(text="No customer(s) found!")
+
+            return
 
         else:
-            total_customer_label.config(text="No customer(s) found!")
-
-        app.withdraw()
-        showinfo(
-            title=f"SRM Fashion {__version__}", message="1 Row deleted successfully..."
-        )
-        app.deiconify()
-        return
+            app.deiconify()
+            return
 
     else:
         print(Fore.YELLOW + f"INFO: Please select a customer record!")
