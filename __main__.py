@@ -27,13 +27,11 @@ def delete_record():
             message="Are you sure? Do you really want to delete the selected record?",
         ):
             app.deiconify()
-            row_dict = treeview_db.item(selected_item)
-            row_values = row_dict.get("values")
-            phone: str = row_values[1]
-
             treeview_db.delete(selected_item)
 
-            c.execute(f"""DELETE FROM Customers where Phone = '{phone}'""")
+            c.execute(
+                f"""DELETE FROM Customers where Phone = '{treeview_db.item(selected_item).get("values")[1]}'"""
+            )
             conn.commit()
 
             _ = len(treeview_db.get_children())
@@ -80,7 +78,7 @@ def validate_and_save():
 
     if name == "":
         name_label.config(fg="red")
-        
+
         app.withdraw()
         showinfo(
             title=f"SRM Fashion {__version__}",
@@ -167,7 +165,7 @@ def validate_and_save():
 
     c.execute(
         f"""INSERT INTO Customers VALUES (
-    "{name}", "{phone}", "{email}", "{dob}", "{gender}"
+    '{name}', '{phone}', '{email}', '{dob}', '{gender}'
     )"""
     )
     conn.commit()
