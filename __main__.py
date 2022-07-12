@@ -4,6 +4,16 @@
 # https://www.abstractapi.com/guides/validate-phone-number-python
 
 
+def not_ready_yet() -> None:
+    app.withdraw()
+    showinfo(
+        title=f"SRM Fashion {__version__}",
+        message="This feature is not ready yet!! Still in developement...",
+    )
+    app.deiconify()
+    return
+
+
 def clrscr() -> None:
     if os_env() == "Linux":
         terminal(command="clear")
@@ -43,9 +53,7 @@ def delete_record() -> None:
             app.deiconify()
             treeview_db.delete(selected_item)
 
-            c.execute(
-                f"""DELETE FROM Customers where Phone = '{phone}'"""
-            )
+            c.execute(f"""DELETE FROM Customers where Phone = '{phone}'""")
             conn.commit()
 
             _ = len(treeview_db.get_children())
@@ -55,6 +63,7 @@ def delete_record() -> None:
 
             else:
                 total_customer_label.config(text="No customer(s) found!")
+                edit_button.config(state="disabled")
                 delete_button.config(state="disabled")
 
             return
@@ -190,6 +199,9 @@ def validate_and_save() -> None:
     )
     treeview_db.insert(parent="", index="end", values=[name, phone, email, dob, gender])
 
+    if edit_button["state"] == "disabled":
+        edit_button.config(state="normal")
+
     if delete_button["state"] == "disabled":
         delete_button.config(state="normal")
 
@@ -243,12 +255,10 @@ try:
     base_path: str = split(p=__file__)[0]
     database_path: str = join(base_path, "customers.db")
 
-    # If database doesn't exist. It create a new database file for you.
     if not isfile(path=database_path):
         print(Fore.GREEN + "INFO: Creating a new database...")
         conn = connect(database=database_path)
         c = conn.cursor()
-        # use not null and primary key 
         c.execute(
             """CREATE TABLE Customers (
              Name TEXT,
@@ -316,7 +326,7 @@ try:
         text="Add an Order",
         bg="black",
         fg="white",
-        width=14,
+        width=12,
         command=lambda: tab_view.select(tab_id=1),
     )
     order_button.bind(sequence="<Return>", func=lambda event: tab_view.select(tab_id=1))
@@ -327,7 +337,7 @@ try:
         text="Exit",
         bg="red",
         fg="white",
-        width=14,
+        width=12,
         command=exit_tk,
     )
     exit_button.bind(sequence="<Return>", func=lambda event: exit_tk())
@@ -340,11 +350,11 @@ try:
 
     customer_labelframe_1: LabelFrame = LabelFrame(
         master=customers_frame,
-        text="Select a Customers",
+        text="Customer Lookup",
         fg="red",
         bg="lightsteelblue2",
     )
-    customer_labelframe_1.pack(padx=10, pady=3, ipady=3, fill="x")
+    customer_labelframe_1.pack(padx=10, ipady=3, fill="x")
 
     Label(
         master=customer_labelframe_1,
@@ -375,29 +385,42 @@ try:
     treeview_db.column(column=3, width=100, minwidth=100, anchor="center")
     treeview_db.column(column=4, width=80, minwidth=80, anchor="w")
 
-    treeview_db.pack(padx=20, pady=5)
+    treeview_db.pack(padx=15, pady=5)
 
     delete_button: Button = Button(
         master=customer_labelframe_1,
         text="Delete Record",
         bg="red",
         fg="white",
-        command=delete_record,
         state="disabled",
+        width=10,
+        command=delete_record,
     )
     delete_button.bind(sequence="<Return>", func=lambda event: delete_record())
     delete_button.pack(side="right", padx=10, pady=5)
 
+    edit_button: Button = Button(
+        master=customer_labelframe_1,
+        text="Edit Record",
+        bg="orange",
+        fg="white",
+        state="disabled",
+        width=10,
+        command=not_ready_yet,
+    )
+    edit_button.bind(sequence="<Return>", func=lambda event: not_ready_yet())
+    edit_button.pack(side="right", padx=10, pady=5)
+
     Label(master=customers_frame, text="or", bg="lightsteelblue2").pack()
 
     customer_labelframe_2: LabelFrame = LabelFrame(
-        master=customers_frame, text="Add New Customer", fg="red", bg="lightsteelblue2"
+        master=customers_frame, text="Customer Details", fg="red", bg="lightsteelblue2"
     )
-    customer_labelframe_2.pack(padx=10, pady=3, ipady=3, fill="x")
+    customer_labelframe_2.pack(padx=10, ipady=3, fill="x")
 
     Label(
         master=customer_labelframe_2,
-        text="Enter Details",
+        text="Customer Details",
         font=("Times New Roman", 22, "underline"),
         bg="lightsteelblue2",
     ).pack(pady=10)
@@ -456,6 +479,7 @@ try:
         text="Save & Continue",
         bg="red",
         fg="white",
+        width=14,
         command=validate_and_save,
     )
     save_button.bind(sequence="<Return>", func=lambda event: validate_and_save())
@@ -466,21 +490,23 @@ try:
     )
     customer_labelframe.pack(side="bottom", padx=10, pady=5, ipady=3, fill="x")
 
-    customer_button: Button = Button(
+    selection_button: Button = Button(
         master=customer_labelframe,
-        text="Select Contact",
+        text="Select",
         bg="black",
         fg="white",
-        width=14,
+        width=12,
+        command=not_ready_yet,
     )
-    customer_button.grid(row=0, column=0, padx=5)
+    selection_button.bind(sequence="<Return>", func=lambda event: not_ready_yet())
+    selection_button.grid(row=0, column=0, padx=5)
 
     exit_button: Button = Button(
         master=customer_labelframe,
         text="Exit",
         bg="red",
         fg="white",
-        width=14,
+        width=12,
         command=exit_tk,
     )
     exit_button.bind(sequence="<Return>", func=lambda event: exit_tk())
@@ -493,7 +519,6 @@ try:
         fg="white",
     ).pack(side="bottom", fill="x")
 
-    # Add values and update UI
     c.execute("""SELECT * FROM Customers""")
     for _ in c.fetchall():
         treeview_db.insert(parent="", index="end", values=_)
@@ -502,6 +527,7 @@ try:
 
     if total_customers:
         total_customer_label.config(text=f"{total_customers} customer(s) found!")
+        edit_button.config(state="normal")
         delete_button.config(state="normal")
 
     else:
