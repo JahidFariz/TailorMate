@@ -4,13 +4,24 @@
 # https://www.abstractapi.com/guides/validate-phone-number-python
 
 
-def exit_tk():
+def clrscr() -> None:
+    if os_env() == "Linux":
+        terminal(command="clear")
+
+    elif os_env == "Windows":
+        terminal(command="cls")
+
+    return
+
+
+def exit_tk() -> None:
     app.withdraw()
 
     if askyesno(title="SRM Fashion", message="Are you sure? Do you want to quit?"):
         print(Fore.RED + "Bye!!!")
         conn.close()
         app.destroy()
+        clrscr()
         terminate()
 
     else:
@@ -19,6 +30,9 @@ def exit_tk():
 
 def delete_record():
     selected_item = treeview_db.focus()
+    row_dict = treeview_db.item(selected_item)
+    row_values = row_dict.get("values")
+    phone = row_values[1]
 
     if selected_item:
         app.withdraw()
@@ -30,7 +44,7 @@ def delete_record():
             treeview_db.delete(selected_item)
 
             c.execute(
-                f"""DELETE FROM Customers where Phone = '{treeview_db.item(selected_item).get("values")[1]}'"""
+                f"""DELETE FROM Customers where Phone = '{phone}'"""
             )
             conn.commit()
 
@@ -41,6 +55,7 @@ def delete_record():
 
             else:
                 total_customer_label.config(text="No customer(s) found!")
+                delete_button.config(state=DISABLED)
 
             return
 
@@ -175,6 +190,9 @@ def validate_and_save():
     )
     treeview_db.insert(parent="", index="end", values=[name, phone, email, dob, gender])
 
+    if delete_button["state"] == DISABLED:
+        delete_button.config(state=NORMAL)
+
     name_entry.delete(first=0, last=END)
     phone_entry.delete(first=0, last=END)
     email_entry.delete(first=0, last=END)
@@ -194,7 +212,9 @@ def validate_and_save():
 try:
     print("INFO: Importing built-in libraries...")
     from getpass import getuser
+    from os import system as terminal
     from os.path import isfile, join, split
+    from platform import system as os_env
     from sqlite3 import connect
     from sys import exit as terminate
     from tkinter import (
@@ -202,7 +222,9 @@ try:
         BOTTOM,
         BROWSE,
         CENTER,
+        DISABLED,
         END,
+        NORMAL,
         RIGHT,
         TOP,
         Button,
@@ -229,10 +251,10 @@ try:
 
     __version__: str = "v.20220712"
     total_orders: int = 0
-    username: str = getuser()
     base_path: str = split(p=__file__)[0]
     database_path: str = join(base_path, "customers.db")
 
+    # If database doesn't exist. It create a new database file for you.
     if not isfile(path=database_path):
         print(Fore.GREEN + "INFO: Creating a new database...")
         conn = connect(database=database_path)
@@ -265,7 +287,7 @@ try:
 
     Label(
         master=app,
-        text=f"Hello {username.title()}, Welcome to SRM Fashion!",
+        text=f"Hello {getuser().title()}, Welcome to SRM Fashion!",
         bg="black",
         fg="white",
     ).pack(side=TOP, fill=X)
@@ -375,12 +397,14 @@ try:
         bg="red",
         fg="white",
         command=delete_record,
+        state=DISABLED,
     )
     delete_button.bind(sequence="<Return>", func=lambda event: delete_record())
     delete_button.pack(side=RIGHT, padx=10, pady=5)
 
     if total_customers:
         total_customer_label.config(text=f"{total_customers} customer(s) found!")
+        delete_button.config(state=NORMAL)
 
     else:
         total_customer_label.config(text="No customer(s) found!")
