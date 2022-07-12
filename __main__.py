@@ -22,8 +22,8 @@ def delete_record():
 
     if selected_item:
         row_dict = treeview_db.item(selected_item)
-        row_values = row_dict["values"]
-        phone = row_values[1]
+        row_values = row_dict.get("values")
+        phone: str = row_values[1]
 
         treeview_db.delete(selected_item)
 
@@ -95,6 +95,9 @@ def validate_and_save():
 
     try:
         number_object = parse(number=phone)
+        phone: str = format_number(
+            numobj=number_object, num_format=PhoneNumberFormat.INTERNATIONAL
+        )
 
     except NumberParseException as number_parse_exception:
         print(f"ERROR: {number_parse_exception}")
@@ -107,7 +110,7 @@ def validate_and_save():
         app.deiconify()
         return
 
-    if not is_possible_number(numobj=number_object):
+    if not is_valid_number(numobj=number_object):
         phone_label.config(fg="red")
         app.withdraw()
         showinfo(
@@ -145,7 +148,7 @@ def validate_and_save():
         if _[0] == phone:
             app.withdraw()
             showinfo(
-                title=f"SRM Fashion {__version__}", message="Contact already exists!"
+                title=f"SRM Fashion {__version__}", message=f"{phone} Contact already exists!"
             )
             app.deiconify()
             return
@@ -160,7 +163,6 @@ def validate_and_save():
     total_customer_label.config(
         text=f"{len(treeview_db.get_children()) + 1} customer(s) found!"
     )
-    print(type(phone))
     treeview_db.insert(parent="", index="end", values=[name, phone, email, dob, gender])
 
     name_entry.delete(first=0, last=END)
@@ -188,9 +190,9 @@ try:
     from tkinter import (
         BOTH,
         BOTTOM,
+        BROWSE,
         CENTER,
         END,
-        LEFT,
         RIGHT,
         TOP,
         Button,
@@ -208,10 +210,10 @@ try:
     from tkinter.ttk import Notebook, Treeview
 
     print("INFO: Importing third party libraries...")
-    from phonenumbers import is_possible_number, parse
+    from phonenumbers import PhoneNumberFormat, format_number, is_valid_number, parse
     from phonenumbers.phonenumberutil import NumberParseException
 
-    __version__: str = "v.20220711"
+    __version__: str = "v.20220712"
     accent_color_light: str = "lightsteelblue2"
     total_orders: int = 0
     username: str = getuser()
@@ -332,14 +334,17 @@ try:
 
     header_list: list = ["Name", "Phone", "Email", "D.O.B", "Gender"]
     treeview_db: Treeview = Treeview(
-        master=customer_labelframe_1, show="headings", columns=header_list
+        master=customer_labelframe_1,
+        show="headings",
+        columns=header_list,
+        selectmode=BROWSE,
     )
 
     for _ in header_list:
         treeview_db.heading(column=_, text=_)
 
     treeview_db.column(column=0, width=130, minwidth=130, anchor=W)
-    treeview_db.column(column=1, width=120, minwidth=120, anchor=CENTER)
+    treeview_db.column(column=1, width=130, minwidth=130, anchor=CENTER)
     treeview_db.column(column=2, width=225, minwidth=225, anchor=W)
     treeview_db.column(column=3, width=100, minwidth=100, anchor=CENTER)
     treeview_db.column(column=4, width=80, minwidth=80, anchor=W)
