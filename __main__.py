@@ -410,21 +410,21 @@ try:
         text="Enter Customer Name:",
         bg=accent_color_light,
     )
-    name_label.grid(row=0, column=0, padx=5)
+    name_label.grid(row=0, column=0, padx=5, sticky=W)
     name_entry: Entry = Entry(master=customer_entry_frame, width=25)
     name_entry.grid(row=0, column=1, padx=5)
 
     phone_label: Label = Label(
         master=customer_entry_frame, text="Contact Number:", bg=accent_color_light
     )
-    phone_label.grid(row=1, column=0)
+    phone_label.grid(row=1, column=0, sticky=W)
     phone_entry: Entry = Entry(master=customer_entry_frame, width=25)
     phone_entry.grid(row=1, column=1)
 
     email_label: Label = Label(
         master=customer_entry_frame, text="Email (Optional):", bg=accent_color_light
     )
-    email_label.grid(row=2, column=0)
+    email_label.grid(row=2, column=0, sticky=W)
     email_entry: Entry = Entry(master=customer_entry_frame, width=25)
     email_entry.grid(row=2, column=1)
 
@@ -432,18 +432,22 @@ try:
         master=customer_entry_frame,
         text="Date of Birth (Optional):",
         bg=accent_color_light,
-    ).grid(row=3, column=0)
+    ).grid(row=3, column=0, sticky=W)
     dob_entry: Entry = Entry(customer_entry_frame, width=25)
     dob_entry.grid(row=3, column=1)
 
     Label(master=customer_entry_frame, text="Gender:", bg=accent_color_light).grid(
-        row=4, column=0
+        row=4, column=0, sticky=W
     )
     gender_options: list = ["Female", "Male", "Other"]
     gender_var: StringVar = StringVar()
     gender_var.set(value=gender_options[0])
     gender_dropdown = OptionMenu(customer_entry_frame, gender_var, *gender_options)
-    gender_dropdown.grid(row=4, column=1)
+    gender_dropdown.grid(row=4, column=1, sticky=W, padx=5)
+
+    name_entry.bind(sequence="<Return>", func=lambda event: phone_entry.focus())
+    phone_entry.bind(sequence="<Return>", func=lambda event: email_entry.focus())
+    email_entry.bind(sequence="<Return>", func=lambda event: dob_entry.focus())
 
     save_button: Button = Button(
         master=customer_labelframe_2,
