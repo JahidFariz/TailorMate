@@ -55,7 +55,7 @@ def delete_record() -> None:
 
             else:
                 total_customer_label.config(text="No customer(s) found!")
-                delete_button.config(state=DISABLED)
+                delete_button.config(state="disabled")
 
             return
 
@@ -190,13 +190,13 @@ def validate_and_save() -> None:
     )
     treeview_db.insert(parent="", index="end", values=[name, phone, email, dob, gender])
 
-    if delete_button["state"] == DISABLED:
-        delete_button.config(state=NORMAL)
+    if delete_button["state"] == "disabled":
+        delete_button.config(state="normal")
 
-    name_entry.delete(first=0, last=END)
-    phone_entry.delete(first=0, last=END)
-    email_entry.delete(first=0, last=END)
-    dob_entry.delete(first=0, last=END)
+    name_entry.delete(first=0, last="end")
+    phone_entry.delete(first=0, last="end")
+    email_entry.delete(first=0, last="end")
+    dob_entry.delete(first=0, last="end")
     gender_var.set(value=gender_options[0])
 
     name_entry.focus()
@@ -218,15 +218,6 @@ try:
     from sqlite3 import connect
     from sys import exit as terminate
     from tkinter import (
-        BOTH,
-        BOTTOM,
-        BROWSE,
-        CENTER,
-        DISABLED,
-        END,
-        NORMAL,
-        RIGHT,
-        TOP,
         Button,
         Entry,
         Frame,
@@ -235,8 +226,6 @@ try:
         OptionMenu,
         StringVar,
         Tk,
-        W,
-        X,
     )
     from tkinter.messagebox import askyesno, showinfo
     from tkinter.ttk import Notebook, Treeview
@@ -259,6 +248,7 @@ try:
         print(Fore.GREEN + "INFO: Creating a new database...")
         conn = connect(database=database_path)
         c = conn.cursor()
+        # use not null and primary key 
         c.execute(
             """CREATE TABLE Customers (
              Name TEXT,
@@ -274,8 +264,6 @@ try:
     print(Fore.GREEN + "INFO: Reading database file...")
     conn = connect(database=database_path)
     c = conn.cursor()
-    c.execute("""SELECT * FROM Customers""")
-    customers_data: list = c.fetchall()
 
     print(Fore.GREEN + "INFO: Loading GUI application...")
     app: Tk = Tk()
@@ -290,10 +278,10 @@ try:
         text=f"Hello {getuser().title()}, Welcome to SRM Fashion!",
         bg="black",
         fg="white",
-    ).pack(side=TOP, fill=X)
+    ).pack(side="top", fill="x")
 
     tab_view: Notebook = Notebook(master=app)
-    tab_view.pack(fill=BOTH, expand=True)
+    tab_view.pack(fill="both", expand=True)
 
     orders_frame: Frame = Frame(master=tab_view, bg="lightsteelblue2")
     orders_frame.pack()
@@ -315,10 +303,13 @@ try:
             bg="lightsteelblue2",
         ).pack()
 
+    else:
+        pass
+
     order_labelframe: LabelFrame = LabelFrame(
         master=orders_frame, text="Add Order", fg="red", bg="lightsteelblue2"
     )
-    order_labelframe.pack(side=BOTTOM, padx=10, pady=5, ipady=3, fill=X)
+    order_labelframe.pack(side="bottom", padx=10, pady=5, ipady=3, fill="x")
 
     order_button: Button = Button(
         master=order_labelframe,
@@ -353,7 +344,7 @@ try:
         fg="red",
         bg="lightsteelblue2",
     )
-    customer_labelframe_1.pack(padx=10, pady=3, ipady=3, fill=X)
+    customer_labelframe_1.pack(padx=10, pady=3, ipady=3, fill="x")
 
     Label(
         master=customer_labelframe_1,
@@ -372,24 +363,19 @@ try:
         master=customer_labelframe_1,
         show="headings",
         columns=header_list,
-        selectmode=BROWSE,
+        selectmode="browse",
     )
 
     for _ in header_list:
         treeview_db.heading(column=_, text=_)
 
-    treeview_db.column(column=0, width=130, minwidth=130, anchor=W)
-    treeview_db.column(column=1, width=130, minwidth=130, anchor=CENTER)
-    treeview_db.column(column=2, width=225, minwidth=225, anchor=W)
-    treeview_db.column(column=3, width=100, minwidth=100, anchor=CENTER)
-    treeview_db.column(column=4, width=80, minwidth=80, anchor=W)
-
-    for _ in customers_data:
-        treeview_db.insert(parent="", index="end", values=_)
+    treeview_db.column(column=0, width=130, minwidth=130, anchor="w")
+    treeview_db.column(column=1, width=130, minwidth=130, anchor="center")
+    treeview_db.column(column=2, width=225, minwidth=225, anchor="w")
+    treeview_db.column(column=3, width=100, minwidth=100, anchor="center")
+    treeview_db.column(column=4, width=80, minwidth=80, anchor="w")
 
     treeview_db.pack(padx=20, pady=5)
-
-    total_customers: int = len(treeview_db.get_children())
 
     delete_button: Button = Button(
         master=customer_labelframe_1,
@@ -397,24 +383,17 @@ try:
         bg="red",
         fg="white",
         command=delete_record,
-        state=DISABLED,
+        state="disabled",
     )
     delete_button.bind(sequence="<Return>", func=lambda event: delete_record())
-    delete_button.pack(side=RIGHT, padx=10, pady=5)
-
-    if total_customers:
-        total_customer_label.config(text=f"{total_customers} customer(s) found!")
-        delete_button.config(state=NORMAL)
-
-    else:
-        total_customer_label.config(text="No customer(s) found!")
+    delete_button.pack(side="right", padx=10, pady=5)
 
     Label(master=customers_frame, text="or", bg="lightsteelblue2").pack()
 
     customer_labelframe_2: LabelFrame = LabelFrame(
         master=customers_frame, text="Add New Customer", fg="red", bg="lightsteelblue2"
     )
-    customer_labelframe_2.pack(padx=10, pady=3, ipady=3, fill=X)
+    customer_labelframe_2.pack(padx=10, pady=3, ipady=3, fill="x")
 
     Label(
         master=customer_labelframe_2,
@@ -433,21 +412,21 @@ try:
         text="Enter Customer Name:",
         bg="lightsteelblue2",
     )
-    name_label.grid(row=0, column=0, padx=5, sticky=W)
+    name_label.grid(row=0, column=0, padx=5, sticky="w")
     name_entry: Entry = Entry(master=customer_entry_frame, width=25)
     name_entry.grid(row=0, column=1, padx=5)
 
     phone_label: Label = Label(
         master=customer_entry_frame, text="Contact Number:", bg="lightsteelblue2"
     )
-    phone_label.grid(row=1, column=0, sticky=W)
+    phone_label.grid(row=1, column=0, sticky="w")
     phone_entry: Entry = Entry(master=customer_entry_frame, width=25)
     phone_entry.grid(row=1, column=1)
 
     email_label: Label = Label(
         master=customer_entry_frame, text="Email (Optional):", bg="lightsteelblue2"
     )
-    email_label.grid(row=2, column=0, sticky=W)
+    email_label.grid(row=2, column=0, sticky="w")
     email_entry: Entry = Entry(master=customer_entry_frame, width=25)
     email_entry.grid(row=2, column=1)
 
@@ -455,18 +434,18 @@ try:
         master=customer_entry_frame,
         text="Date of Birth (Optional):",
         bg="lightsteelblue2",
-    ).grid(row=3, column=0, sticky=W)
+    ).grid(row=3, column=0, sticky="w")
     dob_entry: Entry = Entry(customer_entry_frame, width=25)
     dob_entry.grid(row=3, column=1)
 
     Label(master=customer_entry_frame, text="Gender:", bg="lightsteelblue2").grid(
-        row=4, column=0, sticky=W
+        row=4, column=0, sticky="w"
     )
     gender_options: list = ["Female", "Male", "Other"]
     gender_var: StringVar = StringVar()
     gender_var.set(value=gender_options[0])
     gender_dropdown = OptionMenu(customer_entry_frame, gender_var, *gender_options)
-    gender_dropdown.grid(row=4, column=1, sticky=W, padx=5)
+    gender_dropdown.grid(row=4, column=1, sticky="w", padx=5)
 
     name_entry.bind(sequence="<Return>", func=lambda event: phone_entry.focus())
     phone_entry.bind(sequence="<Return>", func=lambda event: email_entry.focus())
@@ -480,12 +459,12 @@ try:
         command=validate_and_save,
     )
     save_button.bind(sequence="<Return>", func=lambda event: validate_and_save())
-    save_button.pack(padx=10, pady=5, side=RIGHT)
+    save_button.pack(padx=10, pady=5, side="right")
 
     customer_labelframe: LabelFrame = LabelFrame(
         master=customers_frame, text="Select Customer", fg="red", bg="lightsteelblue2"
     )
-    customer_labelframe.pack(side=BOTTOM, padx=10, pady=5, ipady=3, fill=X)
+    customer_labelframe.pack(side="bottom", padx=10, pady=5, ipady=3, fill="x")
 
     customer_button: Button = Button(
         master=customer_labelframe,
@@ -512,7 +491,21 @@ try:
         text="Created by FOSS Kingdom | made with Love in Incredible India.",
         bg="black",
         fg="white",
-    ).pack(side=BOTTOM, fill=X)
+    ).pack(side="bottom", fill="x")
+
+    # Add values and update UI
+    c.execute("""SELECT * FROM Customers""")
+    for _ in c.fetchall():
+        treeview_db.insert(parent="", index="end", values=_)
+
+    total_customers: int = len(treeview_db.get_children())
+
+    if total_customers:
+        total_customer_label.config(text=f"{total_customers} customer(s) found!")
+        delete_button.config(state="normal")
+
+    else:
+        total_customer_label.config(text="No customer(s) found!")
 
     app.mainloop()
 
