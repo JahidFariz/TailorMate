@@ -148,16 +148,17 @@ def validate_and_save():
             app.deiconify()
             return
 
-    cursor.execute("""SELECT Phone FROM Customers""")
-    for _ in cursor.fetchall():
-        if _[0] == phone:
-            app.withdraw()
-            showinfo(
-                title=f"SRM Fashion {__version__}",
-                message=f"{phone} Contact already exists!",
-            )
-            app.deiconify()
-            return
+    cursor.execute(f"""SELECT Phone FROM Customers WHERE Phone = '{phone}'""")
+    if cursor.fetchone():
+        phone_label.config(fg="red")
+        
+        app.withdraw()
+        showinfo(
+            title=f"SRM Fashion {__version__}",
+            message=f"{phone} Contact already exists!",
+        )
+        app.deiconify()
+        return
 
     cursor.execute(
         f"""INSERT INTO Customers VALUES (
