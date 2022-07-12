@@ -9,7 +9,7 @@ def exit_tk():
 
     if askyesno(title="SRM Fashion", message="Are you sure? Do you want to quit?"):
         print(Fore.RED + "Bye!!!")
-        database.close()
+        conn.close()
         app.destroy()
         terminate()
 
@@ -33,8 +33,8 @@ def delete_record():
 
             treeview_db.delete(selected_item)
 
-            cursor.execute(f"""DELETE FROM Customers where Phone = '{phone}'""")
-            database.commit()
+            c.execute(f"""DELETE FROM Customers where Phone = '{phone}'""")
+            conn.commit()
 
             _ = len(treeview_db.get_children())
 
@@ -80,6 +80,7 @@ def validate_and_save():
 
     if name == "":
         name_label.config(fg="red")
+        
         app.withdraw()
         showinfo(
             title=f"SRM Fashion {__version__}",
@@ -90,6 +91,7 @@ def validate_and_save():
 
     if phone == "":
         phone_label.config(fg="red")
+
         app.withdraw()
         showinfo(
             title=f"SRM Fashion {__version__}",
@@ -117,6 +119,7 @@ def validate_and_save():
 
     if not is_valid_number(numobj=number_object):
         phone_label.config(fg="red")
+
         app.withdraw()
         showinfo(
             title=f"SRM Fashion {__version__}",
@@ -130,6 +133,7 @@ def validate_and_save():
         if len(split_email) == 2:
             if not len(split_email[0]) or not len(split_email[1]):
                 email_label.config(fg="red")
+
                 app.withdraw()
                 showinfo(
                     title=f"SRM Fashion {__version__}",
@@ -140,6 +144,7 @@ def validate_and_save():
 
         else:
             email_label.config(fg="red")
+
             app.withdraw()
             showinfo(
                 title=f"SRM Fashion {__version__}",
@@ -148,10 +153,10 @@ def validate_and_save():
             app.deiconify()
             return
 
-    cursor.execute(f"""SELECT Phone FROM Customers WHERE Phone = '{phone}'""")
-    if cursor.fetchone():
+    c.execute(f"""SELECT Phone FROM Customers WHERE Phone = '{phone}'""")
+    if c.fetchone():
         phone_label.config(fg="red")
-        
+
         app.withdraw()
         showinfo(
             title=f"SRM Fashion {__version__}",
@@ -160,12 +165,12 @@ def validate_and_save():
         app.deiconify()
         return
 
-    cursor.execute(
+    c.execute(
         f"""INSERT INTO Customers VALUES (
     "{name}", "{phone}", "{email}", "{dob}", "{gender}"
     )"""
     )
-    database.commit()
+    conn.commit()
 
     total_customer_label.config(
         text=f"{len(treeview_db.get_children()) + 1} customer(s) found!"
@@ -233,9 +238,9 @@ try:
 
     if not isfile(path=database_path):
         print(Fore.GREEN + "INFO: Creating a new database...")
-        database = connect(database=database_path)
-        cursor = database.cursor()
-        cursor.execute(
+        conn = connect(database=database_path)
+        c = conn.cursor()
+        c.execute(
             """CREATE TABLE Customers (
              Name TEXT,
              Phone TEXT,
@@ -244,14 +249,14 @@ try:
              Gender TEXT
              )"""
         )
-        database.commit()
-        database.close()
+        conn.commit()
+        conn.close()
 
     print(Fore.GREEN + "INFO: Reading database file...")
-    database = connect(database=database_path)
-    cursor = database.cursor()
-    cursor.execute("""SELECT * FROM Customers""")
-    customers_data: list = cursor.fetchall()
+    conn = connect(database=database_path)
+    c = conn.cursor()
+    c.execute("""SELECT * FROM Customers""")
+    customers_data: list = c.fetchall()
 
     print(Fore.GREEN + "INFO: Loading GUI application...")
     app: Tk = Tk()
