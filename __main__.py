@@ -76,7 +76,7 @@ def validate_and_save():
     dob: str = dob_entry.get().strip()
     gender: str = gender_var.get()
 
-    if name == "":
+    if not name:
         name_label.config(fg="red")
 
         app.withdraw()
@@ -87,7 +87,7 @@ def validate_and_save():
         app.deiconify()
         return
 
-    if phone == "":
+    if not phone:
         phone_label.config(fg="red")
 
         app.withdraw()
