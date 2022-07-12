@@ -8,7 +8,7 @@ def exit_tk():
     app.withdraw()
 
     if askyesno(title="SRM Fashion", message="Are you sure do you want to quit?"):
-        print("Bye!!!")
+        print(Fore.RED + "Bye!!!")
         database.close()
         app.destroy()
         terminate()
@@ -46,7 +46,7 @@ def delete_record():
         return
 
     else:
-        print(f"INFO: Please select a customer record!")
+        print(Fore.YELLOW + f"INFO: Please select a customer record!")
 
         app.withdraw()
         showinfo(
@@ -100,7 +100,7 @@ def validate_and_save():
         )
 
     except NumberParseException as number_parse_exception:
-        print(f"ERROR: {number_parse_exception}")
+        print(Fore.RED + f"ERROR: {number_parse_exception}")
         phone_label.config(fg="red")
         app.withdraw()
         showinfo(
@@ -148,7 +148,8 @@ def validate_and_save():
         if _[0] == phone:
             app.withdraw()
             showinfo(
-                title=f"SRM Fashion {__version__}", message=f"{phone} Contact already exists!"
+                title=f"SRM Fashion {__version__}",
+                message=f"{phone} Contact already exists!",
             )
             app.deiconify()
             return
@@ -173,7 +174,7 @@ def validate_and_save():
 
     name_entry.focus()
 
-    print("INFO: Database appended successfully...")
+    print(Fore.GREEN + "INFO: Database appended successfully...")
 
     app.withdraw()
     showinfo(title=f"SRM Fashion {__version__}", message="Data saved successfully!")
@@ -210,8 +211,12 @@ try:
     from tkinter.ttk import Notebook, Treeview
 
     print("INFO: Importing third party libraries...")
+    from colorama import Fore, init
     from phonenumbers import PhoneNumberFormat, format_number, is_valid_number, parse
     from phonenumbers.phonenumberutil import NumberParseException
+
+    print("INFO: Initializing colorama...")
+    init(autoreset=True)
 
     __version__: str = "v.20220712"
     accent_color_light: str = "lightsteelblue2"
@@ -221,7 +226,7 @@ try:
     database_path: str = join(base_path, "customers.db")
 
     if not isfile(path=database_path):
-        print("INFO: Creating a new database...")
+        print(Fore.GREEN + "INFO: Creating a new database...")
         database = connect(database=database_path)
         cursor = database.cursor()
         cursor.execute(
@@ -236,13 +241,13 @@ try:
         database.commit()
         database.close()
 
-    print("INFO: Reading database file...")
+    print(Fore.GREEN + "INFO: Reading database file...")
     database = connect(database=database_path)
     cursor = database.cursor()
     cursor.execute("""SELECT * FROM Customers""")
     customers_data: list = cursor.fetchall()
 
-    print("INFO: Loading GUI application...")
+    print(Fore.GREEN + "INFO: Loading GUI application...")
     app: Tk = Tk()
     app.resizable(width=False, height=False)
     app.title(string=f"SRM Fashion {__version__}")
@@ -475,8 +480,6 @@ try:
 
 except KeyboardInterrupt:
     print("ERROR: KeyboardInterrupt occurred! Bye...")
-    terminate()
 
 except ModuleNotFoundError as module_not_found_error:
     print(f"ERROR: {module_not_found_error}")
-    terminate()
