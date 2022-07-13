@@ -8,19 +8,9 @@ def not_ready_yet() -> None:
     app.withdraw()
     showinfo(
         title=f"SRM Fashion {__version__}",
-        message="This feature is not ready yet!! Still in developement...",
+        message="This feature is not ready yet!! Still in development...",
     )
     app.deiconify()
-    return
-
-
-def clrscr() -> None:
-    if os_env() == "Linux":
-        terminal(command="clear")
-
-    elif os_env() == "Windows":
-        terminal(command="cls")
-
     return
 
 
@@ -31,7 +21,17 @@ def exit_tk() -> None:
         print(Fore.RED + "Bye!!!")
         conn.close()
         app.destroy()
-        clrscr()
+
+        if isdir(s=cache_file_path):
+            print(Fore.GREEN + "INFO: Cleaning cache files...")
+            rmtree(path=cache_file_path)
+
+        if os_env() == "Linux":
+            terminal(command="clear")
+
+        elif os_env() == "Windows":
+            terminal(command="cls")
+
         terminate()
 
     else:
@@ -225,8 +225,9 @@ try:
     print("INFO: Importing built-in libraries...")
     from getpass import getuser
     from os import system as terminal
-    from os.path import isfile, join, split
+    from os.path import isdir, isfile, join, split
     from platform import system as os_env
+    from shutil import rmtree
     from sqlite3 import connect
     from sys import exit as terminate
     from tkinter import (
@@ -250,10 +251,11 @@ try:
     print("INFO: Initializing colorama...")
     init(autoreset=True)
 
-    __version__: str = "v.20220712"
+    __version__: str = "v.20220713"
     total_orders: int = 0
     base_path: str = split(p=__file__)[0]
     database_path: str = join(base_path, "customers.db")
+    cache_file_path: str = join(base_path, "__pycache__")
 
     if not isfile(path=database_path):
         print(Fore.GREEN + "INFO: Creating a new database...")
