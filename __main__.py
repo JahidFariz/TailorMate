@@ -5,30 +5,13 @@
 
 
 def not_ready_yet() -> None:
+    print(Fore.RED + "INFO: This feature is not ready yet!! Still in development...")
     app.withdraw()
     showinfo(
         title=f"SRM Fashion {__version__}",
         message="This feature is not ready yet!! Still in development...",
     )
     app.deiconify()
-    return None
-
-
-def get_selection() -> (str | None):
-    selected_item: str = treeview_db.focus()
-    if selected_item:
-        return selected_item
-
-    else:
-        print(Fore.YELLOW + f"INFO: Please select a customer record!")
-
-        app.withdraw()
-        showinfo(
-            title=f"SRM Fashion {__version__}",
-            message="Please select a customer record!",
-        )
-        app.deiconify()
-        return None
 
 
 def exit_tk() -> None:
@@ -55,38 +38,27 @@ def exit_tk() -> None:
         app.deiconify()
 
 
-def edit_record() -> None:
-    selected_item: str | None = get_selection()
-    if selected_item:
-        customer_data: list = treeview_db.item(selected_item).get("values")
+def fetch_records() -> None:
+    customer_data: list = treeview_db.item(treeview_db.focus()).get("values")
+    clear_entry()
 
-        name_entry.delete(first=0, last="end")
-        name_entry.insert(index=0, string=customer_data[0])
+    name_entry.insert(index=0, string=customer_data[0])
+    phone_entry.insert(index=0, string=customer_data[1])
+    email_entry.insert(index=0, string=customer_data[2])
+    dob_entry.insert(index=0, string=customer_data[3])
 
-        phone_entry.delete(first=0, last="end")
-        phone_entry.insert(index=0, string=customer_data[1])
+    if customer_data[4] == "Female":
+        gender_var.set(value=gender_options[0])
 
-        email_entry.delete(first=0, last="end")
-        email_entry.insert(index=0, string=customer_data[2])
+    elif customer_data[4] == "Male":
+        gender_var.set(value=gender_options[1])
 
-        dob_entry.delete(first=0, last="end")
-        dob_entry.insert(index=0, string=customer_data[3])
-
-        if customer_data[4] == "Female":
-            gender_var.set(value=gender_options[0])
-
-        elif customer_data[4] == "Male":
-            gender_var.set(value=gender_options[1])
-
-        else:
-            gender_var.set(value=gender_options[2])
-
-        if update_button["state"] == "disabled":
-            update_button.config(state="normal")
+    else:
+        gender_var.set(value=gender_options[2])
 
 
 def delete_record() -> None:
-    selected_item: str | None = get_selection()
+    selected_item: str = treeview_db.focus()
     if selected_item:
         phone: str = treeview_db.item(selected_item).get("values")[1]
 
@@ -101,6 +73,8 @@ def delete_record() -> None:
             c.execute(f"""DELETE FROM Customers WHERE Phone = '{phone}'""")
             conn.commit()
 
+            clear_entry()
+
             _ = len(treeview_db.get_children())
 
             if _:
@@ -108,16 +82,28 @@ def delete_record() -> None:
 
             else:
                 total_customer_label.config(text="No customer(s) found!")
-                edit_button.config(state="disabled")
                 delete_button.config(state="disabled")
-
-            return None
+                update_button.config(state="disabled")
 
         app.deiconify()
-        return None
+
+    else:
+        print(Fore.YELLOW + f"INFO: Please select a customer record!")
+        app.withdraw()
+        showinfo(
+            title=f"SRM Fashion {__version__}",
+            message="Please select a customer record!",
+        )
+        app.deiconify()
 
 
-def validate_entry(name: str, phone: str, email: str, number_object) -> bool:
+def create_entry() -> None:
+    name: str = name_entry.get().strip().title()
+    phone: str = phone_entry.get().strip()
+    email: str = email_entry.get().strip().lower()
+    dob: str = dob_entry.get().strip()
+    gender: str = gender_var.get()
+
     if name_label["fg"] == "red":
         name_label.config(fg="black")
 
@@ -130,70 +116,26 @@ def validate_entry(name: str, phone: str, email: str, number_object) -> bool:
     if not name:
         name_label.config(fg="red")
 
+        print(Fore.YELLOW + "INFO: Please enter the customer name.")
         app.withdraw()
         showinfo(
             title=f"SRM Fashion {__version__}",
-            message="Please enter customer name.",
+            message="Please enter the customer name.",
         )
         app.deiconify()
-        return False
+        return None
 
     if not phone:
         phone_label.config(fg="red")
 
+        print(Fore.YELLOW + "INFO: Please enter the customer phone number.")
         app.withdraw()
         showinfo(
             title=f"SRM Fashion {__version__}",
-            message="Please enter contact number.",
+            message="Please enter the contact phone number.",
         )
         app.deiconify()
-        return False
-
-    if not is_valid_number(numobj=number_object):
-        phone_label.config(fg="red")
-
-        app.withdraw()
-        showinfo(
-            title=f"SRM Fashion {__version__}",
-            message="Please enter the correct mobile number.",
-        )
-        app.deiconify()
-        return False
-
-    if email != "":
-        split_email = email.split(sep="@")
-        if len(split_email) == 2:
-            if not len(split_email[0]) or not len(split_email[1]):
-                email_label.config(fg="red")
-
-                app.withdraw()
-                showinfo(
-                    title=f"SRM Fashion {__version__}",
-                    message="Invalid email address, Try again...",
-                )
-                app.deiconify()
-                return False
-
-        else:
-            email_label.config(fg="red")
-
-            app.withdraw()
-            showinfo(
-                title=f"SRM Fashion {__version__}",
-                message="Invalid email address, Try again...",
-            )
-            app.deiconify()
-            return False
-
-    return True
-
-
-def save_entry() -> None:
-    name: str = name_entry.get().strip().title()
-    phone: str = phone_entry.get().strip()
-    email: str = email_entry.get().strip().lower()
-    dob: str = dob_entry.get().strip()
-    gender: str = gender_var.get()
+        return None
 
     try:
         number_object = parse(number=phone)
@@ -202,8 +144,12 @@ def save_entry() -> None:
         )
 
     except NumberParseException as number_parse_exception:
-        print(Fore.RED + f"ERROR: {number_parse_exception}")
         phone_label.config(fg="red")
+
+        print(
+            Fore.RED
+            + f"ERROR: {number_parse_exception} Use with country codes. eg. +1-XXX-XXX-XXXX"
+        )
         app.withdraw()
         showinfo(
             title=f"SRM Fashion {__version__}",
@@ -212,53 +158,82 @@ def save_entry() -> None:
         app.deiconify()
         return None
 
+    if not is_valid_number(numobj=number_object):
+        phone_label.config(fg="red")
+
+        print(Fore.RED + "ERROR: Please enter the correct mobile number.")
+        app.withdraw()
+        showinfo(
+            title=f"SRM Fashion {__version__}",
+            message="Please enter the correct mobile number.",
+        )
+        app.deiconify()
+        return None
+
     c.execute(f"""SELECT Phone FROM Customers WHERE Phone = '{phone}'""")
     if c.fetchone():
         phone_label.config(fg="red")
 
+        print(Fore.YELLOW + f"INFO: {phone} This contact already exist!!")
         app.withdraw()
         showinfo(
             title=f"SRM Fashion {__version__}",
-            message=f"{phone} This contact already exists!!",
+            message=f"{phone} This contact already exist!!",
         )
         app.deiconify()
         return None
 
-    if validate_entry(name, phone, email, number_object):
-        c.execute(
-            f"""INSERT INTO Customers VALUES (
+    if email != "":
+        split_email = email.split(sep="@")
+        if len(split_email) == 2:
+            if not len(split_email[0]) or not len(split_email[1]):
+                email_label.config(fg="red")
+
+                print(Fore.RED + "INFO: Invalid email address, Please try again...")
+                app.withdraw()
+                showinfo(
+                    title=f"SRM Fashion {__version__}",
+                    message="Invalid email address, Please try again...",
+                )
+                app.deiconify()
+                return None
+
+        else:
+            email_label.config(fg="red")
+
+            print(Fore.RED + "INFO: Invalid email address, Please try again...")
+            app.withdraw()
+            showinfo(
+                title=f"SRM Fashion {__version__}",
+                message="Invalid email address, Please try again...",
+            )
+            app.deiconify()
+            return None
+
+    c.execute(
+        f"""INSERT INTO Customers VALUES (
         '{name}', '{phone}', '{email}', '{dob}', '{gender}'
         )"""
-        )
-        conn.commit()
+    )
+    conn.commit()
 
-        total_customer_label.config(
-            text=f"{len(treeview_db.get_children()) + 1} customer(s) found!"
-        )
-        treeview_db.insert(
-            parent="", index="end", values=[name, phone, email, dob, gender]
-        )
+    total_customer_label.config(
+        text=f"{len(treeview_db.get_children()) + 1} customer(s) found!"
+    )
+    treeview_db.insert(parent="", index="end", values=[name, phone, email, dob, gender])
 
-        if edit_button["state"] == "disabled":
-            edit_button.config(state="normal")
+    if delete_button["state"] == "disabled":
+        delete_button.config(state="normal")
 
-        if delete_button["state"] == "disabled":
-            delete_button.config(state="normal")
+    if update_button["state"] == "disabled":
+        update_button.config(state="normal")
 
-        name_entry.delete(first=0, last="end")
-        phone_entry.delete(first=0, last="end")
-        email_entry.delete(first=0, last="end")
-        dob_entry.delete(first=0, last="end")
-        gender_var.set(value=gender_options[0])
+    clear_entry()
 
-        name_entry.focus()
-
-        print(Fore.GREEN + "INFO: Database appended successfully...")
-
-        app.withdraw()
-        showinfo(title=f"SRM Fashion {__version__}", message="Data saved successfully!")
-        app.deiconify()
-        return None
+    print(Fore.GREEN + "INFO: Database appended successfully...")
+    app.withdraw()
+    showinfo(title=f"SRM Fashion {__version__}", message="Data appended successfully!")
+    app.deiconify()
 
 
 def update_entry() -> None:
@@ -268,60 +243,161 @@ def update_entry() -> None:
     dob: str = dob_entry.get().strip()
     gender: str = gender_var.get()
 
-    try:
-        number_object = parse(number=phone)
-        phone: str = format_number(
-            numobj=number_object, num_format=PhoneNumberFormat.INTERNATIONAL
-        )
+    if name_label["fg"] == "red":
+        name_label.config(fg="black")
 
-    except NumberParseException as number_parse_exception:
-        print(Fore.RED + f"ERROR: {number_parse_exception}")
-        phone_label.config(fg="red")
-        app.withdraw()
-        showinfo(
-            title=f"SRM Fashion {__version__}",
-            message=f"{number_parse_exception} Use with country codes. eg. +1-XXX-XXX-XXXX",
-        )
-        app.deiconify()
-        return None
+    if phone_label["fg"] == "red":
+        phone_label.config(fg="black")
 
-    if validate_entry(name, phone, email, number_object):
-        selected_item: str | None = get_selection()
-        if selected_item:
-            for _ in treeview_db.get_children():
-                if _ != selected_item and treeview_db.item(_).get("values")[1] == phone:
-                    print(Fore.RED + f"ERROR: {phone} This contact already exist!!")
-                    phone_label.config(fg="red")
+    if email_label["fg"] == "red":
+        email_label.config(fg="black")
 
+    selected_item: str = treeview_db.focus()
+    if selected_item:
+        if not name:
+            name_label.config(fg="red")
+
+            print(Fore.YELLOW + "INFO: Please enter the customer name.")
+            app.withdraw()
+            showinfo(
+                title=f"SRM Fashion {__version__}",
+                message="Please enter the customer name.",
+            )
+            app.deiconify()
+            return None
+
+        if not phone:
+            phone_label.config(fg="red")
+
+            print(Fore.YELLOW + "INFO: Please enter the customer mobile number.")
+            app.withdraw()
+            showinfo(
+                title=f"SRM Fashion {__version__}",
+                message="Please enter the customer mobile number.",
+            )
+            app.deiconify()
+            return None
+
+        try:
+            number_object = parse(number=phone)
+            phone: str = format_number(
+                numobj=number_object, num_format=PhoneNumberFormat.INTERNATIONAL
+            )
+
+        except NumberParseException as number_parse_exception:
+            phone_label.config(fg="red")
+
+            print(
+                Fore.RED
+                + f"ERROR: {number_parse_exception} Use with country codes. eg. +1-XXX-XXX-XXXX"
+            )
+            app.withdraw()
+            showinfo(
+                title=f"SRM Fashion {__version__}",
+                message=f"{number_parse_exception} Use with country codes. eg. +1-XXX-XXX-XXXX",
+            )
+            app.deiconify()
+            return None
+
+        if not is_valid_number(numobj=number_object):
+            phone_label.config(fg="red")
+
+            print(Fore.RED + "INFO: Please enter the correct mobil number.")
+            app.withdraw()
+            showinfo(
+                title=f"SRM Fashion {__version__}",
+                message="Please enter the correct mobile number.",
+            )
+            app.deiconify()
+            return None
+
+        for _ in treeview_db.get_children():
+            if _ != selected_item and treeview_db.item(_).get("values")[1] == phone:
+                phone_label.config(fg="red")
+
+                print(Fore.YELLOW + f"INFO: {phone} This contact already exist!!")
+                app.withdraw()
+                showinfo(
+                    title=f"SRM Fashion {__version__}",
+                    message=f"{phone} This contact already exist!!",
+                )
+                app.deiconify()
+                return None
+
+        if email != "":
+            split_email = email.split(sep="@")
+            if len(split_email) == 2:
+                if not len(split_email[0]) or not len(split_email[1]):
+                    email_label.config(fg="red")
+
+                    print(Fore.RED + "INFO: Invalid email address, Please try again...")
                     app.withdraw()
                     showinfo(
                         title=f"SRM Fashion {__version__}",
-                        message=f"{phone} This contact already exist!!",
+                        message="Invalid email address, Please try again...",
                     )
                     app.deiconify()
                     return None
 
-            selected_id: str = treeview_db.item(selected_item).get("values")[1]
-            c.execute(
-                f"""UPDATE Customers SET Name = '{name}', Phone = '{phone}', Email = '{email}', DOB = '{dob}', 
-                Gender = '{gender}' WHERE Phone = '{selected_id}'"""
-            )
-            conn.commit()
+            else:
+                email_label.config(fg="red")
 
-            customer_data: list = [name, phone, email, dob, gender]
-            treeview_db.item(selected_item, values=customer_data)
+                print(Fore.RED + "INFO: Invalid email address, Please try again...")
+                app.withdraw()
+                showinfo(
+                    title=f"SRM Fashion {__version__}",
+                    message="Invalid email address, Try again...",
+                )
+                app.deiconify()
+                return None
 
-            name_entry.delete(first=0, last="end")
-            phone_entry.delete(first=0, last="end")
-            email_entry.delete(first=0, last="end")
-            dob_entry.delete(first=0, last="end")
-            gender_var.set(gender_options[0])
+        selected_id: str = treeview_db.item(selected_item).get("values")[1]
+        c.execute(
+            f"""UPDATE Customers SET Name = '{name}', Phone = '{phone}', Email = '{email}', DOB = '{dob}', 
+            Gender = '{gender}' WHERE Phone = '{selected_id}'"""
+        )
+        conn.commit()
 
-            name_entry.focus()
+        customer_data: list = [name, phone, email, dob, gender]
+        treeview_db.item(selected_item, values=customer_data)
 
-            update_button.config(state="disabled")
+        clear_entry()
 
-            return None
+        print(Fore.GREEN + "INFO: Database updated successfully...")
+        app.withdraw()
+        showinfo(
+            title=f"SRM Fashion {__version__}",
+            message="Database updated successfully...",
+        )
+        app.deiconify()
+
+    else:
+        print(Fore.YELLOW + f"INFO: Please select a customer record!")
+        app.withdraw()
+        showinfo(
+            title=f"SRM Fashion {__version__}",
+            message="Please select a customer record!",
+        )
+        app.deiconify()
+
+
+def clear_entry() -> None:
+    if name_label["fg"] == "red":
+        name_label.config(fg="black")
+
+    if phone_label["fg"] == "red":
+        phone_label.config(fg="black")
+
+    if email_label["fg"] == "red":
+        email_label.config(fg="black")
+
+    name_entry.delete(first=0, last="end")
+    phone_entry.delete(first=0, last="end")
+    email_entry.delete(first=0, last="end")
+    dob_entry.delete(first=0, last="end")
+    gender_var.set(gender_options[0])
+
+    name_entry.focus()
 
 
 try:
@@ -354,7 +430,7 @@ try:
     print("INFO: Initializing colorama...")
     init(autoreset=True)
 
-    __version__: str = "v.20220713"
+    __version__: str = "v.20220714"
     total_orders: int = 0
     base_path: str = split(p=__file__)[0]
     database_path: str = join(base_path, "customers.db")
@@ -490,6 +566,8 @@ try:
     treeview_db.column(column=3, width=100, minwidth=100, anchor="center")
     treeview_db.column(column=4, width=80, minwidth=80, anchor="w")
 
+    treeview_db.bind(sequence="<Double-1>", func=lambda event: fetch_records())
+
     treeview_db.pack(padx=15, pady=5)
 
     delete_button: Button = Button(
@@ -503,18 +581,6 @@ try:
     )
     delete_button.bind(sequence="<Return>", func=lambda event: delete_record())
     delete_button.pack(side="right", padx=10, pady=5)
-
-    edit_button: Button = Button(
-        master=customer_labelframe_1,
-        text="Edit Record",
-        bg="orange",
-        fg="white",
-        state="disabled",
-        width=10,
-        command=edit_record,
-    )
-    edit_button.bind(sequence="<Return>", func=lambda event: edit_record())
-    edit_button.pack(side="right", padx=10, pady=5)
 
     Label(master=customers_frame, text="or", bg="lightsteelblue2").pack()
 
@@ -579,19 +645,22 @@ try:
     phone_entry.bind(sequence="<Return>", func=lambda event: email_entry.focus())
     email_entry.bind(sequence="<Return>", func=lambda event: dob_entry.focus())
 
-    save_button: Button = Button(
-        master=customer_labelframe_2,
-        text="Save",
-        bg="red",
+    buttons_frame: Frame = Frame(master=customer_labelframe_2, bg="lightsteelblue2")
+    buttons_frame.pack(padx=5, pady=10, side="right")
+
+    clear_button: Button = Button(
+        master=buttons_frame,
+        text="Clear",
+        bg="orange",
         fg="white",
         width=10,
-        command=save_entry,
+        command=clear_entry,
     )
-    save_button.bind(sequence="<Return>", func=lambda event: save_entry())
-    save_button.pack(padx=10, pady=10, side="right")
+    clear_button.bind(sequence="<Return>", func=lambda event: clear_entry())
+    clear_button.pack(padx=5, side="right")
 
     update_button: Button = Button(
-        master=customer_labelframe_2,
+        master=buttons_frame,
         text="Update",
         bg="green",
         fg="white",
@@ -600,7 +669,18 @@ try:
         command=update_entry,
     )
     update_button.bind(sequence="<Return>", func=lambda event: update_entry())
-    update_button.pack(padx=5, pady=10, side="right")
+    update_button.pack(padx=5, side="right")
+
+    save_button: Button = Button(
+        master=buttons_frame,
+        text="Create new",
+        bg="red",
+        fg="white",
+        width=10,
+        command=create_entry,
+    )
+    save_button.bind(sequence="<Return>", func=lambda event: create_entry())
+    save_button.pack(padx=5, side="right")
 
     customer_labelframe: LabelFrame = LabelFrame(
         master=customers_frame, text="Select Customer", fg="red", bg="lightsteelblue2"
@@ -644,8 +724,8 @@ try:
 
     if total_customers:
         total_customer_label.config(text=f"{total_customers} customer(s) found!")
-        edit_button.config(state="normal")
         delete_button.config(state="normal")
+        update_button.config(state="normal")
 
     else:
         total_customer_label.config(text="No customer(s) found!")
