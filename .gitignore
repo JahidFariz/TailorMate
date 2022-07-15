@@ -4,3 +4,4 @@ dist/*
 venv/*
 customers.db
 TailorMate.spec
+*.old
