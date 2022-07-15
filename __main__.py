@@ -283,9 +283,7 @@ def clear_entry() -> None:
 
 try:
     from getpass import getuser
-    from os import system as terminal
     from os.path import isdir, isfile, join, split
-    from platform import system as os_env
     from shutil import rmtree
     from sqlite3 import IntegrityError, connect
     from sys import exit as terminate
@@ -333,6 +331,8 @@ try:
     app.resizable(width=False, height=False)
     app.title(string=f"SRM Fashion {__version__}")
     app.protocol(name="WM_DELETE_WINDOW", func=exit_app)
+    app.bind(sequence="<Control-Q>", func=lambda event: exit_app())
+    app.bind(sequence="<Control-q>", func=lambda event: exit_app())
     app.bind(sequence="<Escape>", func=lambda event: exit_app())
     app.config(bg="lightsteelblue2")
 
