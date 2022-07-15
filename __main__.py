@@ -186,14 +186,19 @@ def create_entry() -> None:
 
     clear_entry()
 
-    showinfo(title=f"SRM Fashion {__version__}", message="Database appended successfully...")
+    showinfo(
+        title=f"SRM Fashion {__version__}", message="Database appended successfully..."
+    )
 
 
 def update_entry() -> None:
     selected_item: str = treeview_db.focus()
 
     if not selected_item:
-        showinfo(title=f"SRM Fashion {__version__}", message="Please select a customer record!")
+        showinfo(
+            title=f"SRM Fashion {__version__}",
+            message="Please select a customer record!",
+        )
         return None
 
     name: str | None = validate_name()
@@ -233,14 +238,19 @@ def update_entry() -> None:
 
     clear_entry()
 
-    showinfo(title=f"SRM Fashion {__version__}", message="Database updated successfully...")
+    showinfo(
+        title=f"SRM Fashion {__version__}", message="Database updated successfully..."
+    )
 
 
 def delete_entry() -> None:
     selected_item: str = treeview_db.focus()
 
     if not selected_item:
-        showinfo(title=f"SRM Fashion {__version__}", message="Please select a customer record!")
+        showinfo(
+            title=f"SRM Fashion {__version__}",
+            message="Please select a customer record!",
+        )
         return None
 
     selected_id: str = treeview_db.item(selected_item).get("values")[1]
@@ -251,7 +261,9 @@ def delete_entry() -> None:
 
     clear_entry()
 
-    showinfo(title=f"SRM Fashion {__version__}", message="1 row deleted successfully...")
+    showinfo(
+        title=f"SRM Fashion {__version__}", message="1 row deleted successfully..."
+    )
 
 
 def clear_entry() -> None:
@@ -530,7 +542,13 @@ try:
     clear_data.pack(padx=5, side="right")
 
     delete_button: Button = Button(
-        master=f22, text="Delete", bg="red", fg="white", state="disabled", width=10, command=delete_entry
+        master=f22,
+        text="Delete",
+        bg="red",
+        fg="white",
+        state="disabled",
+        width=10,
+        command=delete_entry,
     )
     delete_button.bind(sequence="<Return>", func=lambda event: delete_entry())
     delete_button.pack(padx=5, side="right")
