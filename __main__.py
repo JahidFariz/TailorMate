@@ -21,7 +21,9 @@ def search_record():
         update_database()
         return None
 
-    c.execute(f"select * from customers where name like '%{search}%' or email like '%{search}%'")
+    c.execute(
+        f"select * from customers where name like '%{search}%' or email like '%{search}%'"
+    )
     total_records = c.fetchall()
 
     if not total_records:
@@ -339,11 +341,12 @@ try:
     from phonenumbers import format_number, is_valid_number, parse
     from phonenumbers.phonenumberutil import NumberParseException
 
-    __version__: str = "v.20220716"
+    __version__: str = "v.20220717"
     total_orders: int = 0
     base_path: str = split(p=__file__)[0]
     database_path: str = join(base_path, "customers.db")
     cache_file_path: str = join(base_path, "__pycache__")
+    accent_color_light: str = "lightsteelblue2"
 
     conn = connect(database=database_path)
     c = conn.cursor()
@@ -366,7 +369,7 @@ try:
     app.bind(sequence="<Control-Q>", func=lambda event: exit_app())
     app.bind(sequence="<Control-q>", func=lambda event: exit_app())
     app.bind(sequence="<Escape>", func=lambda event: exit_app())
-    app.config(bg="lightsteelblue2")
+    app.config(bg=accent_color_light)
 
     search_var: StringVar = StringVar()
     name_var: StringVar = StringVar()
@@ -385,10 +388,10 @@ try:
     tab_view: Notebook = Notebook(master=app)
     tab_view.pack(fill="both", expand=True)
 
-    orders_frame: Frame = Frame(master=tab_view, bg="lightsteelblue2")
+    orders_frame: Frame = Frame(master=tab_view, bg=accent_color_light)
     orders_frame.pack()
 
-    customers_frame: Frame = Frame(master=tab_view, bg="lightsteelblue2")
+    customers_frame: Frame = Frame(master=tab_view, bg=accent_color_light)
     customers_frame.pack()
 
     tab_view.add(child=orders_frame, text="Orders")
@@ -399,7 +402,7 @@ try:
         master=orders_frame,
         text="Order List",
         font=("Times New Roman", 23, "underline"),
-        bg="lightsteelblue2",
+        bg=accent_color_light,
     ).pack(pady=10)
 
     if total_orders == 0:
@@ -407,11 +410,11 @@ try:
             master=orders_frame,
             text="You have zero orders!",
             fg="red",
-            bg="lightsteelblue2",
+            bg=accent_color_light,
         ).pack()
 
     lf1: LabelFrame = LabelFrame(
-        master=orders_frame, text="Add Order", fg="red", bg="lightsteelblue2"
+        master=orders_frame, text="Add Order", fg="red", bg=accent_color_light
     )
     lf1.pack(side="bottom", padx=10, ipady=3, pady=5, fill="x")
 
@@ -442,7 +445,7 @@ try:
         master=customers_frame,
         text="Customer Database",
         fg="red",
-        bg="lightsteelblue2",
+        bg=accent_color_light,
     )
     lf21.pack(padx=10, pady=5, ipady=3, fill="both", expand=1)
 
@@ -450,7 +453,7 @@ try:
         master=customers_frame,
         text="Customer Lookup",
         fg="red",
-        bg="lightsteelblue2",
+        bg=accent_color_light,
     )
     lf22.pack(padx=10, pady=5, ipady=6, fill="both", expand=1)
 
@@ -458,12 +461,12 @@ try:
         master=customers_frame,
         text="Customer Data",
         fg="red",
-        bg="lightsteelblue2",
+        bg=accent_color_light,
     )
     lf23.pack(padx=10, pady=5, ipady=3, fill="both", expand=1)
 
     lf24: LabelFrame = LabelFrame(
-        master=customers_frame, text="Select Customer", fg="red", bg="lightsteelblue2"
+        master=customers_frame, text="Select Customer", fg="red", bg=accent_color_light
     )
     lf24.pack(side="bottom", padx=5, pady=5, ipady=3, fill="both", expand=1)
 
@@ -490,11 +493,11 @@ try:
     treeview_db.bind(sequence="<Delete>", func=lambda event: delete_entry())
     treeview_db.pack(padx=15, pady=5)
 
-    total_customers_label: Label = Label(master=lf21, fg="red", bg="lightsteelblue2")
+    total_customers_label: Label = Label(master=lf21, fg="red", bg=accent_color_light)
     total_customers_label.pack()
 
     # Customer tab, Search section
-    Label(master=lf22, text="Search:", bg="lightsteelblue2").pack(side="left", padx=10)
+    Label(master=lf22, text="Search:", bg=accent_color_light).pack(side="left", padx=10)
     search_entry: Entry = Entry(master=lf22, textvariable=search_var)
     search_entry.bind(sequence="<Return>", func=lambda event: search_record())
     search_entry.pack(side="left", padx=20)
@@ -517,24 +520,26 @@ try:
     search_button.pack(side="right", padx=15)
 
     # Customer tab, data entry section
-    f21: Frame = Frame(master=lf23, bg="lightsteelblue2")
+    f21: Frame = Frame(master=lf23, bg=accent_color_light)
     f21.pack(padx=10, pady=5)
 
     name_label: Label = Label(
         master=f21,
         text="Enter Customer Name:",
-        bg="lightsteelblue2",
+        bg=accent_color_light,
     )
     name_label.grid(row=0, column=0, padx=5, sticky="w")
     name_entry: Entry = Entry(master=f21, width=25, textvariable=name_var)
     name_entry.grid(row=0, column=1, padx=5)
 
-    phone_label: Label = Label(master=f21, text="Contact Number:", bg="lightsteelblue2")
+    phone_label: Label = Label(master=f21, text="Contact Number:", bg=accent_color_light)
     phone_label.grid(row=1, column=0, sticky="w")
     phone_entry: Entry = Entry(master=f21, width=25, textvariable=phone_var)
     phone_entry.grid(row=1, column=1)
 
-    email_label: Label = Label(master=f21, text="Email (Optional):", bg="lightsteelblue2")
+    email_label: Label = Label(
+        master=f21, text="Email (Optional):", bg=accent_color_light
+    )
     email_label.grid(row=2, column=0, sticky="w")
     email_entry: Entry = Entry(master=f21, width=25, textvariable=email_var)
     email_entry.grid(row=2, column=1)
@@ -542,12 +547,12 @@ try:
     Label(
         master=f21,
         text="Date of Birth (Optional):",
-        bg="lightsteelblue2",
+        bg=accent_color_light,
     ).grid(row=3, column=0, sticky="w")
     dob_entry: Entry = Entry(f21, width=25, textvariable=dob_var)
     dob_entry.grid(row=3, column=1)
 
-    Label(master=f21, text="Gender:", bg="lightsteelblue2").grid(
+    Label(master=f21, text="Gender:", bg=accent_color_light).grid(
         row=4, column=0, sticky="w"
     )
     gender_options: list = ["Female", "Male", "Other"]
@@ -561,7 +566,7 @@ try:
     email_entry.bind(sequence="<Return>", func=lambda event: dob_entry.focus())
 
     # customer tab data button section
-    f22: Frame = Frame(master=lf23, bg="lightsteelblue2")
+    f22: Frame = Frame(master=lf23, bg=accent_color_light)
     f22.pack(padx=5, pady=10, side="right")
 
     clear_data: Button = Button(
