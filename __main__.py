@@ -305,13 +305,19 @@ def delete_entry() -> None:
 
 
 def clear_entry() -> None:
-    name_label.config(fg="black")
-    phone_label.config(fg="black")
-    email_label.config(fg="black")
+    update_database()
 
+    search_entry.delete(first=0, last="end")
+
+    name_label.config(fg="black")
     name_entry.delete(first=0, last="end")
+
+    phone_label.config(fg="black")
     phone_entry.delete(first=0, last="end")
+
+    email_label.config(fg="black")
     email_entry.delete(first=0, last="end")
+
     dob_entry.delete(first=0, last="end")
 
     gender_var.set(gender_options[0])
