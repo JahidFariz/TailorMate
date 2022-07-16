@@ -14,8 +14,35 @@ def exit_app() -> None:
     terminate()
 
 
+def search_record():
+    search: str = search_var.get().strip()
+
+    if not search:
+        update_database()
+        return None
+
+    c.execute(f"select * from customers where name like '%{search}%' or email like '%{search}%'")
+    total_records = c.fetchall()
+
+    if not total_records:
+        showinfo(title=f"SRM Fashion {__version__}", message="No records found!")
+        return None
+
+    treeview_db.delete(*treeview_db.get_children())
+    total_customers_label.config(text="No customer(s) found!")
+
+    for _ in total_records:
+        treeview_db.insert(parent="", index="end", values=_)
+
+    total_customers: int = len(treeview_db.get_children())
+    total_customers_label.config(text=f"{total_customers} customer(s) found!")
+
+
 def fetch_data() -> None:
-    customer_data = treeview_db.item(item=treeview_db.focus()).get("values")
+    customer_data: list = treeview_db.item(item=treeview_db.focus()).get("values")
+
+    if not customer_data:
+        return None
 
     clear_entry()
 
@@ -37,12 +64,17 @@ def fetch_data() -> None:
 def update_database() -> None:
     treeview_db.delete(*treeview_db.get_children())
 
-    c.execute("select * from customers")
+    total_customers_label.config(text="No customer(s) found!")
 
+    search_button.config(state="disabled")
+    delete_button.config(state="disabled")
+    update_button.config(state="disabled")
+
+    c.execute("select * from customers")
     for _ in c.fetchall():
         treeview_db.insert(parent="", index="end", values=_)
 
-    total_customers = len(treeview_db.get_children())
+    total_customers: int = len(treeview_db.get_children())
 
     if total_customers:
         total_customers_label.config(text=f"{total_customers} customer(s) found!")
@@ -51,16 +83,10 @@ def update_database() -> None:
         delete_button.config(state="normal")
         update_button.config(state="normal")
 
-    else:
-        total_customers_label.config(text="No customer(s) found!")
-
-        search_button.config(state="disabled")
-        delete_button.config(state="disabled")
-        update_button.config(state="disabled")
-
 
 def validate_name() -> (str | None):
     name_label.config(fg="black")
+
     name: str = name_var.get().strip().title()
 
     if not name:
@@ -78,6 +104,7 @@ def validate_name() -> (str | None):
 
 def validate_phone() -> (str | None):
     phone_label.config(fg="black")
+
     phone: str = phone_var.get().strip()
 
     if not phone:
@@ -91,7 +118,6 @@ def validate_phone() -> (str | None):
 
     try:
         number_object = parse(number=phone)
-        phone: str = format_number(numobj=number_object, num_format=1)
 
     except NumberParseException as number_parse_exception:
         phone_label.config(fg="red")
@@ -113,11 +139,13 @@ def validate_phone() -> (str | None):
         )
         return None
 
+    phone: str = format_number(numobj=number_object, num_format=1)
     return phone
 
 
 def validate_email() -> (str | None):
     email_label.config(fg="black")
+
     email: str = email_var.get().strip().lower()
 
     if email:
@@ -166,9 +194,10 @@ def create_entry() -> None:
 
     try:
         c.execute(
-            f"""insert into customers values (
-            '{name}', '{phone}', '{email}', '{dob}', '{gender}'
-            )"""
+            """insert into customers values (
+            ?, ?, ?, ?, ?
+            )""",
+            (name, phone, email, dob, gender),
         )
 
     except IntegrityError as integrity_error:
@@ -220,7 +249,8 @@ def update_entry() -> None:
 
     try:
         c.execute(
-            f"""update customers set name = '{name}', phone = '{phone}', email = '{email}', dob = '{dob}', gender = '{gender}' where phone = '{selected_id}'"""
+            f"""update customers set name = ?, phone = ?, email = ?, dob = ?, gender = ? where phone = ?""",
+            (name, phone, email, dob, gender, selected_id),
         )
 
     except IntegrityError as integrity_error:
@@ -253,6 +283,12 @@ def delete_entry() -> None:
         )
         return None
 
+    if not askyesno(
+        title=f"SRM Fashion {__version__}",
+        message="Are you sure? Do you want to delete the selected record?",
+    ):
+        return None
+
     selected_id: str = treeview_db.item(selected_item).get("values")[1]
 
     c.execute(f"""delete from customers where phone = '{selected_id}'""")
@@ -262,7 +298,7 @@ def delete_entry() -> None:
     clear_entry()
 
     showinfo(
-        title=f"SRM Fashion {__version__}", message="1 row deleted successfully..."
+        title=f"SRM Fashion {__version__}", message="1 record deleted successfully..."
     )
 
 
@@ -283,7 +319,7 @@ def clear_entry() -> None:
 
 try:
     from getpass import getuser
-    from os.path import isdir, isfile, join, split
+    from os.path import isdir, join, split
     from shutil import rmtree
     from sqlite3 import IntegrityError, connect
     from sys import exit as terminate
@@ -309,23 +345,19 @@ try:
     database_path: str = join(base_path, "customers.db")
     cache_file_path: str = join(base_path, "__pycache__")
 
-    if not isfile(path=database_path):
-        conn = connect(database=database_path)
-        c = conn.cursor()
-        c.execute(
-            """create table customers (
-            name text not null,
-            phone text not null primary key,
-            email text,
-            dob text,
-            gender text not null
-        )"""
-        )
-        conn.commit()
-        conn.close()
-
     conn = connect(database=database_path)
     c = conn.cursor()
+    c.execute(
+        """create table if not exists
+        customers (
+        name text not null,
+        phone text not null primary key,
+        email text,
+        dob text,
+        gender text not null
+        )"""
+    )
+    conn.commit()
 
     app: Tk = Tk()
     app.resizable(width=False, height=False)
@@ -366,7 +398,7 @@ try:
     Label(
         master=orders_frame,
         text="Order List",
-        font=("Times New Roman", 22, "underline"),
+        font=("Times New Roman", 23, "underline"),
         bg="lightsteelblue2",
     ).pack(pady=10)
 
@@ -408,7 +440,7 @@ try:
     # Customers tab
     lf21: LabelFrame = LabelFrame(
         master=customers_frame,
-        text="Customer Lookup",
+        text="Customer Database",
         fg="red",
         bg="lightsteelblue2",
     )
@@ -416,11 +448,11 @@ try:
 
     lf22: LabelFrame = LabelFrame(
         master=customers_frame,
-        text="Search",
+        text="Customer Lookup",
         fg="red",
         bg="lightsteelblue2",
     )
-    lf22.pack(padx=10, pady=5, ipady=3, fill="both", expand=1)
+    lf22.pack(padx=10, pady=5, ipady=6, fill="both", expand=1)
 
     lf23: LabelFrame = LabelFrame(
         master=customers_frame,
@@ -455,33 +487,36 @@ try:
     treeview_db.column(column=4, width=80, minwidth=80, anchor="w")
 
     treeview_db.bind(sequence="<Double-1>", func=lambda event: fetch_data())
+    treeview_db.bind(sequence="<Delete>", func=lambda event: delete_entry())
     treeview_db.pack(padx=15, pady=5)
 
     total_customers_label: Label = Label(master=lf21, fg="red", bg="lightsteelblue2")
     total_customers_label.pack()
 
     # Customer tab, Search section
-    Label(master=lf22, text="Search", bg="lightsteelblue2").pack(
-        side="left", padx=5, pady=5
-    )
-    Entry(master=lf22, textvariable=search_var).pack(side="left", padx=5, pady=5)
+    Label(master=lf22, text="Search:", bg="lightsteelblue2").pack(side="left", padx=10)
+    search_entry: Entry = Entry(master=lf22, textvariable=search_var)
+    search_entry.bind(sequence="<Return>", func=lambda event: search_record())
+    search_entry.pack(side="left", padx=20)
+
+    # clear_search: Button = Button(
+    #     master=lf22, text="Clear", width=10, bg="black", fg="white",
+    # )
+    # clear_search.grid(row=0, column=2, padx=5)
 
     search_button: Button = Button(
         master=lf22,
         text="Search",
-        bg="green",
+        bg="red",
         fg="white",
         state="disabled",
         width=10,
+        command=search_record,
     )
-    search_button.pack(side="right", padx=5, pady=5)
+    search_button.bind(sequence="<Return>", func=lambda event: search_record())
+    search_button.pack(side="right", padx=15)
 
-    clear_search: Button = Button(
-        master=lf22, text="Clear", width=10, bg="orange", fg="white"
-    )
-    clear_search.pack(side="right", padx=5, pady=5)
-
-    # Customer tab, data section
+    # Customer tab, data entry section
     f21: Frame = Frame(master=lf23, bg="lightsteelblue2")
     f21.pack(padx=10, pady=5)
 
@@ -499,9 +534,7 @@ try:
     phone_entry: Entry = Entry(master=f21, width=25, textvariable=phone_var)
     phone_entry.grid(row=1, column=1)
 
-    email_label: Label = Label(
-        master=f21, text="Email (Optional):", bg="lightsteelblue2"
-    )
+    email_label: Label = Label(master=f21, text="Email (Optional):", bg="lightsteelblue2")
     email_label.grid(row=2, column=0, sticky="w")
     email_entry: Entry = Entry(master=f21, width=25, textvariable=email_var)
     email_entry.grid(row=2, column=1)
@@ -527,6 +560,7 @@ try:
     phone_entry.bind(sequence="<Return>", func=lambda event: email_entry.focus())
     email_entry.bind(sequence="<Return>", func=lambda event: dob_entry.focus())
 
+    # customer tab data button section
     f22: Frame = Frame(master=lf23, bg="lightsteelblue2")
     f22.pack(padx=5, pady=10, side="right")
 
@@ -567,7 +601,7 @@ try:
 
     create_button: Button = Button(
         master=f22,
-        text="Create new",
+        text="Create New",
         bg="green",
         fg="white",
         width=10,
