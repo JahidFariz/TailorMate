@@ -538,7 +538,9 @@ try:
     name_entry: Entry = Entry(master=f21, width=25, textvariable=name_var)
     name_entry.grid(row=0, column=1, padx=5)
 
-    phone_label: Label = Label(master=f21, text="Contact Number:", bg=accent_color_light)
+    phone_label: Label = Label(
+        master=f21, text="Contact Number:", bg=accent_color_light
+    )
     phone_label.grid(row=1, column=0, sticky="w")
     phone_entry: Entry = Entry(master=f21, width=25, textvariable=phone_var)
     phone_entry.grid(row=1, column=1)
