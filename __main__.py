@@ -15,6 +15,9 @@ def exit_app() -> None:
 
 
 def search_record():
+    if not treeview_db.get_children():
+        return None
+
     search: str = search_var.get().strip()
 
     if not search:
@@ -41,10 +44,10 @@ def search_record():
 
 
 def fetch_data() -> None:
-    customer_data: list = treeview_db.item(item=treeview_db.focus()).get("values")
-
-    if not customer_data:
+    if not treeview_db.get_children():
         return None
+
+    customer_data: list = treeview_db.item(item=treeview_db.focus()).get("values")
 
     clear_entry()
 
@@ -276,6 +279,9 @@ def update_entry() -> None:
 
 
 def delete_entry() -> None:
+    if not treeview_db.get_children():
+        return None
+
     selected_item: str = treeview_db.focus()
 
     if not selected_item:
