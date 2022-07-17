@@ -36,7 +36,16 @@ if [ -f "./TailorMate.spec" ]; then
 	rm -f -v TailorMate.spec;
 	echo;
 fi
+if [ -f "/opt/TailorMate/TailorMate" ]; then
+	sudo rm -r -v /opt/TailorMate;
+	echo;
+fi
 if [ -f "./dist/TailorMate/TailorMate" ]; then
-	./dist/TailorMate/TailorMate;
+	chmod +x ./dist/TailorMate/TailorMate;
+	sudo cp -r -v ./dist/TailorMate/ /opt/TailorMate/;
+	echo;
+fi
+if [ -f "/opt/TailorMate/TailorMate" ]; then
+	/opt/TailorMate/TailorMate;
 fi
 exit;

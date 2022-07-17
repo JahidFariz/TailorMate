@@ -17,13 +17,21 @@ def exit_app() -> None:
 def search_record():
     search: str = search_var.get().strip()
 
-    clear_entry()
+    name_label.config(fg="black")
+    phone_label.config(fg="black")
+    email_label.config(fg="black")
+
+    name_entry.delete(first=0, last="end")
+    phone_entry.delete(first=0, last="end")
+    email_entry.delete(first=0, last="end")
+    dob_entry.delete(first=0, last="end")
+    gender_var.set(value=gender_options[0])
 
     if not search:
         update_database()
         return None
 
-    total_records: int = 0
+    total_records: list = list()
 
     try:
         number_object = parse(number=search)
@@ -60,14 +68,12 @@ def fetch_data() -> None:
     customer_data: list = treeview_db.item(item=treeview_db.focus()).get("values")
 
     name_label.config(fg="black")
-    name_var.set(value=customer_data[0])
-
     phone_label.config(fg="black")
-    phone_var.set(value=customer_data[1])
-
     email_label.config(fg="black")
-    email_var.set(value=customer_data[2])
 
+    name_var.set(value=customer_data[0])
+    phone_var.set(value=customer_data[1])
+    email_var.set(value=customer_data[2])
     dob_var.set(value=customer_data[3])
 
     if customer_data[4] == gender_options[0]:
@@ -106,7 +112,6 @@ def update_database() -> None:
 
 
 def validate_name() -> (str | None):
-    name_label.config(fg="black")
     name: str = name_var.get().strip().title()
 
     if not name:
@@ -123,7 +128,6 @@ def validate_name() -> (str | None):
 
 
 def validate_phone() -> (str | None):
-    phone_label.config(fg="black")
     phone: str = phone_var.get().strip()
 
     if not phone:
@@ -164,7 +168,6 @@ def validate_phone() -> (str | None):
 
 
 def validate_email() -> (str | None):
-    email_label.config(fg="black")
     email: str = email_var.get().strip().lower()
 
     if email:
@@ -196,6 +199,10 @@ def validate_email() -> (str | None):
 
 
 def create_entry() -> None:
+    name_label.config(fg="black")
+    phone_label.config(fg="black")
+    email_label.config(fg="black")
+
     name: str | None = validate_name()
     if name is None:
         return None
@@ -232,7 +239,13 @@ def create_entry() -> None:
     conn.commit()
     update_database()
 
-    clear_entry()
+    name_entry.delete(first=0, last="end")
+    phone_entry.delete(first=0, last="end")
+    email_entry.delete(first=0, last="end")
+    dob_entry.delete(first=0, last="end")
+    gender_var.set(value=gender_options[0])
+
+    name_entry.focus()
 
     showinfo(
         title=f"SRM Fashion {__version__}", message="Database appended successfully..."
@@ -240,6 +253,10 @@ def create_entry() -> None:
 
 
 def update_entry() -> None:
+    name_label.config(fg="black")
+    phone_label.config(fg="black")
+    email_label.config(fg="black")
+
     selected_item: str = treeview_db.focus()
 
     if not selected_item:
@@ -285,7 +302,13 @@ def update_entry() -> None:
     conn.commit()
     update_database()
 
-    clear_entry()
+    name_entry.delete(first=0, last="end")
+    phone_entry.delete(first=0, last="end")
+    email_entry.delete(first=0, last="end")
+    dob_entry.delete(first=0, last="end")
+    gender_var.set(value=gender_options[0])
+
+    name_entry.focus()
 
     showinfo(
         title=f"SRM Fashion {__version__}", message="Database updated successfully..."
@@ -295,6 +318,10 @@ def update_entry() -> None:
 def delete_entry() -> None:
     if not treeview_db.get_children():
         return None
+
+    name_label.config(fg="black")
+    phone_label.config(fg="black")
+    email_label.config(fg="black")
 
     selected_item: str = treeview_db.focus()
 
@@ -317,7 +344,11 @@ def delete_entry() -> None:
     conn.commit()
     update_database()
 
-    clear_entry()
+    name_entry.delete(first=0, last="end")
+    phone_entry.delete(first=0, last="end")
+    email_entry.delete(first=0, last="end")
+    dob_entry.delete(first=0, last="end")
+    gender_var.set(value=gender_options[0])
 
     showinfo(
         title=f"SRM Fashion {__version__}", message="1 record deleted successfully..."
@@ -327,7 +358,7 @@ def delete_entry() -> None:
 def clear_entry() -> None:
     update_database()
 
-    # search_entry.delete(first=0, last="end")
+    search_entry.delete(first=0, last="end")
 
     name_label.config(fg="black")
     name_entry.delete(first=0, last="end")
@@ -342,14 +373,14 @@ def clear_entry() -> None:
 
     gender_var.set(gender_options[0])
 
-    # name_entry.focus()
+    name_entry.focus()
 
 
 try:
     from getpass import getuser
     from os.path import isdir, join, split
     from shutil import rmtree
-    from sqlite3 import IntegrityError, connect
+    from sqlite3 import IntegrityError, OperationalError, connect
     from sys import exit as terminate
     from tkinter import (
         Button,
@@ -374,19 +405,24 @@ try:
     cache_file_path: str = join(base_path, "__pycache__")
     accent_color_light: str = "lightsteelblue2"
 
-    conn = connect(database=database_path)
-    c = conn.cursor()
-    c.execute(
-        """create table if not exists
-        customers (
-        name text not null,
-        phone text not null primary key,
-        email text,
-        dob text,
-        gender text not null
-        )"""
-    )
-    conn.commit()
+    try:
+        conn = connect(database=database_path)
+        c = conn.cursor()
+        c.execute(
+            """create table if not exists
+            customers (
+            name text not null,
+            phone text not null primary key,
+            email text,
+            dob text,
+            gender text not null
+            )"""
+        )
+        conn.commit()
+
+    except OperationalError as operational_error:
+        print(f"ERROR: {operational_error}")
+        terminate()
 
     app: Tk = Tk()
     app.resizable(width=False, height=False)
