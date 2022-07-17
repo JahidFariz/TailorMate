@@ -71,6 +71,7 @@ def update_database() -> None:
 
     total_customers_label.config(text="No customer(s) found!")
 
+    search_entry.config(state="disabled")
     search_button.config(state="disabled")
     delete_button.config(state="disabled")
     update_button.config(state="disabled")
@@ -84,6 +85,7 @@ def update_database() -> None:
     if total_customers:
         total_customers_label.config(text=f"{total_customers} customer(s) found!")
 
+        search_entry.config(state="normal")
         search_button.config(state="normal")
         delete_button.config(state="normal")
         update_button.config(state="normal")
@@ -91,7 +93,6 @@ def update_database() -> None:
 
 def validate_name() -> (str | None):
     name_label.config(fg="black")
-
     name: str = name_var.get().strip().title()
 
     if not name:
@@ -109,7 +110,6 @@ def validate_name() -> (str | None):
 
 def validate_phone() -> (str | None):
     phone_label.config(fg="black")
-
     phone: str = phone_var.get().strip()
 
     if not phone:
@@ -134,6 +134,8 @@ def validate_phone() -> (str | None):
         )
         return None
 
+    phone: str = format_number(numobj=number_object, num_format=1)
+
     if not is_valid_number(numobj=number_object):
         phone_label.config(fg="red")
         phone_entry.focus()
@@ -144,13 +146,11 @@ def validate_phone() -> (str | None):
         )
         return None
 
-    phone: str = format_number(numobj=number_object, num_format=1)
     return phone
 
 
 def validate_email() -> (str | None):
     email_label.config(fg="black")
-
     email: str = email_var.get().strip().lower()
 
     if email:
@@ -279,9 +279,6 @@ def update_entry() -> None:
 
 
 def delete_entry() -> None:
-    if not treeview_db.get_children():
-        return None
-
     selected_item: str = treeview_db.focus()
 
     if not selected_item:
@@ -428,7 +425,7 @@ try:
     lf1: LabelFrame = LabelFrame(
         master=orders_frame, text="Add Order", fg="red", bg=accent_color_light
     )
-    lf1.pack(side="bottom", padx=10, ipady=3, pady=5, fill="x")
+    lf1.pack(side="bottom", padx=10, ipady=3, pady=10, fill="x")
 
     order_button: Button = Button(
         master=lf1,
@@ -480,7 +477,7 @@ try:
     lf24: LabelFrame = LabelFrame(
         master=customers_frame, text="Select Customer", fg="red", bg=accent_color_light
     )
-    lf24.pack(side="bottom", padx=5, pady=5, ipady=3, fill="both", expand=1)
+    lf24.pack(side="bottom", padx=10, pady=10, ipady=3, fill="x")
 
     # Customer tab, Treeview section
     header_list: list = ["Name", "Phone", "Email", "D.O.B", "Gender"]
@@ -503,21 +500,17 @@ try:
 
     treeview_db.bind(sequence="<Double-1>", func=lambda event: fetch_data())
     treeview_db.bind(sequence="<Delete>", func=lambda event: delete_entry())
-    treeview_db.pack(padx=15, pady=5)
+
+    treeview_db.pack(padx=15, pady=5, fill="both", expand=1)
 
     total_customers_label: Label = Label(master=lf21, fg="red", bg=accent_color_light)
-    total_customers_label.pack()
+    total_customers_label.pack(pady=5)
 
     # Customer tab, Search section
     Label(master=lf22, text="Search:", bg=accent_color_light).pack(side="left", padx=10)
     search_entry: Entry = Entry(master=lf22, textvariable=search_var)
     search_entry.bind(sequence="<Return>", func=lambda event: search_record())
     search_entry.pack(side="left", padx=20)
-
-    # clear_search: Button = Button(
-    #     master=lf22, text="Clear", width=10, bg="black", fg="white",
-    # )
-    # clear_search.grid(row=0, column=2, padx=5)
 
     search_button: Button = Button(
         master=lf22,
@@ -533,7 +526,7 @@ try:
 
     # Customer tab, data entry section
     f21: Frame = Frame(master=lf23, bg=accent_color_light)
-    f21.pack(padx=10, pady=5)
+    f21.pack(padx=10, pady=5, expand=1)
 
     name_label: Label = Label(
         master=f21,
@@ -581,7 +574,7 @@ try:
 
     # customer tab data button section
     f22: Frame = Frame(master=lf23, bg=accent_color_light)
-    f22.pack(padx=5, pady=10, side="right")
+    f22.pack(padx=10, pady=5, ipady=3, side="right", fill="both", expand=1)
 
     clear_data: Button = Button(
         master=f22,
