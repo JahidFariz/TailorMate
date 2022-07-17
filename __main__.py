@@ -293,6 +293,9 @@ def update_entry() -> None:
 
 
 def delete_entry() -> None:
+    if not treeview_db.get_children():
+        return None
+
     selected_item: str = treeview_db.focus()
 
     if not selected_item:

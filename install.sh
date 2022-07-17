@@ -36,7 +36,7 @@ if [ -f "./TailorMate.spec" ]; then
 	rm -f -v TailorMate.spec;
 	echo;
 fi
-if [-f "./dist/TailorMate/TailorMate" ]; then
+if [ -f "./dist/TailorMate/TailorMate" ]; then
 	./dist/TailorMate/TailorMate;
 fi
 exit;
