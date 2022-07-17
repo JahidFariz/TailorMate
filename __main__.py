@@ -487,6 +487,12 @@ try:
     if total_orders == 0:
         Label(
             master=orders_frame,
+            text="#JusticeForSrimathi,  #Kallakurichi",
+            bg="red",
+        ).pack(fill="x")
+
+        Label(
+            master=orders_frame,
             text="You have zero orders!",
             fg="red",
             bg=accent_color_light,
