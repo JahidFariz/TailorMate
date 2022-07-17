@@ -49,11 +49,15 @@ def fetch_data() -> None:
 
     customer_data: list = treeview_db.item(item=treeview_db.focus()).get("values")
 
-    clear_entry()
-
+    name_label.config(fg="black")
     name_var.set(value=customer_data[0])
+
+    phone_label.config(fg="black")
     phone_var.set(value=customer_data[1])
+
+    email_label.config(fg="black")
     email_var.set(value=customer_data[2])
+
     dob_var.set(value=customer_data[3])
 
     if customer_data[4] == gender_options[0]:
