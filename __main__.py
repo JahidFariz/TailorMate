@@ -48,6 +48,7 @@ def search_record():
         total_records = c.fetchall()
 
     if not total_records:
+        print(Fore.RED + "INFO: No records found!")
         showinfo(title=f"SRM Fashion {__version__}", message="No records found!")
         return None
 
@@ -118,6 +119,7 @@ def validate_name() -> (str | None):
         name_label.config(fg="red")
         name_entry.focus()
 
+        print(Fore.RED + "INFO: Please enter the customer name.")
         showinfo(
             title=f"SRM Fashion {__version__}",
             message="Please enter the customer name.",
@@ -134,6 +136,7 @@ def validate_phone() -> (str | None):
         phone_label.config(fg="red")
         phone_entry.focus()
 
+        print(Fore.RED + "Please enter the phone number.")
         showinfo(
             title=f"SRM Fashion {__version__}", message="Please enter the phone number."
         )
@@ -146,6 +149,7 @@ def validate_phone() -> (str | None):
         phone_label.config(fg="red")
         phone_entry.focus()
 
+        print(Fore.RED + str(number_parse_exception))
         showinfo(
             title=f"SRM Fashion {__version__}",
             message=str(number_parse_exception),
@@ -158,6 +162,7 @@ def validate_phone() -> (str | None):
         phone_label.config(fg="red")
         phone_entry.focus()
 
+        print(Fore.RED + "Please enter the correct mobile number.")
         showinfo(
             title=f"SRM Fashion {__version__}",
             message="Please enter the correct mobile number.",
@@ -179,6 +184,7 @@ def validate_email() -> (str | None):
                 email_label.config(fg="red")
                 email_entry.focus()
 
+                print(Fore.RED + "INFO: Invalid email address, Please try again...")
                 showinfo(
                     title=f"SRM Fashion {__version__}",
                     message="Invalid email address, Please try again...",
@@ -189,6 +195,7 @@ def validate_email() -> (str | None):
             email_label.config(fg="red")
             email_entry.focus()
 
+            print(Fore.RED + "INFO: Invalid email address, Please try again...")
             showinfo(
                 title=f"SRM Fashion {__version__}",
                 message="Invalid email address, Please try again...",
@@ -230,6 +237,7 @@ def create_entry() -> None:
         phone_label.config(fg="red")
         phone_entry.focus()
 
+        print(Fore.RED + "INFO: This mobile number already exists.")
         showinfo(
             title=f"SRM Fashion {__version__}",
             message=f"{integrity_error}\n{phone} This mobile number already exist.",
@@ -247,6 +255,7 @@ def create_entry() -> None:
 
     name_entry.focus()
 
+    print(Fore.GREEN + "Database appended successfully...")
     showinfo(
         title=f"SRM Fashion {__version__}", message="Database appended successfully..."
     )
@@ -260,6 +269,7 @@ def update_entry() -> None:
     selected_item: str = treeview_db.focus()
 
     if not selected_item:
+        print(Fore.RED + "INFO: Please select a customer record!")
         showinfo(
             title=f"SRM Fashion {__version__}",
             message="Please select a customer record!",
@@ -293,6 +303,7 @@ def update_entry() -> None:
         phone_label.config(fg="red")
         phone_entry.focus()
 
+        print(Fore.RED + "INFO: This mobile number already exists.")
         showinfo(
             title=f"SRM Fashion {__version__}",
             message=f"{integrity_error}\n{phone} This mobile number already exist.",
@@ -310,6 +321,7 @@ def update_entry() -> None:
 
     name_entry.focus()
 
+    print(Fore.GREEN + "INFO: Database updated successfully...")
     showinfo(
         title=f"SRM Fashion {__version__}", message="Database updated successfully..."
     )
@@ -326,6 +338,7 @@ def delete_entry() -> None:
     selected_item: str = treeview_db.focus()
 
     if not selected_item:
+        print(Fore.RED + "INFO: Please select a customer record!")
         showinfo(
             title=f"SRM Fashion {__version__}",
             message="Please select a customer record!",
@@ -350,6 +363,7 @@ def delete_entry() -> None:
     dob_entry.delete(first=0, last="end")
     gender_var.set(value=gender_options[0])
 
+    print(Fore.GREEN + "INFO: 1 record deleted successfully...")
     showinfo(
         title=f"SRM Fashion {__version__}", message="1 record deleted successfully..."
     )
@@ -397,6 +411,8 @@ try:
 
     from phonenumbers import format_number, is_valid_number, parse
     from phonenumbers.phonenumberutil import NumberParseException
+    from colorama import init
+    from colorama import Fore
 
     __version__: str = "v.20220717"
     total_orders: int = 0
@@ -404,6 +420,7 @@ try:
     database_path: str = join(base_path, "customers.db")
     cache_file_path: str = join(base_path, "__pycache__")
     accent_color_light: str = "lightsteelblue2"
+    init(autoreset=True)
 
     try:
         conn = connect(database=database_path)
@@ -421,9 +438,10 @@ try:
         conn.commit()
 
     except OperationalError as operational_error:
-        print(f"ERROR: {operational_error}")
+        print(Fore.RED + f"ERROR: {operational_error}")
         terminate()
 
+    print(Fore.GREEN + "INFO: Creating GUI application...")
     app: Tk = Tk()
     app.resizable(width=False, height=False)
     app.title(string=f"SRM Fashion {__version__}")
