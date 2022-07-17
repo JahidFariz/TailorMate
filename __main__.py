@@ -15,9 +15,6 @@ def exit_app() -> None:
 
 
 def search_record():
-    if not treeview_db.get_children():
-        return None
-
     search: str = search_var.get().strip()
 
     if not search:
