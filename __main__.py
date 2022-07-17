@@ -413,7 +413,7 @@ try:
     from phonenumbers import format_number, is_valid_number, parse
     from phonenumbers.phonenumberutil import NumberParseException
 
-    __version__: str = "v.20220717"
+    __version__: str = "v.20220718"
     total_orders: int = 0
     base_path: str = split(p=__file__)[0]
     database_path: str = join(base_path, "customers.db")
