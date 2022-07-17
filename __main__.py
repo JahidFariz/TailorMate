@@ -136,7 +136,7 @@ def validate_phone() -> (str | None):
         phone_label.config(fg="red")
         phone_entry.focus()
 
-        print(Fore.RED + "Please enter the phone number.")
+        print(Fore.RED + "INFO: Please enter the phone number.")
         showinfo(
             title=f"SRM Fashion {__version__}", message="Please enter the phone number."
         )
@@ -149,7 +149,7 @@ def validate_phone() -> (str | None):
         phone_label.config(fg="red")
         phone_entry.focus()
 
-        print(Fore.RED + str(number_parse_exception))
+        print(Fore.RED + f"ERROR: {number_parse_exception}")
         showinfo(
             title=f"SRM Fashion {__version__}",
             message=str(number_parse_exception),
@@ -162,7 +162,7 @@ def validate_phone() -> (str | None):
         phone_label.config(fg="red")
         phone_entry.focus()
 
-        print(Fore.RED + "Please enter the correct mobile number.")
+        print(Fore.RED + "INFO: Please enter the correct mobile number.")
         showinfo(
             title=f"SRM Fashion {__version__}",
             message="Please enter the correct mobile number.",
@@ -255,7 +255,7 @@ def create_entry() -> None:
 
     name_entry.focus()
 
-    print(Fore.GREEN + "Database appended successfully...")
+    print(Fore.GREEN + "INFO: Database appended successfully...")
     showinfo(
         title=f"SRM Fashion {__version__}", message="Database appended successfully..."
     )
@@ -409,10 +409,9 @@ try:
     from tkinter.messagebox import askyesno, showinfo
     from tkinter.ttk import Notebook, Treeview
 
+    from colorama import Fore, init
     from phonenumbers import format_number, is_valid_number, parse
     from phonenumbers.phonenumberutil import NumberParseException
-    from colorama import init
-    from colorama import Fore
 
     __version__: str = "v.20220717"
     total_orders: int = 0
