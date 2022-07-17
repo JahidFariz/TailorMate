@@ -28,8 +28,15 @@ if [ -f "./__main__.py" ]; then
     echo;
 fi
 deactivate;
-rm -r -v build
-rm -f -v TailorMate.spec
-echo;
-./dist/TailorMate/TailorMate;
+if [ -d "./build" ]; then
+	rm -r -v build;
+	echo;
+fi
+if [ -f "./TailorMate.spec" ]; then
+	rm -f -v TailorMate.spec;
+	echo;
+fi
+if [-f "./dist/TailorMate/TailorMate" ]; then
+	./dist/TailorMate/TailorMate;
+fi
 exit;
