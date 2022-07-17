@@ -17,14 +17,27 @@ def exit_app() -> None:
 def search_record():
     search: str = search_var.get().strip()
 
+    clear_entry()
+
     if not search:
         update_database()
         return None
 
-    c.execute(
-        f"select * from customers where name like '%{search}%' or email like '%{search}%'"
-    )
-    total_records = c.fetchall()
+    total_records: int = 0
+
+    try:
+        number_object = parse(number=search)
+        search: str = format_number(numobj=number_object, num_format=1)
+
+        if is_valid_number(numobj=number_object):
+            c.execute(f"select * from customers where phone like '%{search}%'")
+            total_records = c.fetchall()
+
+    except NumberParseException:
+        c.execute(
+            f"select * from customers where name like '%{search}%' or email like '%{search}%'"
+        )
+        total_records = c.fetchall()
 
     if not total_records:
         showinfo(title=f"SRM Fashion {__version__}", message="No records found!")
@@ -311,7 +324,7 @@ def delete_entry() -> None:
 def clear_entry() -> None:
     update_database()
 
-    search_entry.delete(first=0, last="end")
+    # search_entry.delete(first=0, last="end")
 
     name_label.config(fg="black")
     name_entry.delete(first=0, last="end")
@@ -326,7 +339,7 @@ def clear_entry() -> None:
 
     gender_var.set(gender_options[0])
 
-    name_entry.focus()
+    # name_entry.focus()
 
 
 try:
