@@ -4,6 +4,12 @@ Free and open source app for tailoring shop and boutique to manage order, measur
 
 TailorMate app is is CRM (Customer Relationship Management) and order management solution designed for Tailoring shops and Boutiques.
 
+Now you can get rid of your old paper-based registers. Let us go digital, by impressing your customers with the new digital order management system, you will get a lot of new business. Be ahead of your competitors.
+
+## Features
+
+* Create, modify or delete customers with Name, Phone, Email, Date of Bitrh, etc.
+
 ## Gallery
 
 ![Order Managements](https://raw.githubusercontent.com/JahidFariz/TailorMate/main/gallery/1.png)

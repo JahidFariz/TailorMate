@@ -13,6 +13,13 @@ def exit_app() -> None:
         rmtree(path=cache_file_path)
 
     print(Fore.RED + "Bye...")
+
+    if os_env() == "Linux":
+        terminal(command="clear")
+
+    if os_env() == "Windows":
+        terminal(command="cls")
+
     terminate()
 
 
@@ -410,7 +417,7 @@ def clear_entry() -> None:
 
 try:
     print("INFO: Importing built-in modules...")
-    from datetime import datetime
+    from datetime import date, datetime
     from getpass import getuser
     from os import system as terminal
     from os.path import isdir, join, split
@@ -447,7 +454,7 @@ try:
     print("INFO: Initializing colorama...")
     init(autoreset=True)
 
-    __version__: str = "v.20220718 (alpha)"
+    __version__: str = "v.20220719 (alpha)"
     total_orders: int = 0
     accent_color_light: str = "lightsteelblue2"
 
@@ -709,7 +716,9 @@ try:
         date_pattern="dd/mm/yyyy",
         showweeknumbers=False,
         showothermonthdays=False,
-        year=today.year,
+        maxdate=date(year=today.year, month=today.month, day=today.day - 1),
+        mindate=date(year=today.year - 100, month=today.month, day=today.day),
+        year=today.year - 18,
         month=today.month,
         background="#212946",
     )
