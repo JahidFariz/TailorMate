@@ -530,6 +530,9 @@ try:
         elif today.month == 3 and today.day == 8:
             msg: str = "Today is International Women's Day."
 
+        elif today.month == 5 and today.day == 1:
+            msg: str = "Today is International Worker's Day."
+
         elif today.month == 6 and today.day == 14:
             msg: str = "Today is World Blood Donor Day."
 
