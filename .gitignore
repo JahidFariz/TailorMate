@@ -1,7 +1,10 @@
+.git/*
 .idea/*
+archive/*
 build/*
 dist/*
 venv/*
 customers.db
 TailorMate.spec
+*pycharm.*
 *.old

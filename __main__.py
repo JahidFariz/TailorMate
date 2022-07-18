@@ -9,8 +9,10 @@ def exit_app() -> None:
     app.destroy()
 
     if isdir(s=cache_file_path):
+        print(Fore.GREEN + "INFO: Cleaning cache files, Please wait...")
         rmtree(path=cache_file_path)
 
+    print(Fore.RED + "Bye...")
     terminate()
 
 
@@ -24,7 +26,8 @@ def search_record():
     name_entry.delete(first=0, last="end")
     phone_entry.delete(first=0, last="end")
     email_entry.delete(first=0, last="end")
-    dob_entry.delete(first=0, last="end")
+    day_selection.selection_set(date=today)
+    day_selection.selection_clear()
     gender_var.set(value=gender_options[0])
 
     if not search:
@@ -62,11 +65,16 @@ def search_record():
     total_customers_label.config(text=f"{total_customers} customer(s) found!")
 
 
-def fetch_data() -> None:
-    if not treeview_db.get_children():
-        return None
+def clear_date():
+    day_selection.selection_set(today)
+    day_selection.selection_clear()
 
+
+def fetch_data() -> None:
     customer_data: list = treeview_db.item(item=treeview_db.focus()).get("values")
+
+    if not customer_data:
+        return None
 
     name_label.config(fg="black")
     phone_label.config(fg="black")
@@ -75,7 +83,13 @@ def fetch_data() -> None:
     name_var.set(value=customer_data[0])
     phone_var.set(value=customer_data[1])
     email_var.set(value=customer_data[2])
-    dob_var.set(value=customer_data[3])
+
+    try:
+        day_selection.selection_set(date=customer_data[3])
+
+    except ValueError:
+        day_selection.selection_set(date=today)
+        day_selection.selection_clear()
 
     if customer_data[4] == gender_options[0]:
         gender_var.set(value=gender_options[0])
@@ -222,7 +236,7 @@ def create_entry() -> None:
     if email is None:
         return None
 
-    dob: str = dob_var.get().strip()
+    dob: str = day_selection.get_date()
     gender: str = gender_var.get()
 
     try:
@@ -250,7 +264,8 @@ def create_entry() -> None:
     name_entry.delete(first=0, last="end")
     phone_entry.delete(first=0, last="end")
     email_entry.delete(first=0, last="end")
-    dob_entry.delete(first=0, last="end")
+    day_selection.selection_set(date=today)
+    day_selection.selection_clear()
     gender_var.set(value=gender_options[0])
 
     name_entry.focus()
@@ -288,7 +303,7 @@ def update_entry() -> None:
     if email is None:
         return None
 
-    dob: str = dob_var.get().strip()
+    dob: str = day_selection.get_date()
     gender: str = gender_var.get()
 
     selected_id: str = treeview_db.item(selected_item).get("values")[1]
@@ -316,7 +331,8 @@ def update_entry() -> None:
     name_entry.delete(first=0, last="end")
     phone_entry.delete(first=0, last="end")
     email_entry.delete(first=0, last="end")
-    dob_entry.delete(first=0, last="end")
+    day_selection.selection_set(date=today)
+    day_selection.selection_clear()
     gender_var.set(value=gender_options[0])
 
     name_entry.focus()
@@ -360,7 +376,8 @@ def delete_entry() -> None:
     name_entry.delete(first=0, last="end")
     phone_entry.delete(first=0, last="end")
     email_entry.delete(first=0, last="end")
-    dob_entry.delete(first=0, last="end")
+    day_selection.selection_set(date=today)
+    day_selection.selection_clear()
     gender_var.set(value=gender_options[0])
 
     print(Fore.GREEN + "INFO: 1 record deleted successfully...")
@@ -383,7 +400,8 @@ def clear_entry() -> None:
     email_label.config(fg="black")
     email_entry.delete(first=0, last="end")
 
-    dob_entry.delete(first=0, last="end")
+    day_selection.selection_set(date=today)
+    day_selection.selection_clear()
 
     gender_var.set(gender_options[0])
 
@@ -391,11 +409,14 @@ def clear_entry() -> None:
 
 
 try:
+    print("INFO: Importing built-in modules...")
+    from datetime import datetime
     from getpass import getuser
     from os.path import isdir, join, split
     from shutil import rmtree
     from sqlite3 import IntegrityError, OperationalError, connect
     from sys import exit as terminate
+    from time import time
     from tkinter import (
         Button,
         Entry,
@@ -409,19 +430,27 @@ try:
     from tkinter.messagebox import askyesno, showinfo
     from tkinter.ttk import Notebook, Treeview
 
-    from colorama import Fore, init
-    from phonenumbers import format_number, is_valid_number, parse
-    from phonenumbers.phonenumberutil import NumberParseException
-
-    __version__: str = "v.20220718"
-    total_orders: int = 0
+    today: datetime = datetime.today()
     base_path: str = split(p=__file__)[0]
     database_path: str = join(base_path, "customers.db")
     cache_file_path: str = join(base_path, "__pycache__")
-    accent_color_light: str = "lightsteelblue2"
+    start_time: float = time()
+
+    print("INFO: Importing third-party modules...")
+    from colorama import Fore, init
+    from phonenumbers import format_number, is_valid_number, parse
+    from phonenumbers.phonenumberutil import NumberParseException
+    from tkcalendar import Calendar
+
+    print("INFO: Initializing colorama...")
     init(autoreset=True)
 
+    __version__: str = "v.20220718 (alpha)"
+    total_orders: int = 0
+    accent_color_light: str = "lightsteelblue2"
+
     try:
+        print(Fore.GREEN + "INFO: Reading database file...")
         conn = connect(database=database_path)
         c = conn.cursor()
         c.execute(
@@ -454,7 +483,6 @@ try:
     name_var: StringVar = StringVar()
     phone_var: StringVar = StringVar()
     email_var: StringVar = StringVar()
-    dob_var: StringVar = StringVar()
     gender_var: StringVar = StringVar()
 
     Label(
@@ -485,9 +513,40 @@ try:
     ).pack(pady=10)
 
     if total_orders == 0:
+        if today.month == 1 and today.day == 1:
+            msg: str = "New Year's Day."
+
+        elif today.month == 2 and today.day == 14:
+            msg: str = "Happy Valentine's Day."
+
+        elif today.month == 3 and today.day == 8:
+            msg: str = "Today is International Women's Day."
+
+        elif today.month == 6 and today.day == 14:
+            msg: str = "Today is World Blood Donor Day."
+
+        elif today.month == 6 and today.day == 19:
+            msg: str = "Happy Father's Day."
+
+        elif today.month == 10 and today.day == 5:
+            msg: str = "Today is Fariz's Birthday *(developer of Sales-Predictor)"
+
+        elif today.month == 12 and today.day == 1:
+            msg: str = "Today is World AIDS Day."
+
+        elif today.month == 12 and today.day == 25:
+            msg: str = "Merry Christmas."
+
+        elif today.month == 12 and today.day == 31:
+            msg: str = "Happy New Year's Eve"
+
+        else:
+            msg: str = "#JusticeForSrimathi,  #Kallakurichi"
+
+        print(Fore.RED + msg)
         Label(
             master=orders_frame,
-            text="#JusticeForSrimathi,  #Kallakurichi",
+            text=msg,
             bg="red",
         ).pack(fill="x")
 
@@ -544,7 +603,7 @@ try:
 
     lf23: LabelFrame = LabelFrame(
         master=customers_frame,
-        text="Customer Data",
+        text="Customer Details",
         fg="red",
         bg=accent_color_light,
     )
@@ -568,10 +627,10 @@ try:
     for _ in header_list:
         treeview_db.heading(column=_, text=_)
 
-    treeview_db.column(column=0, width=130, minwidth=130, anchor="w")
+    treeview_db.column(column=0, width=150, minwidth=150, anchor="w")
     treeview_db.column(column=1, width=130, minwidth=130, anchor="center")
     treeview_db.column(column=2, width=225, minwidth=225, anchor="w")
-    treeview_db.column(column=3, width=100, minwidth=100, anchor="center")
+    treeview_db.column(column=3, width=80, minwidth=80, anchor="center")
     treeview_db.column(column=4, width=80, minwidth=80, anchor="w")
 
     treeview_db.bind(sequence="<Double-1>", func=lambda event: fetch_data())
@@ -584,9 +643,9 @@ try:
 
     # Customer tab, Search section
     Label(master=lf22, text="Search:", bg=accent_color_light).pack(side="left", padx=10)
-    search_entry: Entry = Entry(master=lf22, textvariable=search_var)
+    search_entry: Entry = Entry(master=lf22, textvariable=search_var, width=25)
     search_entry.bind(sequence="<Return>", func=lambda event: search_record())
-    search_entry.pack(side="left", padx=20)
+    search_entry.pack(side="left", padx=25)
 
     search_button: Button = Button(
         master=lf22,
@@ -609,31 +668,45 @@ try:
         text="Enter Customer Name:",
         bg=accent_color_light,
     )
-    name_label.grid(row=0, column=0, padx=5, sticky="w")
-    name_entry: Entry = Entry(master=f21, width=25, textvariable=name_var)
+    name_label.grid(row=0, column=0, sticky="w")
+    name_entry: Entry = Entry(master=f21, width=30, textvariable=name_var)
     name_entry.grid(row=0, column=1, padx=5)
 
     phone_label: Label = Label(
         master=f21, text="Contact Number:", bg=accent_color_light
     )
     phone_label.grid(row=1, column=0, sticky="w")
-    phone_entry: Entry = Entry(master=f21, width=25, textvariable=phone_var)
-    phone_entry.grid(row=1, column=1)
+    phone_entry: Entry = Entry(master=f21, width=30, textvariable=phone_var)
+    phone_entry.grid(row=1, column=1, padx=5)
 
     email_label: Label = Label(
         master=f21, text="Email (Optional):", bg=accent_color_light
     )
     email_label.grid(row=2, column=0, sticky="w")
-    email_entry: Entry = Entry(master=f21, width=25, textvariable=email_var)
-    email_entry.grid(row=2, column=1)
+    email_entry: Entry = Entry(master=f21, width=30, textvariable=email_var)
+    email_entry.grid(row=2, column=1, padx=5)
 
     Label(
         master=f21,
-        text="Date of Birth (Optional):",
+        text=f"Date of Birth (Optional):",
         bg=accent_color_light,
     ).grid(row=3, column=0, sticky="w")
-    dob_entry: Entry = Entry(f21, width=25, textvariable=dob_var)
-    dob_entry.grid(row=3, column=1)
+    # ERROR: No module named 'babel.numbers'
+    day_selection: Calendar = Calendar(
+        master=f21,
+        selectmode="day",
+        year=today.year,
+        month=today.month,
+        background="#212946",
+    )
+    day_selection.selection_clear()
+    day_selection.grid(row=3, column=1, padx=5, pady=5)
+
+    clear_date_button: Button = Button(
+        master=f21, text="Clear Date", fg="white", bg="red", width=10, command=clear_date
+    )
+    clear_date_button.bind(sequence="<Return>", func=lambda event: clear_date())
+    clear_date_button.grid(row=3, column=2, padx=5, sticky="e")
 
     Label(master=f21, text="Gender:", bg=accent_color_light).grid(
         row=4, column=0, sticky="w"
@@ -646,7 +719,6 @@ try:
 
     name_entry.bind(sequence="<Return>", func=lambda event: phone_entry.focus())
     phone_entry.bind(sequence="<Return>", func=lambda event: email_entry.focus())
-    email_entry.bind(sequence="<Return>", func=lambda event: dob_entry.focus())
 
     # customer tab data button section
     f22: Frame = Frame(master=lf23, bg=accent_color_light)
@@ -726,6 +798,15 @@ try:
         bg="black",
         fg="white",
     ).pack(side="bottom", fill="x")
+
+    boot_time_label: Label = Label(master=app, bg=accent_color_light)
+    boot_time_label.pack(side="right", fill="x", padx=5)
+
+    end_time: float = time()
+    elapsed_time = end_time - start_time
+
+    if elapsed_time < 1:
+        boot_time_label.config(text=f"Booting Time: {round(elapsed_time * 1000, 2)} millisecond(s)")
 
     update_database()
 
