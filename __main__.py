@@ -412,7 +412,9 @@ try:
     print("INFO: Importing built-in modules...")
     from datetime import datetime
     from getpass import getuser
+    from os import system as terminal
     from os.path import isdir, join, split
+    from platform import system as os_env
     from shutil import rmtree
     from sqlite3 import IntegrityError, OperationalError, connect
     from sys import exit as terminate
@@ -468,6 +470,12 @@ try:
     except OperationalError as operational_error:
         print(Fore.RED + f"ERROR: {operational_error}")
         terminate()
+
+    if os_env() == "Linux":
+        terminal(command="xtitle -q -t SRM Fashion")
+
+    if os_env() == "Windows":
+        terminal(command="title SRM Fashion")
 
     print(Fore.GREEN + "INFO: Creating GUI application...")
     app: Tk = Tk()
@@ -630,7 +638,7 @@ try:
     treeview_db.column(column=0, width=150, minwidth=150, anchor="w")
     treeview_db.column(column=1, width=130, minwidth=130, anchor="center")
     treeview_db.column(column=2, width=225, minwidth=225, anchor="w")
-    treeview_db.column(column=3, width=80, minwidth=80, anchor="center")
+    treeview_db.column(column=3, width=100, minwidth=100, anchor="center")
     treeview_db.column(column=4, width=80, minwidth=80, anchor="w")
 
     treeview_db.bind(sequence="<Double-1>", func=lambda event: fetch_data())
@@ -665,26 +673,26 @@ try:
 
     name_label: Label = Label(
         master=f21,
-        text="Enter Customer Name:",
+        text="Customer Name:",
         bg=accent_color_light,
     )
     name_label.grid(row=0, column=0, sticky="w")
     name_entry: Entry = Entry(master=f21, width=30, textvariable=name_var)
-    name_entry.grid(row=0, column=1, padx=5)
+    name_entry.grid(row=0, column=1, padx=5, sticky="w")
 
     phone_label: Label = Label(
         master=f21, text="Contact Number:", bg=accent_color_light
     )
     phone_label.grid(row=1, column=0, sticky="w")
     phone_entry: Entry = Entry(master=f21, width=30, textvariable=phone_var)
-    phone_entry.grid(row=1, column=1, padx=5)
+    phone_entry.grid(row=1, column=1, padx=5, sticky="w")
 
     email_label: Label = Label(
-        master=f21, text="Email (Optional):", bg=accent_color_light
+        master=f21, text="Email Address (Optional):", bg=accent_color_light
     )
     email_label.grid(row=2, column=0, sticky="w")
     email_entry: Entry = Entry(master=f21, width=30, textvariable=email_var)
-    email_entry.grid(row=2, column=1, padx=5)
+    email_entry.grid(row=2, column=1, padx=5, sticky="w")
 
     Label(
         master=f21,
@@ -695,6 +703,9 @@ try:
     day_selection: Calendar = Calendar(
         master=f21,
         selectmode="day",
+        date_pattern="dd/mm/yyyy",
+        showweeknumbers=False,
+        showothermonthdays=False,
         year=today.year,
         month=today.month,
         background="#212946",
@@ -703,10 +714,15 @@ try:
     day_selection.grid(row=3, column=1, padx=5, pady=5)
 
     clear_date_button: Button = Button(
-        master=f21, text="Clear Date", fg="white", bg="red", width=10, command=clear_date
+        master=f21,
+        text="Clear Date",
+        fg="white",
+        bg="red",
+        width=10,
+        command=clear_date,
     )
     clear_date_button.bind(sequence="<Return>", func=lambda event: clear_date())
-    clear_date_button.grid(row=3, column=2, padx=5, sticky="e")
+    clear_date_button.grid(row=3, column=2, padx=5, sticky="w")
 
     Label(master=f21, text="Gender:", bg=accent_color_light).grid(
         row=4, column=0, sticky="w"
@@ -714,7 +730,7 @@ try:
     gender_options: list = ["Female", "Male", "Other"]
     gender_var.set(value=gender_options[0])
     OptionMenu(f21, gender_var, *gender_options).grid(
-        row=4, column=1, sticky="w", padx=5
+        row=4, column=1, padx=5, sticky="w"
     )
 
     name_entry.bind(sequence="<Return>", func=lambda event: phone_entry.focus())
@@ -794,7 +810,7 @@ try:
 
     Label(
         master=app,
-        text="Created by FOSS Kingdom | made with Love in Incredible India.",
+        text="Created by FOSS Kingdom | Made with Love in Incredible India.",
         bg="black",
         fg="white",
     ).pack(side="bottom", fill="x")
@@ -806,7 +822,17 @@ try:
     elapsed_time = end_time - start_time
 
     if elapsed_time < 1:
-        boot_time_label.config(text=f"Booting Time: {round(elapsed_time * 1000, 2)} millisecond(s)")
+        print(
+            Fore.GREEN
+            + f"INFO: Booting Time: {round(elapsed_time * 1000, 2)} millisecond(s)"
+        )
+        boot_time_label.config(
+            text=f"Booting Time: {round(elapsed_time * 1000, 2)} millisecond(s)"
+        )
+
+    else:
+        print(Fore.GREEN + f"INFO: Booting Time: {elapsed_time} second(s)")
+        boot_time_label.config(text=f"Booting Time {elapsed_time} second(s)")
 
     update_database()
 
