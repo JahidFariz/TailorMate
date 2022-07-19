@@ -7,6 +7,6 @@ private/*
 venv/*
 customers.db
 TailorMate.spec
-*pycharm.*
+*pycharm*.*
 *.old
-*test.py
+*test*.py

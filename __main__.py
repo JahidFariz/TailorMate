@@ -23,6 +23,13 @@ def exit_app() -> None:
     terminate()
 
 
+def pstat():
+    cpu: float = cpu_percent()
+    mem = virtual_memory().percent
+    pstat_label.config(text=f"CPU: {cpu}% | MEM {mem}%")
+    pstat_label.after(ms=1000, func=pstat)
+
+
 def search_record():
     search: str = search_var.get().strip()
 
@@ -433,6 +440,7 @@ try:
     print("INFO: Importing built-in modules...")
     from datetime import date, datetime
     from getpass import getuser
+    from os import getuid
     from os import system as terminal
     from os.path import isdir, join, split
     from platform import system as os_env
@@ -455,7 +463,10 @@ try:
     from tkinter.messagebox import askyesno, showinfo
     from tkinter.ttk import Notebook, Treeview
 
+    from psutil import cpu_percent, virtual_memory
+
     today: datetime = datetime.today()
+    pid: int = getuid()
     base_path: str = split(p=__file__)[0]
     database_path: str = join(base_path, "customers.db")
     cache_file_path: str = join(base_path, "__pycache__")
@@ -480,7 +491,7 @@ try:
             + "Created by FOSS Kingdom, Made with Love in Incredible India.\n"
         )
 
-    __version__: str = "v.20220719 (alpha)"
+    __version__: str = "v.20220720 (alpha)"
     total_orders: int = 0
     accent_color_light: str = "lightsteelblue2"
 
@@ -526,6 +537,7 @@ try:
     email_var: StringVar = StringVar()
     gender_var: StringVar = StringVar()
 
+    print(Fore.RED + f"Hello {getuser().title()}, Welcome to SRM Fashion!")
     Label(
         master=app,
         text=f"Hello {getuser().title()}, Welcome to SRM Fashion!",
@@ -688,7 +700,6 @@ try:
     treeview_db.bind(sequence="<Delete>", func=lambda event: delete_entry())
 
     treeview_scroll.config(command=treeview_db.yview)
-
     treeview_db.pack(fill="both", expand=1)
 
     total_customers_label: Label = Label(master=lf21, fg="red", bg=accent_color_light)
@@ -696,7 +707,9 @@ try:
 
     # Customer tab, Search section
     Label(master=lf22, text="Search:", bg=accent_color_light).pack(side="left", padx=10)
-    search_entry: Entry = Entry(master=lf22, textvariable=search_var, width=25)
+    search_entry: Entry = Entry(
+        master=lf22, textvariable=search_var, width=25, state="disabled"
+    )
     search_entry.bind(sequence="<Return>", func=lambda event: search_record())
     search_entry.pack(side="left", padx=25)
 
@@ -855,15 +868,21 @@ try:
     exit_button.bind(sequence="<Return>", func=lambda event: exit_app())
     exit_button.grid(row=0, column=1, padx=5)
 
+    print(Fore.RED + "Created by FOSS Kingdom | Made with Love in Incredible India.")
     Label(
         master=app,
-        text="Created by FOSS Kingdom | Made with Love in Incredible India.",
+        text="Created by FOSS Kingdom, Made with Love in Incredible India.",
         bg="black",
         fg="white",
     ).pack(side="bottom", fill="x")
 
+    pstat_label: Label = Label(master=app, bg=accent_color_light)
+    pstat_label.pack(side="left", fill="x", padx=10)
+
     boot_time_label: Label = Label(master=app, bg=accent_color_light)
-    boot_time_label.pack(side="right", fill="x", padx=5)
+    boot_time_label.pack(side="right", fill="x", padx=10)
+
+    pstat()
 
     end_time: float = time()
     elapsed_time = end_time - start_time
