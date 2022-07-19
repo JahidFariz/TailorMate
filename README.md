@@ -12,6 +12,8 @@ Now you can get rid of your old paper-based registers. Let us go digital, by imp
 
 ## Gallery
 
-![Order Managements](https://raw.githubusercontent.com/JahidFariz/TailorMate/main/gallery/1.png)
+![Commad Line Interface](https://raw.githubusercontent.com/JahidFariz/TailorMate/main/gallery/cli.png)
 
-![Customer Relationship Management](https://raw.githubusercontent.com/JahidFariz/TailorMate/main/gallery/2.png)
+![Order Managements](https://raw.githubusercontent.com/JahidFariz/TailorMate/main/gallery/gui1.png)
+
+![Customer Relationship Management](https://raw.githubusercontent.com/JahidFariz/TailorMate/main/gallery/gui2.png)
