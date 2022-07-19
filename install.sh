@@ -24,7 +24,8 @@ if [ -f "./__main__.py" ]; then
 	python3 -m isort ./__main__.py;
 	python3 -m black ./__main__.py;
 	echo;
-    pyinstaller __main__.py -n="TailorMate" --hidden-import="babel.numbers" -Dy;
+    pyinstaller __main__.py -n="TailorMate" --hidden-import="babel.numbers" --hidden-import="pyfiglet.fonts" \
+    --add-data="./venv/lib/python3.*/site-packages/pyfiglet/fonts/*:./pyfiglet/fonts/" -Dy;
     echo;
 fi
 deactivate;

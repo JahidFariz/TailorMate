@@ -3,8 +3,10 @@
 archive/*
 build/*
 dist/*
+private/*
 venv/*
 customers.db
 TailorMate.spec
 *pycharm.*
 *.old
+*test.py

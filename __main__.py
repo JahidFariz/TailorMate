@@ -33,7 +33,9 @@ def search_record():
     name_entry.delete(first=0, last="end")
     phone_entry.delete(first=0, last="end")
     email_entry.delete(first=0, last="end")
-    day_selection.selection_set(date=today)
+    day_selection.selection_set(
+        date=date(year=today.year - 18, month=today.month, day=today.day)
+    )
     day_selection.selection_clear()
     gender_var.set(value=gender_options[0])
 
@@ -73,7 +75,9 @@ def search_record():
 
 
 def clear_date():
-    day_selection.selection_set(today)
+    day_selection.selection_set(
+        date=date(year=today.year - 18, month=today.month, day=today.day)
+    )
     day_selection.selection_clear()
 
 
@@ -95,7 +99,9 @@ def fetch_data() -> None:
         day_selection.selection_set(date=customer_data[3])
 
     except ValueError:
-        day_selection.selection_set(date=today)
+        day_selection.selection_set(
+            date=date(year=today.year - 18, month=today.month, day=today.day)
+        )
         day_selection.selection_clear()
 
     if customer_data[4] == gender_options[0]:
@@ -271,7 +277,9 @@ def create_entry() -> None:
     name_entry.delete(first=0, last="end")
     phone_entry.delete(first=0, last="end")
     email_entry.delete(first=0, last="end")
-    day_selection.selection_set(date=today)
+    day_selection.selection_set(
+        date=date(year=today.year - 18, month=today.month, day=today.day)
+    )
     day_selection.selection_clear()
     gender_var.set(value=gender_options[0])
 
@@ -338,7 +346,9 @@ def update_entry() -> None:
     name_entry.delete(first=0, last="end")
     phone_entry.delete(first=0, last="end")
     email_entry.delete(first=0, last="end")
-    day_selection.selection_set(date=today)
+    day_selection.selection_set(
+        date=date(year=today.year - 18, month=today.month, day=today.day)
+    )
     day_selection.selection_clear()
     gender_var.set(value=gender_options[0])
 
@@ -383,7 +393,9 @@ def delete_entry() -> None:
     name_entry.delete(first=0, last="end")
     phone_entry.delete(first=0, last="end")
     email_entry.delete(first=0, last="end")
-    day_selection.selection_set(date=today)
+    day_selection.selection_set(
+        date=date(year=today.year - 18, month=today.month, day=today.day)
+    )
     day_selection.selection_clear()
     gender_var.set(value=gender_options[0])
 
@@ -407,7 +419,9 @@ def clear_entry() -> None:
     email_label.config(fg="black")
     email_entry.delete(first=0, last="end")
 
-    day_selection.selection_set(date=today)
+    day_selection.selection_set(
+        date=date(year=today.year - 18, month=today.month, day=today.day)
+    )
     day_selection.selection_clear()
 
     gender_var.set(gender_options[0])
@@ -422,6 +436,7 @@ try:
     from os import system as terminal
     from os.path import isdir, join, split
     from platform import system as os_env
+    from random import choice
     from shutil import rmtree
     from sqlite3 import IntegrityError, OperationalError, connect
     from sys import exit as terminate
@@ -433,6 +448,7 @@ try:
         Label,
         LabelFrame,
         OptionMenu,
+        Scrollbar,
         StringVar,
         Tk,
     )
@@ -446,13 +462,23 @@ try:
     start_time: float = time()
 
     print("INFO: Importing third-party modules...")
-    from colorama import Fore, init
+    from colorama import Fore, Style, init
     from phonenumbers import format_number, is_valid_number, parse
     from phonenumbers.phonenumberutil import NumberParseException
+    from pyfiglet import FigletFont, figlet_format
     from tkcalendar import Calendar
 
     print("INFO: Initializing colorama...")
     init(autoreset=True)
+
+    selected_font = choice(seq=FigletFont.getFonts())
+    if selected_font:
+        print(Fore.RED + figlet_format(text="SRM Fashion", font=selected_font))
+        print(f"Pyfiglet Font: {selected_font}")
+        print(
+            Style.BRIGHT
+            + "Created by FOSS Kingdom, Made with Love in Incredible India.\n"
+        )
 
     __version__: str = "v.20220719 (alpha)"
     total_orders: int = 0
@@ -635,11 +661,18 @@ try:
     # Customer tab, Treeview section
     header_list: list = ["Name", "Phone", "Email", "D.O.B", "Gender"]
 
+    treeview_frame: Frame = Frame(master=lf21, bg=accent_color_light)
+    treeview_frame.pack(padx=15, pady=5, fill="both", expand=1)
+
+    treeview_scroll: Scrollbar = Scrollbar(master=treeview_frame)
+    treeview_scroll.pack(side="right", fill="y")
+
     treeview_db: Treeview = Treeview(
-        master=lf21,
+        master=treeview_frame,
         show="headings",
         columns=header_list,
         selectmode="browse",
+        yscrollcommand=treeview_scroll.set,
     )
 
     for _ in header_list:
@@ -654,7 +687,9 @@ try:
     treeview_db.bind(sequence="<Double-1>", func=lambda event: fetch_data())
     treeview_db.bind(sequence="<Delete>", func=lambda event: delete_entry())
 
-    treeview_db.pack(padx=15, pady=5, fill="both", expand=1)
+    treeview_scroll.config(command=treeview_db.yview)
+
+    treeview_db.pack(fill="both", expand=1)
 
     total_customers_label: Label = Label(master=lf21, fg="red", bg=accent_color_light)
     total_customers_label.pack(pady=5)
