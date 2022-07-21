@@ -5,8 +5,8 @@ build/*
 dist/*
 private/*
 venv/*
-customers.db
-TailorMate.spec
+*.db
+*.spec
 *pycharm*.*
 *.old
 *test*.py

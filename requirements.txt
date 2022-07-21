@@ -1,6 +1,7 @@
 # mandatory
 colorama==0.4.5
-phonenumbers==8.12.51
+# cryptography==37.0.4
+phonenumbers==8.12.52
 psutil==5.9.1
 pyfiglet==0.8.post1
 tkcalendar==1.6.1

@@ -1,8 +1,19 @@
+def not_ready_yet() -> None:
+    app.withdraw()
+    showinfo(
+        title=f"SRM Fashion {__version__}",
+        message="This action is not ready yet, Still work in progress...",
+    )
+    app.deiconify()
+
+
 def exit_app() -> None:
+    app.withdraw()
     if not askyesno(
         title=f"SRM Fashion {__version__}",
         message="Are you sure? do you really want to quit?",
     ):
+        app.deiconify()
         return None
 
     conn.close()
@@ -14,23 +25,28 @@ def exit_app() -> None:
 
     print(Fore.RED + "Bye...")
 
-    if os_env() == "Linux":
+    if os_name == "Linux":
         terminal(command="clear")
 
-    if os_env() == "Windows":
+    if os_name == "Windows":
         terminal(command="cls")
 
     terminate()
 
 
-def pstat():
+def pstat() -> None:
     cpu: float = cpu_percent()
-    mem = virtual_memory().percent
-    pstat_label.config(text=f"CPU: {cpu}% | MEM {mem}%")
+    mem: float = virtual_memory().percent
+    pwr: float = round(sensors_battery().percent, 1)
+    clock: str = strftime("%I:%M:%S %p")
+
+    pstat_label.config(
+        text=f"CPU: {cpu}% | MEM {mem}% | PWR: {pwr}% | {username.title()} @ {clock}"
+    )
     pstat_label.after(ms=1000, func=pstat)
 
 
-def search_record():
+def search_record() -> None:
     search: str = search_var.get().strip()
 
     name_label.config(fg="black")
@@ -68,7 +84,9 @@ def search_record():
 
     if not total_records:
         print(Fore.RED + "INFO: No records found!")
+        app.withdraw()
         showinfo(title=f"SRM Fashion {__version__}", message="No records found!")
+        app.deiconify()
         return None
 
     treeview_db.delete(*treeview_db.get_children())
@@ -81,7 +99,7 @@ def search_record():
     total_customers_label.config(text=f"{total_customers} customer(s) found!")
 
 
-def clear_date():
+def clear_date() -> None:
     day_selection.selection_set(
         date=date(year=today.year - 18, month=today.month, day=today.day)
     )
@@ -154,10 +172,12 @@ def validate_name() -> (str | None):
         name_entry.focus()
 
         print(Fore.RED + "INFO: Please enter the customer name.")
+        app.withdraw()
         showinfo(
             title=f"SRM Fashion {__version__}",
             message="Please enter the customer name.",
         )
+        app.deiconify()
         return None
 
     return name
@@ -171,9 +191,11 @@ def validate_phone() -> (str | None):
         phone_entry.focus()
 
         print(Fore.RED + "INFO: Please enter the phone number.")
+        app.withdraw()
         showinfo(
             title=f"SRM Fashion {__version__}", message="Please enter the phone number."
         )
+        app.deiconify()
         return None
 
     try:
@@ -184,10 +206,12 @@ def validate_phone() -> (str | None):
         phone_entry.focus()
 
         print(Fore.RED + f"ERROR: {number_parse_exception}")
+        app.withdraw()
         showinfo(
             title=f"SRM Fashion {__version__}",
             message=str(number_parse_exception),
         )
+        app.deiconify()
         return None
 
     phone: str = format_number(numobj=number_object, num_format=1)
@@ -197,10 +221,12 @@ def validate_phone() -> (str | None):
         phone_entry.focus()
 
         print(Fore.RED + "INFO: Please enter the correct mobile number.")
+        app.withdraw()
         showinfo(
             title=f"SRM Fashion {__version__}",
             message="Please enter the correct mobile number.",
         )
+        app.deiconify()
         return None
 
     return phone
@@ -219,10 +245,12 @@ def validate_email() -> (str | None):
                 email_entry.focus()
 
                 print(Fore.RED + "INFO: Invalid email address, Please try again...")
+                app.withdraw()
                 showinfo(
                     title=f"SRM Fashion {__version__}",
                     message="Invalid email address, Please try again...",
                 )
+                app.deiconify()
                 return None
 
         else:
@@ -230,10 +258,12 @@ def validate_email() -> (str | None):
             email_entry.focus()
 
             print(Fore.RED + "INFO: Invalid email address, Please try again...")
+            app.withdraw()
             showinfo(
                 title=f"SRM Fashion {__version__}",
                 message="Invalid email address, Please try again...",
             )
+            app.deiconify()
             return None
 
     return email
@@ -272,10 +302,12 @@ def create_entry() -> None:
         phone_entry.focus()
 
         print(Fore.RED + "INFO: This mobile number already exists.")
+        app.withdraw()
         showinfo(
             title=f"SRM Fashion {__version__}",
             message=f"{integrity_error}\n{phone} This mobile number already exist.",
         )
+        app.deiconify()
         return None
 
     conn.commit()
@@ -293,9 +325,11 @@ def create_entry() -> None:
     name_entry.focus()
 
     print(Fore.GREEN + "INFO: Database appended successfully...")
+    app.withdraw()
     showinfo(
         title=f"SRM Fashion {__version__}", message="Database appended successfully..."
     )
+    app.deiconify()
 
 
 def update_entry() -> None:
@@ -307,10 +341,12 @@ def update_entry() -> None:
 
     if not selected_item:
         print(Fore.RED + "INFO: Please select a customer record!")
+        app.withdraw()
         showinfo(
             title=f"SRM Fashion {__version__}",
             message="Please select a customer record!",
         )
+        app.deiconify()
         return None
 
     name: str | None = validate_name()
@@ -341,10 +377,12 @@ def update_entry() -> None:
         phone_entry.focus()
 
         print(Fore.RED + "INFO: This mobile number already exists.")
+        app.withdraw()
         showinfo(
             title=f"SRM Fashion {__version__}",
             message=f"{integrity_error}\n{phone} This mobile number already exist.",
         )
+        app.deiconify()
         return None
 
     conn.commit()
@@ -362,9 +400,11 @@ def update_entry() -> None:
     name_entry.focus()
 
     print(Fore.GREEN + "INFO: Database updated successfully...")
+    app.withdraw()
     showinfo(
         title=f"SRM Fashion {__version__}", message="Database updated successfully..."
     )
+    app.deiconify()
 
 
 def delete_entry() -> None:
@@ -379,16 +419,20 @@ def delete_entry() -> None:
 
     if not selected_item:
         print(Fore.RED + "INFO: Please select a customer record!")
+        app.withdraw()
         showinfo(
             title=f"SRM Fashion {__version__}",
             message="Please select a customer record!",
         )
+        app.deiconify()
         return None
 
+    app.withdraw()
     if not askyesno(
         title=f"SRM Fashion {__version__}",
         message="Are you sure? Do you want to delete the selected record?",
     ):
+        app.deiconify()
         return None
 
     selected_id: str = treeview_db.item(selected_item).get("values")[1]
@@ -407,9 +451,11 @@ def delete_entry() -> None:
     gender_var.set(value=gender_options[0])
 
     print(Fore.GREEN + "INFO: 1 record deleted successfully...")
+    app.withdraw()
     showinfo(
         title=f"SRM Fashion {__version__}", message="1 record deleted successfully..."
     )
+    app.deiconify()
 
 
 def clear_entry() -> None:
@@ -436,11 +482,126 @@ def clear_entry() -> None:
     name_entry.focus()
 
 
+def donation_page() -> None:
+    def exit_subwindow() -> None:
+        new_window.destroy()
+        app.deiconify()
+
+    app.withdraw()
+    new_window = Toplevel(master=app)
+    new_window.protocol(name="WM_DELETE_WINDOW", func=exit_subwindow)
+    new_window.bind(sequence="<Control-Q>", func=lambda event: exit_subwindow())
+    new_window.bind(sequence="<Control-q>", func=lambda event: exit_subwindow())
+    new_window.bind(sequence="<Escape>", func=lambda event: exit_subwindow())
+    new_window.bind(sequence="<Alt-F4>", func=lambda event: exit_subwindow())
+    new_window.iconphoto(False, PhotoImage(file=donation_icon_path))
+    new_window.title(string="Donate Us!")
+    new_window.resizable(width=False, height=False)
+    new_window.config(bg=accent_color_light)
+
+    Label(
+        master=new_window,
+        text=f"Hello {username.title()}, Welcome to SRM Fashion!",
+        bg="black",
+        fg="white",
+    ).pack(side="top", fill="x")
+
+    donation_labelframe: LabelFrame = LabelFrame(
+        master=new_window,
+        text="Donate Us",
+        fg="red",
+        bg=accent_color_light,
+    )
+    donation_labelframe.pack(padx=10, fill="both", expand=1)
+
+    donation_textwidget: Text = Text(
+        master=donation_labelframe, wrap="word", selectbackground="orange"
+    )
+    donation_textwidget.insert(
+        index=1.0,
+        chars="""\tFOSS KINGODM is powered by people like you. Contribute today and show 
+your love for us! You can help maintain this software development by sending us 
+a donation. It's a free and open-source software. 
+
+\tI developed this application on my free time. So if you enjoy it, feel 
+free to show your support. Created by FOSS Kingdom. Made with Love in Incredible 
+India.
+
+Get Involved:
+\tWe are always evolving and welcome new ideas, partners, contributions 
+and emails. We have a very optimistic view of the future. We are very fond of 
+this lovely planet!
+
+Donate:
+\tWe strongly believe that, "When you give, you get back tenfold." Now, 
+that's a great exchange rate!
+
+What drives us? Why should I donate?
+(Our mission, vision and goal):
+Goal 1: No Poverty (To help end poverty.)
+Goal 2: Zero Hunger (To feed the hungry.)
+Goal 3: Good Health and Well-being (To provide good healthcare.)
+Goal 4: Quality Education (To send more kids to school.)
+Goal 5: Gender Equality (To empower women and girls.)
+Goal 6: Clean Water and Sanitation (To give clean water.)
+Goal 7: Affordable and Clean Energy (To develop renewable energy.)""",
+    )
+    donation_textwidget.config(state="disabled")
+    donation_textwidget.pack(fill="both", expand=1, padx=10, pady=10)
+
+    qrcode_image: PhotoImage = PhotoImage(file=qrcode_path).subsample(x=3, y=3)
+
+    Label(
+        master=new_window,
+        text="Scan here to donate with Google Pay!",
+        fg="red",
+        compound="bottom",
+        bg=accent_color_light,
+        image=qrcode_image,
+    ).pack()
+
+    Label(
+        master=new_window,
+        text="UPI: gameworld2k18@oksbi",
+        fg="red",
+        bg=accent_color_light,
+    ).pack()
+
+    Label(
+        master=new_window,
+        text="""Name: MOHAMED FARIZ
+A/C No: 0740301000082422
+Bank: LAKSHMI VILAS BANK
+Branch: THIRUTHURAIPOONDI
+IFSC: LAVB0000740""",
+        bg=accent_color_light,
+    ).pack()
+
+    close_button: Button = Button(
+        master=new_window,
+        text="Close",
+        bg="red",
+        fg="white",
+        width=10,
+        command=exit_subwindow,
+    )
+    close_button.bind(sequence="<Return>", func=lambda event: exit_subwindow())
+    close_button.pack(pady=5)
+
+    Label(
+        master=new_window,
+        text="Created by FOSS Kingdom | Made with Love in Incredible India.",
+        bg="black",
+        fg="white",
+    ).pack(fill="x", side="bottom")
+
+    new_window.mainloop()
+
+
 try:
     print("INFO: Importing built-in modules...")
     from datetime import date, datetime
     from getpass import getuser
-    from os import getuid
     from os import system as terminal
     from os.path import isdir, join, split
     from platform import system as os_env
@@ -448,39 +609,51 @@ try:
     from shutil import rmtree
     from sqlite3 import IntegrityError, OperationalError, connect
     from sys import exit as terminate
-    from time import time
+    from time import strftime, time
     from tkinter import (
         Button,
         Entry,
         Frame,
         Label,
         LabelFrame,
+        Menu,
         OptionMenu,
+        PhotoImage,
         Scrollbar,
         StringVar,
+        Text,
         Tk,
+        Toplevel,
     )
     from tkinter.messagebox import askyesno, showinfo
     from tkinter.ttk import Notebook, Treeview
 
-    from psutil import cpu_percent, virtual_memory
-
     today: datetime = datetime.today()
-    pid: int = getuid()
+    username = getuser()
     base_path: str = split(p=__file__)[0]
-    database_path: str = join(base_path, "customers.db")
+    # <a href="https://www.flaticon.com/free-icons/sewing" title="sewing icons">
+    # Sewing icons created by ultimatearm - Flaticon
+    # </a>
+    logo_icon_path: str = join(base_path, "assets/sewing.png")
+    database_path: str = join(base_path, "database.db")
+    donation_icon_path: str = join(base_path, "assets/donation.png")
+    qrcode_path: str = join(base_path, "assets/qr_code.png")
     cache_file_path: str = join(base_path, "__pycache__")
+    os_name: str = os_env()
     start_time: float = time()
 
     print("INFO: Importing third-party modules...")
     from colorama import Fore, Style, init
     from phonenumbers import format_number, is_valid_number, parse
     from phonenumbers.phonenumberutil import NumberParseException
+    from psutil import cpu_percent, sensors_battery, virtual_memory
     from pyfiglet import FigletFont, figlet_format
     from tkcalendar import Calendar
 
     print("INFO: Initializing colorama...")
     init(autoreset=True)
+
+    total_ram = round(virtual_memory().total / (1024 * 1024 * 1024), 2)
 
     selected_font = choice(seq=FigletFont.getFonts())
     if selected_font:
@@ -491,45 +664,43 @@ try:
             + "Created by FOSS Kingdom, Made with Love in Incredible India.\n"
         )
 
-    __version__: str = "v.20220720 (alpha)"
+    __version__: str = "v.20220721 (alpha)"
     total_orders: int = 0
     accent_color_light: str = "lightsteelblue2"
 
-    try:
-        print(Fore.GREEN + "INFO: Reading database file...")
-        conn = connect(database=database_path)
-        c = conn.cursor()
-        c.execute(
-            """create table if not exists
-            customers (
-            name text not null,
-            phone text not null primary key,
-            email text,
-            dob text,
-            gender text not null
-            )"""
-        )
-        conn.commit()
-
-    except OperationalError as operational_error:
-        print(Fore.RED + f"ERROR: {operational_error}")
-        terminate()
-
-    if os_env() == "Linux":
+    if os_name == "Linux":
         terminal(command="xtitle -q -t SRM Fashion")
 
-    if os_env() == "Windows":
+    if os_name == "Windows":
         terminal(command="title SRM Fashion")
 
     print(Fore.GREEN + "INFO: Creating GUI application...")
     app: Tk = Tk()
+    app.withdraw()
+    app.iconphoto(False, PhotoImage(file=logo_icon_path))
     app.resizable(width=False, height=False)
     app.title(string=f"SRM Fashion {__version__}")
     app.protocol(name="WM_DELETE_WINDOW", func=exit_app)
     app.bind(sequence="<Control-Q>", func=lambda event: exit_app())
     app.bind(sequence="<Control-q>", func=lambda event: exit_app())
     app.bind(sequence="<Escape>", func=lambda event: exit_app())
-    app.config(bg=accent_color_light)
+
+    menu_bar: Menu = Menu(master=app)
+    help_menu: Menu = Menu(master=menu_bar, tearoff=0)
+
+    menu_bar.add_cascade(label="Help", menu=help_menu)
+
+    donation_icon: PhotoImage = PhotoImage(file=donation_icon_path).subsample(
+        x=25, y=25
+    )
+    help_menu.add_command(
+        label="Donate Us", command=donation_page, image=donation_icon, compound="left"
+    )
+
+    help_menu.add_separator()
+    help_menu.add_command(label="About TailorMate", command=not_ready_yet)
+
+    app.config(menu=menu_bar, bg=accent_color_light)
 
     search_var: StringVar = StringVar()
     name_var: StringVar = StringVar()
@@ -537,10 +708,10 @@ try:
     email_var: StringVar = StringVar()
     gender_var: StringVar = StringVar()
 
-    print(Fore.RED + f"Hello {getuser().title()}, Welcome to SRM Fashion!")
+    print(Fore.RED + f"Hello {username.title()}, Welcome to SRM Fashion!")
     Label(
         master=app,
-        text=f"Hello {getuser().title()}, Welcome to SRM Fashion!",
+        text=f"Hello {username.title()}, Welcome to SRM Fashion!",
         bg="black",
         fg="white",
     ).pack(side="top", fill="x")
@@ -566,17 +737,96 @@ try:
     ).pack(pady=10)
 
     if total_orders == 0:
+        # https://www.un.org/en/observances/international-days-and-weeks
+
         if today.month == 1 and today.day == 1:
             msg: str = "New Year's Day."
+
+        elif today.month == 1 and today.day == 4:
+            msg: str = "Today is World Braille Day."
+
+        elif today.month == 1 and today.day == 24:
+            msg: str = "Today is International Day of Education."
+
+        elif today.month == 2 and today.day == 2:
+            msg: str = "Today is World Wetlands Day."
+
+        elif today.month == 2 and today.day == 10:
+            msg: str = "Today is World Pulses Day."
+
+        elif today.month == 2 and today.day == 11:
+            msg: str = "Today is International Day of Women and Girls in Science."
+
+        elif today.month == 2 and today.day == 13:
+            msg: str = "Today is World Radio Day."
 
         elif today.month == 2 and today.day == 14:
             msg: str = "Happy Valentine's Day."
 
+        elif today.month == 2 and today.day == 20:
+            msg: str = "Today is World Day of Social Justice."
+
+        elif today.month == 2 and today.day == 21:
+            msg: str = "Today is International Mother Language Day."
+
+        elif today.month == 3 and today.month == 3:
+            msg: str = "Today is World Wildlife Day."
+
         elif today.month == 3 and today.day == 8:
             msg: str = "Today is International Women's Day."
 
+        elif today.month == 3 and today.day == 10:
+            msg: str = "Today is International Day of Women Judges."
+
+        elif today.month == 3 and today.day == 21:
+            msg: str = "Today is International Day of Forests."
+
+        elif today.month == 3 and today.day == 22:
+            msg: str = "Today is World Water Day."
+
+        elif today.month == 3 and today.day == 23:
+            msg: str = "Today is World Meteorological Day."
+
+        elif today.month == 3 and today.day == 24:
+            msg: str = "Today is World Tuberculosis Day."
+
+        elif today.month == 4 and today.day == 2:
+            msg: str = "Today is World Autism Awareness Day."
+
+        elif today.month == 4 and today.day == 5:
+            msg: str = "Today is International Day of Conscience."
+
+        elif today.month == 4 and today.day == 6:
+            msg: str = "Today is International Day of Sports for Development and Peace."
+
+        elif today.month == 4 and today.day == 7:
+            msg: str = "Today is World Health Day."
+
+        elif today.month == 4 and today.day == 12:
+            msg: str = "Today is International Day of Human Space Flight."
+
+        elif today.month == 4 and today.day == 21:
+            msg: str = "Today is World Creativity and Innovation Day."
+
+        elif today.month == 4 and today.day == 22:
+            msg: str = "Today is International Mother Earth Day."
+
+        elif today.month == 4 and today.day == 25:
+            msg: str = "Today is World Malaria Day."
+
+        elif today.month == 4 and today.day == 30:
+            msg: str = "Today is International Jazz Day."
+
         elif today.month == 5 and today.day == 1:
             msg: str = "Today is International Worker's Day."
+
+        elif today.month == 5 and today.day == 2:
+            msg: str = "Today is World Tuna Day."
+
+        elif today.month == 5 and today.day == 3:
+            msg: str = "Today is World Press Freedom Day."
+
+        # To be continued...
 
         elif today.month == 6 and today.day == 14:
             msg: str = "Today is World Blood Donor Day."
@@ -584,8 +834,11 @@ try:
         elif today.month == 6 and today.day == 19:
             msg: str = "Happy Father's Day."
 
+        elif today.month == 7 and today.day == 11:
+            msg: str = "Today is World Population Day."
+
         elif today.month == 10 and today.day == 5:
-            msg: str = "Today is Fariz's Birthday *(developer of Sales-Predictor)"
+            msg: str = "Today is Fariz's Birthday *(Founder of FOSS KINGDOM)"
 
         elif today.month == 12 and today.day == 1:
             msg: str = "Today is World AIDS Day."
@@ -674,7 +927,7 @@ try:
     header_list: list = ["Name", "Phone", "Email", "D.O.B", "Gender"]
 
     treeview_frame: Frame = Frame(master=lf21, bg=accent_color_light)
-    treeview_frame.pack(padx=15, pady=5, fill="both", expand=1)
+    treeview_frame.pack(padx=15, fill="both", expand=1)
 
     treeview_scroll: Scrollbar = Scrollbar(master=treeview_frame)
     treeview_scroll.pack(side="right", fill="y")
@@ -697,13 +950,14 @@ try:
     treeview_db.column(column=4, width=80, minwidth=80, anchor="w")
 
     treeview_db.bind(sequence="<Double-1>", func=lambda event: fetch_data())
+    treeview_db.bind(sequence="<Return>", func=lambda event: fetch_data())
     treeview_db.bind(sequence="<Delete>", func=lambda event: delete_entry())
 
     treeview_scroll.config(command=treeview_db.yview)
     treeview_db.pack(fill="both", expand=1)
 
     total_customers_label: Label = Label(master=lf21, fg="red", bg=accent_color_light)
-    total_customers_label.pack(pady=5)
+    total_customers_label.pack()
 
     # Customer tab, Search section
     Label(master=lf22, text="Search:", bg=accent_color_light).pack(side="left", padx=10)
@@ -800,16 +1054,16 @@ try:
     f22: Frame = Frame(master=lf23, bg=accent_color_light)
     f22.pack(padx=10, pady=5, ipady=3, side="right", fill="both", expand=1)
 
-    clear_data: Button = Button(
+    clear_input_data: Button = Button(
         master=f22,
-        text="Clear",
+        text="Clear Input",
         bg="black",
         fg="white",
         width=10,
         command=clear_entry,
     )
-    clear_data.bind(sequence="<Return>", func=lambda event: clear_entry())
-    clear_data.pack(padx=5, side="right")
+    clear_input_data.bind(sequence="<Return>", func=lambda event: clear_entry())
+    clear_input_data.pack(padx=5, side="right")
 
     delete_button: Button = Button(
         master=f22,
@@ -852,9 +1106,9 @@ try:
         bg="black",
         fg="white",
         width=12,
-        # command=not_ready_yet,
+        command=not_ready_yet,
     )
-    # selection_button.bind(sequence="<Return>", func=lambda event: not_ready_yet())
+    selection_button.bind(sequence="<Return>", func=lambda event: not_ready_yet())
     selection_button.grid(row=0, column=0, padx=5)
 
     exit_button: Button = Button(
@@ -897,11 +1151,50 @@ try:
         )
 
     else:
-        print(Fore.GREEN + f"INFO: Booting Time: {elapsed_time} second(s)")
-        boot_time_label.config(text=f"Booting Time {elapsed_time} second(s)")
+        print(Fore.GREEN + f"INFO: Booting Time: {round(elapsed_time, 3)} second(s)")
+        boot_time_label.config(text=f"Booting Time {round(elapsed_time, 3)} second(s)")
+
+    try:
+        print(Fore.GREEN + "INFO: Reading database file...")
+        conn = connect(database=database_path)
+        c = conn.cursor()
+        c.execute(
+            """create table if not exists
+            customers (
+            name text not null,
+            phone text not null primary key,
+            email text,
+            dob text,
+            gender text not null
+            )"""
+        )
+        conn.commit()
+
+    except OperationalError as operational_error:
+        print(Fore.RED + f"ERROR: {operational_error}")
+        showinfo(
+            title=f"SRM Fashion {__version__}",
+            message=f"Sorry, an error occurred! {operational_error}",
+        )
+        app.destroy()
+
+        if isdir(s=cache_file_path):
+            print(Fore.GREEN + "INFO: Cleaning cache files, Please wait...")
+            rmtree(path=cache_file_path)
+
+        print(Fore.RED + "Bye...")
+
+        if os_name == "Linux":
+            terminal(command="clear")
+
+        if os_name == "Windows":
+            terminal(command="cls")
+
+        terminate()
 
     update_database()
 
+    app.deiconify()
     app.mainloop()
 
 except KeyboardInterrupt:
