@@ -696,7 +696,7 @@ try:
             + "Created by FOSS Kingdom, Made with Love in Incredible India.\n"
         )
 
-    __version__: str = "v.20220721 (alpha)"
+    __version__: str = "v.20220722 (alpha)"
     total_orders: int = 0
     accent_color_light: str = "lightsteelblue2"
 
