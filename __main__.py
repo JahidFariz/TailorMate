@@ -1,5 +1,9 @@
+from asyncio.log import logger
+
+
 def not_ready_yet() -> None:
     app.withdraw()
+    info(msg="This action is not ready yet, Still work in progress...")
     showinfo(
         title=f"SRM Fashion {__version__}",
         message="This action is not ready yet, Still work in progress...",
@@ -84,6 +88,7 @@ def search_record() -> None:
 
     if not total_records:
         print(Fore.RED + "INFO: No records found!")
+        info(msg="No records found!")
         app.withdraw()
         showinfo(title=f"SRM Fashion {__version__}", message="No records found!")
         app.deiconify()
@@ -119,12 +124,12 @@ def fetch_data() -> None:
     phone_label.config(fg="black")
     email_label.config(fg="black")
 
-    name_var.set(value=customer_data[0])
-    phone_var.set(value=customer_data[1])
-    email_var.set(value=customer_data[2])
+    name_var.set(value=customer_data[1])
+    phone_var.set(value=customer_data[2])
+    email_var.set(value=customer_data[3])
 
     try:
-        day_selection.selection_set(date=customer_data[3])
+        day_selection.selection_set(date=customer_data[4])
 
     except ValueError:
         day_selection.selection_set(
@@ -132,10 +137,10 @@ def fetch_data() -> None:
         )
         day_selection.selection_clear()
 
-    if customer_data[4] == gender_options[0]:
+    if customer_data[5] == gender_options[0]:
         gender_var.set(value=gender_options[0])
 
-    elif customer_data[4] == gender_options[1]:
+    elif customer_data[5] == gender_options[1]:
         gender_var.set(value=gender_options[1])
 
     else:
@@ -178,6 +183,7 @@ def validate_name() -> (str | None):
         name_entry.focus()
 
         print(Fore.RED + "INFO: Please enter the customer name.")
+        warning(msg="Please enter the customer name.")
         app.withdraw()
         showinfo(
             title=f"SRM Fashion {__version__}",
@@ -197,6 +203,7 @@ def validate_phone() -> (str | None):
         phone_entry.focus()
 
         print(Fore.RED + "INFO: Please enter the phone number.")
+        warning(msg="Please enter the phone number.")
         app.withdraw()
         showinfo(
             title=f"SRM Fashion {__version__}", message="Please enter the phone number."
@@ -212,6 +219,7 @@ def validate_phone() -> (str | None):
         phone_entry.focus()
 
         print(Fore.RED + f"ERROR: {number_parse_exception}")
+        error(msg=str(number_parse_exception))
         app.withdraw()
         showinfo(
             title=f"SRM Fashion {__version__}",
@@ -227,6 +235,7 @@ def validate_phone() -> (str | None):
         phone_entry.focus()
 
         print(Fore.RED + "INFO: Please enter the correct mobile number.")
+        warning(msg="Please enter the correct mobile number.")
         app.withdraw()
         showinfo(
             title=f"SRM Fashion {__version__}",
@@ -251,6 +260,7 @@ def validate_email() -> (str | None):
                 email_entry.focus()
 
                 print(Fore.RED + "INFO: Invalid email address, Please try again...")
+                warning(msg="Invalid email address...")
                 app.withdraw()
                 showinfo(
                     title=f"SRM Fashion {__version__}",
@@ -264,6 +274,7 @@ def validate_email() -> (str | None):
             email_entry.focus()
 
             print(Fore.RED + "INFO: Invalid email address, Please try again...")
+            warning(msg="Invalid email address...")
             app.withdraw()
             showinfo(
                 title=f"SRM Fashion {__version__}",
@@ -308,6 +319,7 @@ def create_entry() -> None:
         phone_entry.focus()
 
         print(Fore.RED + "INFO: This mobile number already exists.")
+        warning(msg="This mobile number already exists.")
         app.withdraw()
         showinfo(
             title=f"SRM Fashion {__version__}",
@@ -331,6 +343,7 @@ def create_entry() -> None:
     name_entry.focus()
 
     print(Fore.GREEN + "INFO: Database appended successfully...")
+    info(msg="Database appended successfully...")
     app.withdraw()
     showinfo(
         title=f"SRM Fashion {__version__}", message="Database appended successfully..."
@@ -347,6 +360,7 @@ def update_entry() -> None:
 
     if not selected_item:
         print(Fore.RED + "INFO: Please select a customer record!")
+        info(msg="Please select a customer record!")
         app.withdraw()
         showinfo(
             title=f"SRM Fashion {__version__}",
@@ -370,12 +384,12 @@ def update_entry() -> None:
     dob: str = day_selection.get_date()
     gender: str = gender_var.get()
 
-    selected_id: str = treeview_db.item(selected_item).get("values")[1]
+    # //
+    selected_id: str = treeview_db.item(selected_item).get("values")[2]
 
     try:
         c.execute(
-            f"""update customers set name = ?, phone = ?, email = ?, dob = ?, gender = ? where phone = ?""",
-            (name, phone, email, dob, gender, selected_id),
+            f"""update customers set name = '{name}', phone = '{phone}', email = '{email}', dob = '{dob}', gender = '{gender}' where phone = '{selected_id}'"""
         )
 
     except IntegrityError as integrity_error:
@@ -383,6 +397,7 @@ def update_entry() -> None:
         phone_entry.focus()
 
         print(Fore.RED + "INFO: This mobile number already exists.")
+        warning(msg="This mobile number already exist.")
         app.withdraw()
         showinfo(
             title=f"SRM Fashion {__version__}",
@@ -406,6 +421,7 @@ def update_entry() -> None:
     name_entry.focus()
 
     print(Fore.GREEN + "INFO: Database updated successfully...")
+    info(msg="Database updated successfully...")
     app.withdraw()
     showinfo(
         title=f"SRM Fashion {__version__}", message="Database updated successfully..."
@@ -425,6 +441,7 @@ def delete_entry() -> None:
 
     if not selected_item:
         print(Fore.RED + "INFO: Please select a customer record!")
+        info(msg="Please select a customer record!")
         app.withdraw()
         showinfo(
             title=f"SRM Fashion {__version__}",
@@ -441,7 +458,8 @@ def delete_entry() -> None:
         app.deiconify()
         return None
 
-    selected_id: str = treeview_db.item(selected_item).get("values")[1]
+    # //
+    selected_id: str = treeview_db.item(selected_item).get("values")[2]
 
     c.execute(f"""delete from customers where phone = '{selected_id}'""")
     conn.commit()
@@ -457,6 +475,7 @@ def delete_entry() -> None:
     gender_var.set(value=gender_options[0])
 
     print(Fore.GREEN + "INFO: 1 record deleted successfully...")
+    info(msg="1 record deleted successfully...")
     app.withdraw()
     showinfo(
         title=f"SRM Fashion {__version__}", message="1 record deleted successfully..."
@@ -608,6 +627,8 @@ try:
     print("INFO: Importing built-in modules...")
     from datetime import date, datetime
     from getpass import getuser
+    from logging import basicConfig, error, info, warning
+    from os import mkdir
     from os import system as terminal
     from os.path import isdir, join, split
     from platform import system as os_env
@@ -633,6 +654,14 @@ try:
     )
     from tkinter.messagebox import askyesno, showinfo
     from tkinter.ttk import Notebook, Treeview
+
+    print("INFO: Importing third-party modules...")
+    from colorama import Fore, Style, init
+    from phonenumbers import format_number, is_valid_number, parse
+    from phonenumbers.phonenumberutil import NumberParseException
+    from psutil import cpu_percent, sensors_battery, virtual_memory
+    from pyfiglet import FigletFont, figlet_format
+    from tkcalendar import Calendar
 
     today: datetime = datetime.today()
     username = getuser()
@@ -674,15 +703,30 @@ try:
     os_name: str = os_env()
     start_time: float = time()
 
-    print("INFO: Importing third-party modules...")
-    from colorama import Fore, Style, init
-    from phonenumbers import format_number, is_valid_number, parse
-    from phonenumbers.phonenumberutil import NumberParseException
-    from psutil import cpu_percent, sensors_battery, virtual_memory
-    from pyfiglet import FigletFont, figlet_format
-    from tkcalendar import Calendar
+    if os_name == "Linux":
+        if not isdir(s=f"/home/{username}/.config/TailorMate/"):
+            mkdir(path=f"/home/{username}/.config/TailorMate/")
+
+        log_file_path: str = f"/home/{username}/.config/TailorMate/logger.log"
+
+    elif os_name == "Windows":
+        if not isdir(s=f"C:\\Users\\{username}\\TailorMate\\"):
+            mkdir(path=f"C:\\Users\\{username}\\TailorMate\\")
+
+        log_file_path: str = f"C:\\Users\\{username}\\TailorMate\\logger.log"
+
+    else:
+        log_file_path: str = join(base_path, "logger.log")
+
+    basicConfig(
+        filename=log_file_path,
+        level=0,
+        format="%(levelname)s\t%(asctime)s\t%(message)s",
+        filemode="w",
+    )
 
     print("INFO: Initializing colorama...")
+    info(msg="Initializing colorama...")
     init(autoreset=True)
 
     total_ram = round(virtual_memory().total / (1024 * 1024 * 1024), 2)
@@ -696,7 +740,7 @@ try:
             + "Created by FOSS Kingdom, Made with Love in Incredible India.\n"
         )
 
-    __version__: str = "v.20220722 (alpha)"
+    __version__: str = "v.20220723 (alpha)"
     total_orders: int = 0
     accent_color_light: str = "lightsteelblue2"
 
@@ -707,6 +751,7 @@ try:
         terminal(command="title SRM Fashion")
 
     print(Fore.GREEN + "INFO: Creating GUI application...")
+    info(msg="Creating GUI application...")
     app: Tk = Tk()
     app.withdraw()
     app.iconphoto(False, PhotoImage(file=logo_icon_path))
@@ -724,7 +769,7 @@ try:
     menu_bar.add_cascade(label="Links", menu=links_menu)
     menu_bar.add_cascade(label="Help", menu=help_menu)
 
-    links_menu.add_command(label="Licence", command=not_ready_yet)
+    links_menu.add_command(label="Licence GPL-v3.0", command=not_ready_yet)
     links_menu.add_command(label="Source Code", command=not_ready_yet)
     links_menu.add_command(label="Issues", command=not_ready_yet)
     links_menu.add_command(label="Website", command=not_ready_yet)
@@ -751,9 +796,129 @@ try:
     Label(
         master=app,
         text=f"Hello {username.title()}, Welcome to SRM Fashion!",
-        bg="black",
+        bg="blue",
         fg="white",
     ).pack(side="top", fill="x")
+
+    if today.month == 1 and today.day == 1:
+        msg: str = "New Year's Day."
+
+    elif today.month == 1 and today.day == 4:
+        msg: str = "Today is World Braille Day."
+
+    elif today.month == 1 and today.day == 24:
+        msg: str = "Today is International Day of Education."
+
+    elif today.month == 2 and today.day == 2:
+        msg: str = "Today is World Wetlands Day."
+
+    elif today.month == 2 and today.day == 10:
+        msg: str = "Today is World Pulses Day."
+
+    elif today.month == 2 and today.day == 11:
+        msg: str = "Today is International Day of Women and Girls in Science."
+
+    elif today.month == 2 and today.day == 13:
+        msg: str = "Today is World Radio Day."
+
+    elif today.month == 2 and today.day == 14:
+        msg: str = "Happy Valentine's Day."
+
+    elif today.month == 2 and today.day == 20:
+        msg: str = "Today is World Day of Social Justice."
+
+    elif today.month == 2 and today.day == 21:
+        msg: str = "Today is International Mother Language Day."
+
+    elif today.month == 3 and today.month == 3:
+        msg: str = "Today is World Wildlife Day."
+
+    elif today.month == 3 and today.day == 8:
+        msg: str = "Today is International Women's Day."
+
+    elif today.month == 3 and today.day == 10:
+        msg: str = "Today is International Day of Women Judges."
+
+    elif today.month == 3 and today.day == 21:
+        msg: str = "Today is International Day of Forests."
+
+    elif today.month == 3 and today.day == 22:
+        msg: str = "Today is World Water Day."
+
+    elif today.month == 3 and today.day == 23:
+        msg: str = "Today is World Meteorological Day."
+
+    elif today.month == 3 and today.day == 24:
+        msg: str = "Today is World Tuberculosis Day."
+
+    elif today.month == 4 and today.day == 2:
+        msg: str = "Today is World Autism Awareness Day."
+
+    elif today.month == 4 and today.day == 5:
+        msg: str = "Today is International Day of Conscience."
+
+    elif today.month == 4 and today.day == 6:
+        msg: str = "Today is International Day of Sports for Development and Peace."
+
+    elif today.month == 4 and today.day == 7:
+        msg: str = "Today is World Health Day."
+
+    elif today.month == 4 and today.day == 12:
+        msg: str = "Today is International Day of Human Space Flight."
+
+    elif today.month == 4 and today.day == 21:
+        msg: str = "Today is World Creativity and Innovation Day."
+
+    elif today.month == 4 and today.day == 22:
+        msg: str = "Today is International Mother Earth Day."
+
+    elif today.month == 4 and today.day == 25:
+        msg: str = "Today is World Malaria Day."
+
+    elif today.month == 4 and today.day == 30:
+        msg: str = "Today is International Jazz Day."
+
+    elif today.month == 5 and today.day == 1:
+        msg: str = "Today is International Worker's Day."
+
+    elif today.month == 5 and today.day == 2:
+        msg: str = "Today is World Tuna Day."
+
+    elif today.month == 5 and today.day == 3:
+        msg: str = "Today is World Press Freedom Day."
+
+    # To be continued...
+
+    elif today.month == 6 and today.day == 14:
+        msg: str = "Today is World Blood Donor Day."
+
+    elif today.month == 6 and today.day == 19:
+        msg: str = "Happy Father's Day."
+
+    elif today.month == 7 and today.day == 11:
+        msg: str = "Today is World Population Day."
+
+    elif today.month == 10 and today.day == 5:
+        msg: str = "Today is Fariz's Birthday *(Founder of FOSS KINGDOM)"
+
+    elif today.month == 12 and today.day == 1:
+        msg: str = "Today is World AIDS Day."
+
+    elif today.month == 12 and today.day == 25:
+        msg: str = "Merry Christmas."
+
+    elif today.month == 12 and today.day == 31:
+        msg: str = "Happy New Year's Eve"
+
+    else:
+        msg: str = "#JusticeForSrimathi,  #Kallakurichi"
+
+    print(Fore.RED + msg)
+    Label(
+        master=app,
+        text=msg,
+        bg="yellow",
+    ).pack(fill="x")
 
     tab_view: Notebook = Notebook(master=app)
     tab_view.pack(fill="both", expand=True)
@@ -777,127 +942,6 @@ try:
 
     if total_orders == 0:
         # https://www.un.org/en/observances/international-days-and-weeks
-
-        if today.month == 1 and today.day == 1:
-            msg: str = "New Year's Day."
-
-        elif today.month == 1 and today.day == 4:
-            msg: str = "Today is World Braille Day."
-
-        elif today.month == 1 and today.day == 24:
-            msg: str = "Today is International Day of Education."
-
-        elif today.month == 2 and today.day == 2:
-            msg: str = "Today is World Wetlands Day."
-
-        elif today.month == 2 and today.day == 10:
-            msg: str = "Today is World Pulses Day."
-
-        elif today.month == 2 and today.day == 11:
-            msg: str = "Today is International Day of Women and Girls in Science."
-
-        elif today.month == 2 and today.day == 13:
-            msg: str = "Today is World Radio Day."
-
-        elif today.month == 2 and today.day == 14:
-            msg: str = "Happy Valentine's Day."
-
-        elif today.month == 2 and today.day == 20:
-            msg: str = "Today is World Day of Social Justice."
-
-        elif today.month == 2 and today.day == 21:
-            msg: str = "Today is International Mother Language Day."
-
-        elif today.month == 3 and today.month == 3:
-            msg: str = "Today is World Wildlife Day."
-
-        elif today.month == 3 and today.day == 8:
-            msg: str = "Today is International Women's Day."
-
-        elif today.month == 3 and today.day == 10:
-            msg: str = "Today is International Day of Women Judges."
-
-        elif today.month == 3 and today.day == 21:
-            msg: str = "Today is International Day of Forests."
-
-        elif today.month == 3 and today.day == 22:
-            msg: str = "Today is World Water Day."
-
-        elif today.month == 3 and today.day == 23:
-            msg: str = "Today is World Meteorological Day."
-
-        elif today.month == 3 and today.day == 24:
-            msg: str = "Today is World Tuberculosis Day."
-
-        elif today.month == 4 and today.day == 2:
-            msg: str = "Today is World Autism Awareness Day."
-
-        elif today.month == 4 and today.day == 5:
-            msg: str = "Today is International Day of Conscience."
-
-        elif today.month == 4 and today.day == 6:
-            msg: str = "Today is International Day of Sports for Development and Peace."
-
-        elif today.month == 4 and today.day == 7:
-            msg: str = "Today is World Health Day."
-
-        elif today.month == 4 and today.day == 12:
-            msg: str = "Today is International Day of Human Space Flight."
-
-        elif today.month == 4 and today.day == 21:
-            msg: str = "Today is World Creativity and Innovation Day."
-
-        elif today.month == 4 and today.day == 22:
-            msg: str = "Today is International Mother Earth Day."
-
-        elif today.month == 4 and today.day == 25:
-            msg: str = "Today is World Malaria Day."
-
-        elif today.month == 4 and today.day == 30:
-            msg: str = "Today is International Jazz Day."
-
-        elif today.month == 5 and today.day == 1:
-            msg: str = "Today is International Worker's Day."
-
-        elif today.month == 5 and today.day == 2:
-            msg: str = "Today is World Tuna Day."
-
-        elif today.month == 5 and today.day == 3:
-            msg: str = "Today is World Press Freedom Day."
-
-        # To be continued...
-
-        elif today.month == 6 and today.day == 14:
-            msg: str = "Today is World Blood Donor Day."
-
-        elif today.month == 6 and today.day == 19:
-            msg: str = "Happy Father's Day."
-
-        elif today.month == 7 and today.day == 11:
-            msg: str = "Today is World Population Day."
-
-        elif today.month == 10 and today.day == 5:
-            msg: str = "Today is Fariz's Birthday *(Founder of FOSS KINGDOM)"
-
-        elif today.month == 12 and today.day == 1:
-            msg: str = "Today is World AIDS Day."
-
-        elif today.month == 12 and today.day == 25:
-            msg: str = "Merry Christmas."
-
-        elif today.month == 12 and today.day == 31:
-            msg: str = "Happy New Year's Eve"
-
-        else:
-            msg: str = "#JusticeForSrimathi,  #Kallakurichi"
-
-        print(Fore.RED + msg)
-        Label(
-            master=orders_frame,
-            text=msg,
-            bg="red",
-        ).pack(fill="x")
-
         Label(
             master=orders_frame,
             text="You have zero orders!",
@@ -1008,7 +1052,11 @@ try:
     # Customer tab, Search section
     Label(master=lf22, text="Search:", bg=accent_color_light).pack(side="left", padx=10)
     search_entry: Entry = Entry(
-        master=lf22, textvariable=search_var, width=25, state="disabled"
+        master=lf22,
+        textvariable=search_var,
+        width=25,
+        state="disabled",
+        selectbackground="orange",
     )
     search_entry.bind(sequence="<Return>", func=lambda event: search_record())
     search_entry.pack(side="left", padx=25)
@@ -1038,21 +1086,27 @@ try:
         bg=accent_color_light,
     )
     name_label.grid(row=0, column=0, sticky="w")
-    name_entry: Entry = Entry(master=f21, width=30, textvariable=name_var)
+    name_entry: Entry = Entry(
+        master=f21, width=30, textvariable=name_var, selectbackground="orange"
+    )
     name_entry.grid(row=0, column=1, padx=5, sticky="w")
 
     phone_label: Label = Label(
         master=f21, text="Contact Number:", bg=accent_color_light
     )
     phone_label.grid(row=1, column=0, sticky="w")
-    phone_entry: Entry = Entry(master=f21, width=30, textvariable=phone_var)
+    phone_entry: Entry = Entry(
+        master=f21, width=30, textvariable=phone_var, selectbackground="orange"
+    )
     phone_entry.grid(row=1, column=1, padx=5, sticky="w")
 
     email_label: Label = Label(
         master=f21, text="Email Address (Optional):", bg=accent_color_light
     )
     email_label.grid(row=2, column=0, sticky="w")
-    email_entry: Entry = Entry(master=f21, width=30, textvariable=email_var)
+    email_entry: Entry = Entry(
+        master=f21, width=30, textvariable=email_var, selectbackground="orange"
+    )
     email_entry.grid(row=2, column=1, padx=5, sticky="w")
 
     Label(
@@ -1072,6 +1126,7 @@ try:
         year=today.year - 18,
         month=today.month,
         background="#212946",
+        selectbackground="#212946",
     )
     day_selection.selection_clear()
     day_selection.grid(row=3, column=1, padx=5, pady=5)
@@ -1139,7 +1194,7 @@ try:
     )
     update_button: Button = Button(
         master=f22,
-        text="Update",
+        text="Edit & Update",
         bg="orange",
         fg="white",
         state="disabled",
@@ -1218,16 +1273,19 @@ try:
             Fore.GREEN
             + f"INFO: Booting Time: {round(elapsed_time * 1000, 2)} millisecond(s)"
         )
+        info(msg=f"Booting Time: {round(elapsed_time * 1000, 2)} millisecond(s)")
         boot_time_label.config(
             text=f"Booting Time: {round(elapsed_time * 1000, 2)} millisecond(s)"
         )
 
     else:
         print(Fore.GREEN + f"INFO: Booting Time: {round(elapsed_time, 3)} second(s)")
+        info(msg=f"Booting Time: {round(elapsed_time, 3)} second(s)")
         boot_time_label.config(text=f"Booting Time {round(elapsed_time, 3)} second(s)")
 
     try:
         print(Fore.GREEN + "INFO: Reading database file...")
+        info(msg="Reading database file...")
         conn = connect(database=database_path)
         c = conn.cursor()
         c.execute(
@@ -1244,6 +1302,7 @@ try:
 
     except OperationalError as operational_error:
         print(Fore.RED + f"ERROR: {operational_error}")
+        error(msg=f"ERROR: {operational_error}")
         showinfo(
             title=f"SRM Fashion {__version__}",
             message=f"Sorry, an error occurred! {operational_error}",
@@ -1252,6 +1311,7 @@ try:
 
         if isdir(s=cache_file_path):
             print(Fore.GREEN + "INFO: Cleaning cache files, Please wait...")
+            info(msg="Cleaning cache files, Please wait...")
             rmtree(path=cache_file_path)
 
         print(Fore.RED + "Bye...")

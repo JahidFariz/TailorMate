@@ -9,4 +9,5 @@ venv/*
 *.spec
 *pycharm*.*
 *.old
+*.log
 *test*.py
