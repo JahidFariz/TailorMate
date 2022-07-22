@@ -92,7 +92,10 @@ def search_record() -> None:
     treeview_db.delete(*treeview_db.get_children())
     total_customers_label.config(text="No customer(s) found!")
 
+    count: int = 0
     for _ in total_records:
+        count: int = count + 1
+        _: list = [count, _[0], _[1], _[2], _[3], _[4]]
         treeview_db.insert(parent="", index="end", values=_)
 
     total_customers: int = len(treeview_db.get_children())
@@ -150,7 +153,10 @@ def update_database() -> None:
     update_button.config(state="disabled")
 
     c.execute("select * from customers")
+    count: int = 0
     for _ in c.fetchall():
+        count: int = count + 1
+        _: list = [count, _[0], _[1], _[2], _[3], _[4]]
         treeview_db.insert(parent="", index="end", values=_)
 
     total_customers: int = len(treeview_db.get_children())
@@ -639,6 +645,32 @@ try:
     donation_icon_path: str = join(base_path, "assets/donation.png")
     qrcode_path: str = join(base_path, "assets/qr_code.png")
     cache_file_path: str = join(base_path, "__pycache__")
+    order_icon_path: str = join(base_path, "assets/order.png")
+    # <a href="https://www.flaticon.com/free-icons/target" title="target icons">
+    # Target icons created by Freepik - Flaticon
+    # </a>
+    customers_icon_path: str = join(base_path, "assets/target.png")
+    exit_icon_path: str = join(base_path, "assets/logout.png")
+    # <a href="https://www.flaticon.com/free-icons/search" title="search icons">
+    # Search icons created by Icon home - Flaticon
+    # </a>
+    search_icon_path: str = join(base_path, "assets/magnifying-glass.png")
+    # <a href="https://www.flaticon.com/free-icons/user" title="user icons">
+    # User icons created by uicon - Flaticon
+    # </a>
+    adduser_icon_path: str = join(base_path, "assets/add-user.png")
+    # <a href="https://www.flaticon.com/free-icons/edit" title="edit icons">
+    # Edit icons created by Pixel perfect - Flaticon
+    # </a>
+    edituser_icon_path: str = join(base_path, "assets/edit.png")
+    # <a href="https://www.flaticon.com/free-icons/delete" title="delete icons">
+    # Delete icons created by Andrean Prabowo - Flaticon
+    # </a>
+    removeuser_icon_path: str = join(base_path, "assets/delete-user.png")
+    # <a href="https://www.flaticon.com/free-icons/delete" title="delete icons">
+    # Delete icons created by Pixel perfect - Flaticon
+    # </a>
+    clear_icon_path: str = join(base_path, "assets/delete.png")
     os_name: str = os_env()
     start_time: float = time()
 
@@ -686,9 +718,16 @@ try:
     app.bind(sequence="<Escape>", func=lambda event: exit_app())
 
     menu_bar: Menu = Menu(master=app)
+    links_menu: Menu = Menu(master=menu_bar, tearoff=0)
     help_menu: Menu = Menu(master=menu_bar, tearoff=0)
 
+    menu_bar.add_cascade(label="Links", menu=links_menu)
     menu_bar.add_cascade(label="Help", menu=help_menu)
+
+    links_menu.add_command(label="Licence", command=not_ready_yet)
+    links_menu.add_command(label="Source Code", command=not_ready_yet)
+    links_menu.add_command(label="Issues", command=not_ready_yet)
+    links_menu.add_command(label="Website", command=not_ready_yet)
 
     donation_icon: PhotoImage = PhotoImage(file=donation_icon_path).subsample(
         x=25, y=25
@@ -871,24 +910,30 @@ try:
     )
     lf1.pack(side="bottom", padx=10, ipady=3, pady=10, fill="x")
 
+    order_icon: PhotoImage = PhotoImage(file=order_icon_path).subsample(x=24, y=24)
     order_button: Button = Button(
         master=lf1,
         text="Add an Order",
         bg="black",
         fg="white",
-        width=12,
+        width=115,
         command=lambda: tab_view.select(tab_id=1),
+        image=order_icon,
+        compound="left",
     )
     order_button.bind(sequence="<Return>", func=lambda event: tab_view.select(tab_id=1))
     order_button.grid(row=0, column=0, padx=5)
 
+    exit_icon: PhotoImage = PhotoImage(file=exit_icon_path).subsample(x=24, y=24)
     exit_button: Button = Button(
         master=lf1,
         text="Exit",
         bg="red",
         fg="white",
-        width=12,
+        compound="left",
+        width=115,
         command=exit_app,
+        image=exit_icon,
     )
     exit_button.bind(sequence="<Return>", func=lambda event: exit_app())
     exit_button.grid(row=0, column=1, padx=5)
@@ -924,7 +969,7 @@ try:
     lf24.pack(side="bottom", padx=10, pady=10, ipady=3, fill="x")
 
     # Customer tab, Treeview section
-    header_list: list = ["Name", "Phone", "Email", "D.O.B", "Gender"]
+    header_list: list = ["S.No", "Name", "Phone", "Email", "D.O.B", "Gender"]
 
     treeview_frame: Frame = Frame(master=lf21, bg=accent_color_light)
     treeview_frame.pack(padx=15, fill="both", expand=1)
@@ -943,11 +988,12 @@ try:
     for _ in header_list:
         treeview_db.heading(column=_, text=_)
 
-    treeview_db.column(column=0, width=150, minwidth=150, anchor="w")
-    treeview_db.column(column=1, width=130, minwidth=130, anchor="center")
-    treeview_db.column(column=2, width=225, minwidth=225, anchor="w")
-    treeview_db.column(column=3, width=100, minwidth=100, anchor="center")
-    treeview_db.column(column=4, width=80, minwidth=80, anchor="w")
+    treeview_db.column(column=0, width=75, minwidth=75, anchor="center")
+    treeview_db.column(column=1, width=150, minwidth=150, anchor="w")
+    treeview_db.column(column=2, width=130, minwidth=130, anchor="center")
+    treeview_db.column(column=3, width=225, minwidth=225, anchor="w")
+    treeview_db.column(column=4, width=100, minwidth=100, anchor="center")
+    treeview_db.column(column=5, width=80, minwidth=80, anchor="w")
 
     treeview_db.bind(sequence="<Double-1>", func=lambda event: fetch_data())
     treeview_db.bind(sequence="<Return>", func=lambda event: fetch_data())
@@ -967,14 +1013,17 @@ try:
     search_entry.bind(sequence="<Return>", func=lambda event: search_record())
     search_entry.pack(side="left", padx=25)
 
+    search_icon: PhotoImage = PhotoImage(file=search_icon_path).subsample(x=24, y=24)
     search_button: Button = Button(
         master=lf22,
         text="Search",
         bg="red",
         fg="white",
         state="disabled",
-        width=10,
+        compound="left",
+        width=115,
         command=search_record,
+        image=search_icon,
     )
     search_button.bind(sequence="<Return>", func=lambda event: search_record())
     search_button.pack(side="right", padx=15)
@@ -1054,59 +1103,80 @@ try:
     f22: Frame = Frame(master=lf23, bg=accent_color_light)
     f22.pack(padx=10, pady=5, ipady=3, side="right", fill="both", expand=1)
 
+    clear_icon: PhotoImage = PhotoImage(file=clear_icon_path).subsample(x=24, y=24)
     clear_input_data: Button = Button(
         master=f22,
         text="Clear Input",
         bg="black",
         fg="white",
-        width=10,
+        compound="left",
+        width=115,
         command=clear_entry,
+        image=clear_icon,
     )
     clear_input_data.bind(sequence="<Return>", func=lambda event: clear_entry())
     clear_input_data.pack(padx=5, side="right")
 
+    removeuser_icon: PhotoImage = PhotoImage(file=removeuser_icon_path).subsample(
+        x=24, y=24
+    )
     delete_button: Button = Button(
         master=f22,
         text="Delete",
         bg="red",
         fg="white",
         state="disabled",
-        width=10,
+        compound="left",
+        width=115,
         command=delete_entry,
+        image=removeuser_icon,
     )
     delete_button.bind(sequence="<Return>", func=lambda event: delete_entry())
     delete_button.pack(padx=5, side="right")
 
+    edituser_icon: PhotoImage = PhotoImage(file=edituser_icon_path).subsample(
+        x=24, y=24
+    )
     update_button: Button = Button(
         master=f22,
         text="Update",
         bg="orange",
         fg="white",
         state="disabled",
-        width=10,
+        compound="left",
+        width=115,
         command=update_entry,
+        image=edituser_icon,
     )
     update_button.bind(sequence="<Return>", func=lambda event: update_entry())
     update_button.pack(padx=5, side="right")
 
+    adduser_icon: PhotoImage = PhotoImage(file=adduser_icon_path).subsample(x=24, y=24)
     create_button: Button = Button(
         master=f22,
         text="Create New",
         bg="green",
         fg="white",
-        width=10,
+        compound="left",
+        width=115,
         command=create_entry,
+        image=adduser_icon,
     )
     create_button.bind(sequence="<Return>", func=lambda event: create_entry())
     create_button.pack(padx=5, side="right")
 
+    customer_icon: PhotoImage = PhotoImage(file=customers_icon_path).subsample(
+        x=24, y=24
+    )
     selection_button: Button = Button(
         master=lf24,
         text="Select",
         bg="black",
         fg="white",
-        width=12,
+        compound="left",
+        width=115,
         command=not_ready_yet,
+        image=customer_icon,
     )
     selection_button.bind(sequence="<Return>", func=lambda event: not_ready_yet())
     selection_button.grid(row=0, column=0, padx=5)
@@ -1116,8 +1186,10 @@ try:
         text="Exit",
         bg="red",
         fg="white",
-        width=12,
+        compound="left",
+        width=115,
         command=exit_app,
+        image=exit_icon,
     )
     exit_button.bind(sequence="<Return>", func=lambda event: exit_app())
     exit_button.grid(row=0, column=1, padx=5)
