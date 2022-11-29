@@ -1,6 +1,6 @@
 # encoding:     utf-8
 # author:       Mohamed Fariz Founder of (FOSS KINGDOM)
-# version:      v20221127
+# version:      v20221128
 # language:     Python v3.10.8
 # project_name: TailorMate
 
@@ -419,7 +419,7 @@ def create_configuration() -> None:
 
     ####################################################################################################################
 
-    if not license_agreement_var.get():
+    if not eula_var.get():
         print(F_RED + "[INFO]\tPlease accept the license agreement.")
 
         ca.withdraw()
@@ -4247,7 +4247,7 @@ try:
         database_file_path: str = join(BASE_PATH, "database.db")
         private_key_path: str = join(BASE_PATH, "secret.key")
 
-    __version__: str = "v.20221127 (Alpha-LTS)"
+    __version__: str = "v.20221128 (Alpha-LTS)"
     accent_color_light: str = "lightsteelblue2"
     accent_color_dark: str = "#212946"
 
@@ -4305,8 +4305,8 @@ try:
         ca.bind(sequence="<Control-Q>", func=lambda event: exit_ca())
         ca.bind(sequence="<Control-q>", func=lambda event: exit_ca())
 
-        license_agreement_var: BooleanVar = BooleanVar()
-        license_agreement_var.set(value=False)
+        eula_var: BooleanVar = BooleanVar()
+        eula_var.set(value=False)
         business_name_var: StringVar = StringVar()
         business_type_var: StringVar = StringVar()
         business_type_var.set(value=business_types[0])
@@ -4364,8 +4364,8 @@ try:
         ca_tab_view: Notebook = Notebook(master=ca)
         ca_tab_view.pack(fill=BOTH, expand=1)
 
-        ca_license_frame: Frame = Frame(master=ca_tab_view, bg=accent_color_light)
-        ca_license_frame.pack()
+        ca_eula_frame: Frame = Frame(master=ca_tab_view, bg=accent_color_light)
+        ca_eula_frame.pack()
 
         ca_business_frame: Frame = Frame(master=ca_tab_view, bg=accent_color_light)
         ca_business_frame.pack()
@@ -4382,7 +4382,7 @@ try:
         ca_other_settings: Frame = Frame(master=ca_tab_view, bg=accent_color_light)
         ca_other_settings.pack()
 
-        ca_tab_view.add(child=ca_license_frame, text="License Agreement")
+        ca_tab_view.add(child=ca_eula_frame, text="License Agreement")
         ca_tab_view.add(child=ca_business_frame, text="User Configuration")
         ca_tab_view.add(child=ca_passwd_frame, text="Password Configuration")
         ca_tab_view.add(child=ca_smtp_frame, text="SMTP Configuration")
@@ -4409,7 +4409,7 @@ try:
         )
 
         lf01: LabelFrame = LabelFrame(
-            master=ca_license_frame,
+            master=ca_eula_frame,
             text="License Agreement",
             bg=accent_color_light,
             fg="red",
@@ -4430,7 +4430,7 @@ try:
             text="I accept the license agreement",
             bg=accent_color_light,
             activebackground=accent_color_light,
-            variable=license_agreement_var,
+            variable=eula_var,
         )
         eula_btn.pack(padx=10, anchor=E)
 
