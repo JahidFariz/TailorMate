@@ -13,6 +13,7 @@ tkcalendar==1.6.1
 ttkthemes==3.2.2
 
 # optional
+wheel==0.38.4
 Babel==2.11.0
 black==22.10.0
 isort==5.10.1

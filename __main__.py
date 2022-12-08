@@ -26,7 +26,7 @@
 # secret.key
 
 # email_validator.validate_email function requires internet connection.
-# It helps to check the domain address server is exist or not.
+# It helps to check the domain address server is existing or not.
 
 # TODO: int:03d check.
 # TODO: send order completion message.
@@ -150,37 +150,6 @@ def validate_root_passwd():
         ca.deiconify()
 
         return None
-
-    # if (
-    #     root_passwd1.lower().__contains__("tailor")
-    #     or root_passwd1.lower().__contains__("mate")
-    #     or root_passwd1.lower().__contains__("foss")
-    #     or root_passwd1.lower().__contains__("kingdom")
-    #     or root_passwd1.lower().__contains__("fariz")
-    #     or root_passwd1.lower().__contains__("smtp")
-    #     or root_passwd1.lower().__contains__("password")
-    #     or root_passwd1.lower().__contains__("google")
-    #     or root_passwd1.lower().__contains__("gmail")
-    #     or root_passwd1.lower().__contains__("root")
-    #     or root_passwd1.lower().__contains__("admin")
-    #     or root_passwd1.lower().__contains__(username)
-    # ):
-    #     print(F_BLUE + "=" * 80)
-    #     print(
-    #         F_RED
-    #         + "[ERROR]\tThis password is not allowed! Please try a different one..."
-    #     )
-    #     print(F_BLUE + "=" * 80)
-
-    #     ca_app.withdraw()
-    #     play_alert_sound(master=ca_app, textvariable=ca_bell_var)
-    #     showinfo(
-    #         title=f"TailorMate {__version__}",
-    #         message="This password is not allowed! Please try a different one...",
-    #     )
-    #     ca_app.deiconify()
-
-    #     return None
 
     return encrypt_root_passwd(passwd=root_passwd1)
 
@@ -715,26 +684,6 @@ def create_configuration() -> None:
     email_username: str = split_email[0]
     email_domain_address: str = split_email[1]
 
-    # if not email_username and not email_domain_address:
-    #     print(F_RED + "[INFO]\tInvalid email address, Please try again...")
-
-    #     ca_app.withdraw()
-    #     play_alert_sound(master=ca_app, textvariable=ca_bell_var)
-    #     showinfo(
-    #         title=f"TailorMate {__version__}",
-    #         message="Invalid email address, Please try again...",
-    #     )
-    #     ca_app.deiconify()
-
-    #     ca_tab_view.select(tab_id=3)
-
-    #     smtp_email_lbl.config(fg="red")
-    #     smtp_email_entry.focus()
-
-    #     ca_save_btn.config(text="Save", state=NORMAL)
-
-    #     return None
-
     if not email_domain_address == "gmail.com":
         print(F_RED + "[INFO]\tWe only handles Gmail address for now.")
 
@@ -1261,25 +1210,6 @@ def configure_caps_lock():
         )
 
     caps_lock_state.set(value=not caps_lock_state.get())
-
-
-# def configure_caps_lock_status(key):
-#     if key == Key.caps_lock:
-#         if os_name == "Windows":
-#             if GetKeyState(VK_CAPITAL) == 1:
-#                 pass
-
-#             else:
-#                 pass
-
-#         else:
-#             sa.withdraw()
-#             play_alert_sound(master=tm, textvariable=bell_var)
-#             showinfo(
-#                 title=f"TailorMate {__version__}",
-#                 message="This action is not ready yet, Still work in progress...",
-#             )
-#             sa.deiconify()
 
 
 def check_root_passwd() -> None:
@@ -6252,11 +6182,6 @@ try:
 
     tm.iconphoto(False, TkPhotoImage(file=join(BASE_PATH, "assets/sewing.png")))
     tm.resizable(width=True, height=True)
-    # https://pythonguides.com/python-tkinter-window-size/
-    # tm.geometry(newGeometry=f"{app.winfo_screenwidth()}x{app.winfo_screenheight()}+0+0")
-    # tm.geometry("+0+0")
-    # tm.geometry("%dx%d" % (self.window_width, self.window_height))
-    # tm.minsize(width=831, height=976)
     tm.title(string=shop_name + "!")
     tm.protocol(name="WM_DELETE_WINDOW", func=exit_app)
     tm.bind(sequence="<Control-Q>", func=lambda event: exit_app())
@@ -6274,8 +6199,6 @@ try:
     search_var: StringVar = StringVar()
     name_var1: StringVar = StringVar()
     name_var2: StringVar = StringVar()
-    # isd_code_var1: StringVar = StringVar()
-    # isd_code_var2: StringVar = StringVar()
     ph_var1: StringVar = StringVar()
     ph_var2: StringVar = StringVar()
     email_var1: StringVar = StringVar()
@@ -6306,98 +6229,6 @@ try:
 
     _: Image = Image.open(fp=join(BASE_PATH, "assets/logout.png")).resize(size=(20, 20))
     exit_ico: PhotoImage = PhotoImage(image=_)
-
-    # licence_ico: PhotoImage or None = None
-    # source_code_ico: PhotoImage or None = None
-    # bug_report_ico: PhotoImage or None = None
-    # website_ico: PhotoImage or None = None
-    # donation_ico: PhotoImage or None = None
-    # brand_logo_light: PhotoImage or None = None
-    # order_ico: PhotoImage or None = None
-    # exit_ico: PhotoImage or None = None
-    # search_ico: PhotoImage or None = None
-    # clear_ico: PhotoImage or None = None
-    # remove_user_ico: PhotoImage or None = None
-    # edit_user_ico: PhotoImage or None = None
-    # adduser_ico: PhotoImage or None = None
-    # customer_ico: PhotoImage or None = None
-    # save_ico: PhotoImage or None = None
-
-    # try:
-    #     _: Image = Image.open(fp=join(base_path, "assets/license.png")).resize((21, 21))
-    #     licence_ico: PhotoImage or None = PhotoImage(image=_)
-
-    #     _: Image = Image.open(fp=join(base_path, "assets/programming.png")).resize(
-    #         (21, 21)
-    #     )
-    #     source_code_ico: PhotoImage or None = PhotoImage(image=_)
-
-    #     _: Image = Image.open(fp=join(base_path, "assets/bug-report.png")).resize(
-    #         (21, 21)
-    #     )
-    #     bug_report_ico: PhotoImage or None = PhotoImage(image=_)
-
-    #     _: Image = Image.open(fp=join(base_path, "assets/web-link.png")).resize(
-    #         (21, 21)
-    #     )
-    #     website_ico: PhotoImage or None = PhotoImage(image=_)
-
-    #     _: Image = Image.open(fp=donation_ico_path).resize((21, 21))
-    #     donation_ico: PhotoImage or None = PhotoImage(image=_)
-
-    #     _: Image = Image.open(fp=join(base_path, "assets/brand-logo-light.png"))
-    #     brand_logo_light: PhotoImage or None = PhotoImage(image=_)
-
-    #     _: Image = Image.open(fp=join(base_path, "assets/brand-logo-dark.png"))
-    #     brand_logo_dark: PhotoImage or None = PhotoImage(image=_)
-
-    #     _: Image = Image.open(fp=join(base_path, "assets/order.png")).resize((21, 21))
-    #     order_ico: PhotoImage or None = PhotoImage(image=_)
-
-    #     _: Image = Image.open(fp=join(base_path, "assets/logout.png")).resize((21, 21))
-    #     exit_ico: PhotoImage or None = PhotoImage(image=_)
-
-    #     _: Image = Image.open(fp=join(base_path, "assets/magnifying-glass.png")).resize(
-    #         (21, 21)
-    #     )
-    #     search_ico: PhotoImage or None = PhotoImage(image=_)
-
-    #     _: Image = Image.open(fp=join(base_path, "assets/delete.png")).resize((21, 21))
-    #     clear_ico: PhotoImage or None = PhotoImage(image=_)
-
-    #     _: Image = Image.open(fp=join(base_path, "assets/delete-user.png")).resize(
-    #         (21, 21)
-    #     )
-    #     remove_user_ico: PhotoImage or None = PhotoImage(image=_)
-
-    #     _: Image = Image.open(fp=join(base_path, "assets/edit.png")).resize((21, 21))
-    #     edit_user_ico: PhotoImage or None = PhotoImage(image=_)
-
-    #     _: Image = Image.open(fp=join(base_path, "assets/add-user.png")).resize(
-    #         (21, 21)
-    #     )
-    #     adduser_ico: PhotoImage or None = PhotoImage(image=_)
-
-    #     _: Image = Image.open(fp=join(base_path, "assets/target.png")).resize((21, 21))
-    #     customer_ico: PhotoImage or None = PhotoImage(image=_)
-
-    #     _: Image = Image.open(fp=join(base_path, "assets/diskette.png")).resize(
-    #         (21, 21)
-    #     )
-    #     save_ico: PhotoImage or None = PhotoImage(image=_)
-
-    # except FileNotFoundError as file_not_found_error:
-    #     print(F_RED + f"[ERROR]\t{file_not_found_error}")
-    #     play_alert_sound(master=tm, textvariable=bell_var)
-    #     showinfo(title=f"TailorMate {__version__}", message=str(file_not_found_error))
-    #     tm.destroy()
-
-    #     clean_cache()
-
-    #     print(F_RED + "Bye...")
-
-    #     clrscr()
-    #     terminate()
 
     # Creating and configure main menu
     menubar: Menu = Menu(master=tm)
@@ -7003,7 +6834,6 @@ try:
     orders_db.column(column=1, width=90, minwidth=90, anchor=CENTER)  # Order No
     orders_db.column(column=2, width=150, minwidth=150, anchor=W)  # Name
     orders_db.column(column=3, width=155, minwidth=155, anchor=CENTER)  # Created on
-    # orders_db.column(column=4, width=100, minwidth=100, anchor=E)  # ISD Code
     orders_db.column(column=4, width=130, minwidth=130, anchor=CENTER)  # Phone Number
     orders_db.column(column=5, width=110, minwidth=110, anchor=CENTER)  # Item
     orders_db.column(column=6, width=130, minwidth=130, anchor=CENTER)  # Stitching type
@@ -7054,17 +6884,6 @@ try:
         command=product_delivered,
     )
     product_delivered_btn.grid(row=0, column=1, padx=10)
-
-    # if tot_orders == 0:
-    #     l12: Label = Label(
-    #         master=orders_frame,
-    #         text="You have zero orders!",
-    #         fg="red",
-    #     )
-    #     l12.pack()
-
-    #     brand_lbl: Label = Label(master=orders_frame)
-    #     brand_lbl.pack(fill=BOTH, expand=1)
 
     lf12: LabelFrame = LabelFrame(
         master=orders_frame,
@@ -7156,8 +6975,6 @@ try:
     customers_db.column(column=1, width=150, minwidth=150, anchor=W)
     # Created on
     customers_db.column(column=2, width=155, minwidth=155, anchor=CENTER)
-    # ISD Code
-    # customers_db.column(column=3, width=100, minwidth=100, anchor=E)
     # Phone Number
     customers_db.column(column=3, width=130, minwidth=130, anchor=CENTER)
     # Email
@@ -7239,17 +7056,6 @@ try:
 
     ph_lbl2: Label = Label(master=f21, text="Contact Number:")
     ph_lbl2.grid(row=1, column=0, sticky=W)
-
-    # for _ in country_list:
-    #     if country == f"{_[0]} ({_[1]})":
-    #         ph_var1.set(value=_[1])
-    #         isd_code_var1.set(value=_[1])
-    #         isd_code_var2.set(value=_[1])
-
-    # ph_cb2: Combobox = Combobox(
-    #     master=f21, width=10, textvariable=isd_code_var1, values=isd_codes, justify=RIGHT
-    # )
-    # ph_cb2.grid(row=1, column=1, padx=(5, 0), sticky=NSEW)
 
     ph_entry: Entry = Entry(
         master=f21,
@@ -7486,10 +7292,6 @@ try:
 
     ph_lbl3: Label = Label(master=f31, text="Contact Number:")
     ph_lbl3.grid(row=1, column=0, padx=5, sticky=W)
-    # ph_cb3: Combobox = Combobox(
-    #     master=f321, width=10, textvariable=isd_code_var2, values=isd_codes, justify=RIGHT
-    # )
-    # ph_cb3.grid(row=1, column=1, padx=(5, 0), sticky=NSEW)
     ph_entry3: Entry = Entry(
         master=f31,
         width=30,
@@ -7519,12 +7321,6 @@ try:
 
     order_type_lbl: Label = Label(master=f32, text="Order Type:")
     order_type_lbl.grid(row=0, column=0, padx=5, pady=2, sticky=W)
-
-    "Alteration"
-    "Embroidery"
-    "Knitting"
-    "Material"
-    "Stitching"
 
     stitch_var.set(value=1)
     rb1: Radiobutton = Radiobutton(
