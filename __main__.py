@@ -5,7 +5,7 @@
 # project_name: TailorMate
 
 # Full forms
-
+# ============================
 # wa        Whatsapp
 # yt        YouTube
 # ca        Configuration App
@@ -136,7 +136,7 @@ def validate_root_passwd():
 
         return None
 
-    if not root_passwd1 == root_passwd2:
+    if root_passwd1 != root_passwd2:
         print(F_BLUE + "=" * 80)
         print(F_RED + "[ERROR]\tPassword doesn't match, Please try again...")
         print(F_BLUE + "=" * 80)
@@ -684,7 +684,7 @@ def create_configuration() -> None:
     email_username: str = split_email[0]
     email_domain_address: str = split_email[1]
 
-    if not email_domain_address == "gmail.com":
+    if email_domain_address != "gmail.com":
         print(F_RED + "[INFO]\tWe only handles Gmail address for now.")
 
         ca.withdraw()
@@ -801,7 +801,7 @@ def create_configuration() -> None:
 
         return None
 
-    if not len(ca_smtp_passwd) == 16 or not ca_smtp_passwd.isalpha():
+    if len(ca_smtp_passwd) != 16 or not ca_smtp_passwd.isalpha():
         print(F_BLUE + "=" * 80)
         print(F_RED + "[ERROR]\tIncorrect SMTP password! Please try again...")
         print(F_BLUE + "=" * 80)
@@ -2797,7 +2797,7 @@ def save_order():
         save_item_btn.config(text="Save", state=NORMAL)
         return None
 
-    if not selected_row[0] == name:
+    if selected_row[0] != name:
         print(F_BLUE + "=" * 80)
         print(F_RED + "[ERROR]\tThe Customer's name mismatch!")
         print(F_BLUE + "=" * 80)
@@ -2815,7 +2815,7 @@ def save_order():
         save_item_btn.config(text="Save", state=NORMAL)
         return None
 
-    if not selected_row[3] == email:
+    if selected_row[3] != email:
         print(F_BLUE + "=" * 80)
         print(F_RED + "[ERROR]\tThe Customer's email address mismatch!")
         print(F_BLUE + "=" * 80)

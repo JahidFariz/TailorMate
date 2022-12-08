@@ -16,8 +16,6 @@ ___
 
 ### Note that Python 3.9+ cannot be used on Windows 7 or earlier
 
-<https://www.python.org/downloads/release/python-3810/>
-
 ___
 
 ## Open Source Third-party modules
