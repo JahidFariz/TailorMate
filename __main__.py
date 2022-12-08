@@ -70,7 +70,7 @@ def clrscr():
         pass
 
 
-def clean_cache():
+def clear_cache():
     cache_file_path: str = join(BASE_PATH, "__pycache__")
 
     if isdir(s=cache_file_path):
@@ -81,9 +81,9 @@ def clean_cache():
 def update_configuration(section: str, option: str, value) -> None:
     config.set(section=section, option=option, value=value)
 
-    config_file = open(file=config_file_path, mode="w")
-    config.write(fp=config_file)
-    config_file.close()
+    file = open(file=config_file, mode="w")
+    config.write(fp=file)
+    file.close()
 
 
 def toggle_root_passwd():
@@ -407,9 +407,9 @@ def create_configuration() -> None:
 
     ####################################################################################################################
 
-    if not isfile(path=private_key_path):
+    if not isfile(path=private_key_file):
         print(F_GREEN + "[INFO]\tGenerating new private key...")
-        gen_private_key(key_path=private_key_path)
+        gen_private_key(key_path=private_key_file)
 
     ####################################################################################################################
 
@@ -823,7 +823,7 @@ def create_configuration() -> None:
 
         return None
 
-    ca_smtp_passwd = encrypt_smtp_passwd(data=ca_smtp_passwd, key_path=private_key_path)
+    ca_smtp_passwd = encrypt_smtp_passwd(data=ca_smtp_passwd, key_path=private_key_file)
 
     ####################################################################################################################
 
@@ -895,7 +895,7 @@ def create_configuration() -> None:
 def exit_ca() -> None:
     ca.destroy()
 
-    clean_cache()
+    clear_cache()
 
     print(F_RED + "Bye...")
 
@@ -1244,12 +1244,34 @@ def check_root_passwd() -> None:
 def exit_sa():
     sa.destroy()
 
-    clean_cache()
+    clear_cache()
 
     print(F_RED + "Bye...")
 
     clrscr()
     terminate()
+
+
+def clear_data():
+    tm.withdraw()
+    play_bell_sound(master=tm, bell_var=tm_bell_var)
+
+    if askyesno(
+        title=f"TailorMate {__version__}",
+        message="All of this application's data will be deleted permanently. This includes all files, settings, "
+        "accounts, databases etc.",
+    ):
+        tm.destroy()
+
+        print(F_YELLOW + "[INFO]\tClearing App Data, Please wait...")
+        rmtree(path=config_path)
+
+        clear_cache()
+
+        terminate()
+
+    else:
+        tm.deiconify()
 
 
 def add_order():
@@ -4014,7 +4036,7 @@ def exit_app() -> None:
 
     conn.close()
     tm.destroy()
-    clean_cache()
+    clear_cache()
     print(F_RED + "Bye...")
 
     clrscr()
@@ -4043,6 +4065,7 @@ try:
     from os import mkdir
     from os import system as terminal
     from os.path import isdir, isfile, join
+    from shutil import rmtree
     from pathlib import Path
     from platform import system as os_environment
     from random import choice
@@ -4157,25 +4180,23 @@ try:
     # isd_codes: list = sorted(isd_codes)
 
     if os_env == "Linux":
-        if not isdir(s=f"/home/{whoami}/.config/TailorMate/"):
-            mkdir(path=f"/home/{whoami}/.config/TailorMate/")
+        config_path: str = f"/home/{whoami}/.config/TailorMate/"
 
-        config_file_path: str = f"/home/{whoami}/.config/TailorMate/config.ini"
-        database_file_path: str = f"/home/{whoami}/.config/TailorMate/database.db"
-        private_key_path: str = f"/home/{whoami}/.config/TailorMate/secret.key"
+        if not isdir(s=config_path):
+            mkdir(path=config_path)
 
     elif os_env == "Windows":
-        if not isdir(s=f"C:\\Users\\{whoami}\\TailorMate\\"):
-            mkdir(path=f"C:\\Users\\{whoami}\\TailorMate\\")
+        config_path: str = f"C:\\Users\\{whoami}\\TailorMate\\"
 
-        config_file_path: str = f"C:\\Users\\{whoami}\\TailorMate\\config.ini"
-        database_file_path: str = f"C:\\Users\\{whoami}\\TailorMate\\database.db"
-        private_key_path: str = f"C:\\Users\\{whoami}\\TailorMate\\secret.key"
+        if not isdir(s=config_path):
+            mkdir(path=config_path)
 
     else:
-        config_file_path: str = join(BASE_PATH, "config.ini")
-        database_file_path: str = join(BASE_PATH, "database.db")
-        private_key_path: str = join(BASE_PATH, "secret.key")
+        config_path: Path = BASE_PATH
+
+    config_file: str = join(config_path, "config.ini")
+    db_file: str = join(config_path, "database.db")
+    private_key_file: str = join(config_path, "secret.key")
 
     __version__: str = "v.20221128 (Alpha-LTS)"
     accent_color_light: str = "lightsteelblue2"
@@ -4221,7 +4242,7 @@ try:
     if os_env == "Windows":
         terminal(command="title TailorMate")
 
-    if not isfile(path=config_file_path):
+    if not isfile(path=config_file):
         print(F_GREEN + "[INFO]\tLoading configuration app, Please wait...")
 
         ca: Tk = Tk()
@@ -5475,7 +5496,7 @@ try:
     ####################################################################################################################
 
     print(F_GREEN + "[INFO]\tReading configuration file, Please wait...")
-    config.read(filenames=config_file_path)
+    config.read(filenames=config_file)
 
     shop_name: str = config.get(section="userprofile", option="business_name").upper()
     shop_contact: str = config.get(section="userprofile", option="phone").replace(
@@ -6135,7 +6156,7 @@ try:
     try:
         smtp_passwd: str = decrypt_smtp_passwd(
             token=config.get(section="smtp_server", option="password"),
-            key_path=private_key_path,
+            key_path=private_key_file,
         )
 
     except InvalidToken as invalid_token:
@@ -6148,7 +6169,7 @@ try:
             title=f"TailorMate {__version__}", message=f"InvalidToken: {invalid_token}"
         )
 
-        clean_cache()
+        clear_cache()
 
         print(F_RED + "Bye...")
 
@@ -6165,7 +6186,7 @@ try:
             title=f"TailorMate {__version__}", message=f"ValueError: {value_error}"
         )
 
-        clean_cache()
+        clear_cache()
 
         print(F_RED + "Bye...")
 
@@ -6292,6 +6313,8 @@ try:
             section="options", option="check_mxdns_record", value=str(mxdns_var.get())
         ),
     )
+
+    settings_menu.add_command(label="Clear App Data", command=clear_data)
 
     options_menu.add_cascade(label="Settings Preference", menu=settings_menu)
 
@@ -7545,7 +7568,7 @@ try:
 
     try:
         print(F_GREEN + "[INFO]\tReading database file...")
-        conn = connect(database=database_file_path)
+        conn = connect(database=db_file)
         c = conn.cursor()
         c.execute(
             """create table if not exists orders (
@@ -7587,7 +7610,7 @@ try:
         )
         tm.destroy()
 
-        clean_cache()
+        clear_cache()
 
         print(F_RED + "Bye...")
 
