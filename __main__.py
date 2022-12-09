@@ -1,6 +1,6 @@
 # encoding:     utf-8
 # author:       Mohamed Fariz Founder of (FOSS KINGDOM)
-# version:      v20221128
+# version:      v20221209
 # language:     Python v3.10.8
 # project_name: TailorMate
 
@@ -4065,7 +4065,6 @@ try:
     from os import mkdir
     from os import system as terminal
     from os.path import isdir, isfile, join
-    from shutil import rmtree
     from pathlib import Path
     from platform import system as os_environment
     from random import choice
@@ -4198,7 +4197,7 @@ try:
     db_file: str = join(config_path, "database.db")
     private_key_file: str = join(config_path, "secret.key")
 
-    __version__: str = "v.20221128 (Alpha-LTS)"
+    __version__: str = "v.20221209 (Alpha-LTS)"
     accent_color_light: str = "lightsteelblue2"
     accent_color_dark: str = "#212946"
 
@@ -4888,16 +4887,31 @@ try:
 
         Label(
             master=f041, text="Steps to follow:", fg="red", bg=accent_color_light
-        ).grid(row=0, column=0, sticky=W)
+        ).grid(row=0, column=0, sticky=W, columnspan=2)
 
         Label(
             master=f041,
-            text="Step 1: Don't forget to turn ON",
+            text="Step 1: Don't forget to turn ON 2-Step Verification",
             bg=accent_color_light,
-        ).grid(row=1, column=0, padx=2, sticky=W)
+        ).grid(row=1, column=0, padx=2, sticky=W, columnspan=2)
+
+        Label(
+            master=f041,
+            text="Step 2: Generate the new SMTP App Password",
+            bg=accent_color_light,
+        ).grid(row=2, column=0, padx=2, sticky=W, columnspan=2)
+
+        Label(
+            master=f041,
+            text="Step 3: Select the mail app and Create the custom device name.",
+            bg=accent_color_light,
+        ).grid(row=3, column=0, padx=2, sticky=W, columnspan=2)
+
+        ca_btn_frame_4: Frame = Frame(master=lf04, bg=accent_color_light)
+        ca_btn_frame_4.pack()
 
         two_step_verification_btn: Button = Button(
-            master=f041,
+            master=ca_btn_frame_4,
             text="2-Step Verification",
             activebackground="green",
             fg="#fff",
@@ -4916,17 +4930,11 @@ try:
                 url="https://myaccount.google.com/signinoptions/two-step-verification"
             ),
         )
-        two_step_verification_btn.grid(row=1, column=1, padx=2)
-
-        Label(
-            master=f041,
-            text="Step 2: Click here to generate",
-            bg=accent_color_light,
-        ).grid(row=2, column=0, padx=2, sticky=W)
+        two_step_verification_btn.grid(row=0, column=0, padx=5)
 
         # https://support.google.com/accounts?p=less-secure-apps&hl=en
         app_passwds_btn: Button = Button(
-            master=f041,
+            master=ca_btn_frame_4,
             text="SMTP App Password",
             activebackground="green",
             fg="#fff",
@@ -4941,20 +4949,20 @@ try:
             sequence="<Return>",
             func=lambda event: browser(url="https://myaccount.google.com/apppasswords"),
         )
-        app_passwds_btn.grid(row=2, column=1, padx=2)
+        app_passwds_btn.grid(row=0, column=1, padx=5)
 
         two_step_verification_btn.bind(
-            sequence="<Up>", func=lambda event: app_passwds_btn.focus()
+            sequence="<Left>", func=lambda event: app_passwds_btn.focus()
         )
         two_step_verification_btn.bind(
-            sequence="<Down>", func=lambda event: app_passwds_btn.focus()
+            sequence="<Right>", func=lambda event: app_passwds_btn.focus()
         )
 
         app_passwds_btn.bind(
-            sequence="<Up>", func=lambda event: two_step_verification_btn.focus()
+            sequence="<Left>", func=lambda event: two_step_verification_btn.focus()
         )
         app_passwds_btn.bind(
-            sequence="<Down>", func=lambda event: two_step_verification_btn.focus()
+            sequence="<Right>", func=lambda event: two_step_verification_btn.focus()
         )
 
         Label(

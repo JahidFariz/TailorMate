@@ -10,7 +10,7 @@ apt list --upgradable -a;
 echo;
 
 echo "> sudo apt install python3 python3-pip python3-tk python3-venv xtitle";
-sudo apt install python3 python3-pip python3-tk python3-venv;
+sudo apt install python3 python3-pip python3-tk python3-venv xtitle;
 echo;
 
 echo "> sudo apt autoremove";
