@@ -369,14 +369,14 @@ def check_passwd_strength():
 def update_theme_color() -> None:  # This static function only works on setting configuration
     ca_selected_theme: str = ca_theme_var.get()
 
-    if ca_selected_theme == themes_list[0] or (
-        ca_selected_theme == themes_list[2] and isLight()
+    if ca_selected_theme == THEMES_LIST[0] or (
+        ca_selected_theme == THEMES_LIST[2] and isLight()
     ):
         ca_theme_table.config(bg="#fff", fg="#000")
         ca_theme_table["menu"].config(bg="#fff", fg="#000")
 
-    elif ca_selected_theme == themes_list[1] or (
-        ca_selected_theme == themes_list[2] and isDark()
+    elif ca_selected_theme == THEMES_LIST[1] or (
+        ca_selected_theme == THEMES_LIST[2] and isDark()
     ):
         ca_theme_table.config(bg="#000", fg="#fff")
         ca_theme_table["menu"].config(bg="#000", fg="#fff")
@@ -873,10 +873,10 @@ def create_configuration() -> None:
 
     ca_selected_theme: str = ca_theme_var.get()
 
-    if ca_selected_theme == themes_list[0]:
+    if ca_selected_theme == THEMES_LIST[0]:
         update_configuration(section="options", option="theme", value="light")
 
-    elif ca_selected_theme == themes_list[1]:
+    elif ca_selected_theme == THEMES_LIST[1]:
         update_configuration(section="options", option="theme", value="dark")
 
     else:
@@ -1496,14 +1496,12 @@ def send_email(to_addr: str, subject: str, message):
     msg["From"] = smtp_email
     msg["To"] = to_addr
     msg["Subject"] = subject
-    # msg.set_content(message)
     msg.set_content(MIMEText(message, "html"))
 
     try:
         print(F_YELLOW + "[INFO]\tConnecting to smtp.gmail.com:587, Please wait...")
         setdefaulttimeout(10.0)
         server: SMTP = SMTP(host="smtp.gmail.com", port=587)
-        # server: SMTP = SMTP(host="localhost", port=1025)
         server.ehlo()
         print(F_YELLOW + "[INFO]\tStarting TLS Handshake, Please wait...")
         server.starttls()
@@ -1512,8 +1510,6 @@ def send_email(to_addr: str, subject: str, message):
         print(F_YELLOW + "[INFO]\tLogging in to your gmail account, Please wait...")
         server.login(user=smtp_email, password=smtp_passwd)
         print(F_GREEN + "[INFO]\tLogin success...")
-        # msg: str = f"subject: {subject}\n\n{message}"
-        # server.sendmail(from_addr=smtp_email, to_addrs=to_addr, msg=msg)
         server.send_message(msg=msg)
         print(F_GREEN + "[INFO]\tEmail sent successfully!")
         server.quit()
@@ -1897,7 +1893,6 @@ def update_customers() -> None:
         serial_no: int = serial_no + 1
         name: str = _[0]
         created_on: str = _[1]
-        # iso_code: str = _[2]
         ph: str = _[2]
         email: str = _[3]
         dob: str = _[4]
@@ -1965,7 +1960,6 @@ def fetch_data() -> None:
 
     customer_data: list = customers_db.item(item=selected_id).get("values")
     name_var1.set(value=customer_data[1])
-    # isd_code_var1.set(value="+" + str(customer_data[3]))
     ph_var1.set(value=customer_data[3])
     email_var1.set(value=customer_data[4])
 
@@ -2085,7 +2079,6 @@ def search_record() -> None:
         count: int = count + 1
         name: str = _[0]
         created_on: str = _[1]
-        # isd_code: str = _[2]
         ph: str = _[2]
         email: str = _[3]
         dob: str = _[4]
@@ -2185,7 +2178,6 @@ def create_entry() -> None:
 
         return None
 
-    # isd_code: str = isd_code_var1.get()
     ph: str or None = validate_ph(ph_no_var=ph_var1, master=tm, bell_var=tm_bell_var)
     if ph is None:
         ph_lbl2.config(fg="red")
@@ -2394,7 +2386,6 @@ def update_entry() -> None:
         name_entry.focus()
         return None
 
-    # isd_code: str = isd_code_var1.get()
     ph: str or None = validate_ph(ph_no_var=ph_var1, master=tm, bell_var=tm_bell_var)
     if ph is None:
         ph_lbl2.config(fg="red")
@@ -3116,66 +3107,66 @@ def time_stat() -> None:
 
 
 def switch2dark() -> None:  # This is the main dark theme function
-    tm.config(bg=accent_color_dark)
-    menubar.config(bg=accent_color_dark, fg="#fff")
-    file_menu.config(bg=accent_color_dark, fg="#fff")
-    options_menu.config(bg=accent_color_dark, fg="#fff")
-    calendar_menu.config(bg=accent_color_dark, fg="#fff")
-    settings_menu.config(bg=accent_color_dark, fg="#fff")
-    theme_menu.config(bg=accent_color_dark, fg="#fff")
-    links_menu.config(bg=accent_color_dark, fg="#fff")
-    help_menu.config(bg=accent_color_dark, fg="#fff")
-    orders_frame.config(bg=accent_color_dark)
-    customers_frame.config(bg=accent_color_dark)
-    items_frame.config(bg=accent_color_dark)
-    stats_frame.config(bg=accent_color_dark)
-    greetings_lbl.config(bg=accent_color_dark, fg="#fff")
-    lf11.config(bg=accent_color_dark)
-    treeview_frame1.config(bg=accent_color_dark)
+    tm.config(bg=THEME["dark"])
+    menubar.config(bg=THEME["dark"], fg="#fff")
+    file_menu.config(bg=THEME["dark"], fg="#fff")
+    options_menu.config(bg=THEME["dark"], fg="#fff")
+    calendar_menu.config(bg=THEME["dark"], fg="#fff")
+    settings_menu.config(bg=THEME["dark"], fg="#fff")
+    theme_menu.config(bg=THEME["dark"], fg="#fff")
+    links_menu.config(bg=THEME["dark"], fg="#fff")
+    help_menu.config(bg=THEME["dark"], fg="#fff")
+    orders_frame.config(bg=THEME["dark"])
+    customers_frame.config(bg=THEME["dark"])
+    items_frame.config(bg=THEME["dark"])
+    stats_frame.config(bg=THEME["dark"])
+    greetings_lbl.config(bg=THEME["dark"], fg="#fff")
+    lf11.config(bg=THEME["dark"])
+    treeview_frame1.config(bg=THEME["dark"])
     orders_db.tag_configure(
-        tagname="odd", background=accent_color_dark, foreground="#fff"
+        tagname="odd", background=THEME["dark"], foreground="#fff"
     )
     orders_db.tag_configure(tagname="even", background="#2A3459", foreground="#fff")
-    tot_orders_lbl.config(bg=accent_color_dark)
-    f11.config(bg=accent_color_dark)
+    tot_orders_lbl.config(bg=THEME["dark"])
+    f11.config(bg=THEME["dark"])
     mark_as_completed_btn.config(bg="green", activebackground="#20C020")
     product_delivered_btn.config(bg="#000080", activebackground="#2020C0")
-    lf12.config(bg=accent_color_dark)
+    lf12.config(bg=THEME["dark"])
     order_btn.config(bg="#000", activebackground="#404040")
     exit_btn1.config(activebackground="#C02020", bg="#800000")
-    lf21.config(bg=accent_color_dark)
-    lf22.config(bg=accent_color_dark)
-    lf23.config(bg=accent_color_dark)
-    lf24.config(bg=accent_color_dark)
-    treeview_frame2.config(bg=accent_color_dark)
+    lf21.config(bg=THEME["dark"])
+    lf22.config(bg=THEME["dark"])
+    lf23.config(bg=THEME["dark"])
+    lf24.config(bg=THEME["dark"])
+    treeview_frame2.config(bg=THEME["dark"])
     customers_db.tag_configure(
-        tagname="odd", background=accent_color_dark, foreground="#fff"
+        tagname="odd", background=THEME["dark"], foreground="#fff"
     )
     customers_db.tag_configure(tagname="even", background="#2A3459", foreground="#fff")
-    tot_customers_lbl.config(bg=accent_color_dark)
-    search_lbl.config(bg=accent_color_dark, fg="#fff")
+    tot_customers_lbl.config(bg=THEME["dark"])
+    search_lbl.config(bg=THEME["dark"], fg="#fff")
     search_entry.config(
         bg="#2A3459", fg="#fff", highlightcolor="blue", insertbackground="red"
     )
-    runtime_search_lbl.config(bg=accent_color_dark, fg="#fff")
+    runtime_search_lbl.config(bg=THEME["dark"], fg="#fff")
     search_btn.config(activebackground="#C02020", bg="#800000")
-    f2.config(bg=accent_color_dark)
-    f21.config(bg=accent_color_dark)
-    f22.config(bg=accent_color_dark)
-    name_lbl.config(bg=accent_color_dark, fg="#fff")
+    f2.config(bg=THEME["dark"])
+    f21.config(bg=THEME["dark"])
+    f22.config(bg=THEME["dark"])
+    name_lbl.config(bg=THEME["dark"], fg="#fff")
     name_entry.config(
         bg="#2A3459", fg="#fff", highlightcolor="blue", insertbackground="red"
     )
-    ph_lbl2.config(bg=accent_color_dark, fg="#fff")
+    ph_lbl2.config(bg=THEME["dark"], fg="#fff")
     ph_entry.config(
         bg="#2A3459", fg="#fff", highlightcolor="blue", insertbackground="red"
     )
-    email_lbl.config(bg=accent_color_dark, fg="#fff")
+    email_lbl.config(bg=THEME["dark"], fg="#fff")
     email_entry.config(
         bg="#2A3459", fg="#fff", highlightcolor="blue", insertbackground="red"
     )
-    dob_lbl.config(bg=accent_color_dark, fg="#fff")
-    gender_lbl.config(bg=accent_color_dark, fg="#fff")
+    dob_lbl.config(bg=THEME["dark"], fg="#fff")
+    gender_lbl.config(bg=THEME["dark"], fg="#fff")
     create_btn.config(activebackground="#20C020", bg="green")
     update_btn.config(activebackground="#FF8020", bg="#C08000")
     delete_btn.config(activebackground="#C02020", bg="#800000")
@@ -3183,71 +3174,71 @@ def switch2dark() -> None:  # This is the main dark theme function
     clear_inputs_btn.config(activebackground="#404040", bg="#000")
     select_btn.config(activebackground="#404040", bg="#000")
     exit_btn2.config(activebackground="#C02020", bg="#800000")
-    lf31.config(bg=accent_color_dark)
-    treeview_frame3.config(bg=accent_color_dark)
+    lf31.config(bg=THEME["dark"])
+    treeview_frame3.config(bg=THEME["dark"])
     items_db.tag_configure(
-        tagname="odd", background=accent_color_dark, foreground="#fff"
+        tagname="odd", background=THEME["dark"], foreground="#fff"
     )
     items_db.tag_configure(tagname="even", background="#2A3459", foreground="#fff")
-    info_lbl.config(bg=accent_color_dark)
-    lf32.config(bg=accent_color_dark)
-    f3.config(bg=accent_color_dark)
-    f31.config(bg=accent_color_dark)
-    f32.config(bg=accent_color_dark)
-    name_lbl3.config(bg=accent_color_dark, fg="#fff")
+    info_lbl.config(bg=THEME["dark"])
+    lf32.config(bg=THEME["dark"])
+    f3.config(bg=THEME["dark"])
+    f31.config(bg=THEME["dark"])
+    f32.config(bg=THEME["dark"])
+    name_lbl3.config(bg=THEME["dark"], fg="#fff")
     name_entry3.config(
         bg="#2A3459", fg="#fff", highlightcolor="blue", insertbackground="red"
     )
-    ph_lbl3.config(bg=accent_color_dark, fg="#fff")
+    ph_lbl3.config(bg=THEME["dark"], fg="#fff")
     ph_entry3.config(
         bg="#2A3459", fg="#fff", highlightcolor="blue", insertbackground="red"
     )
-    email_lbl3.config(bg=accent_color_dark, fg="#fff")
+    email_lbl3.config(bg=THEME["dark"], fg="#fff")
     email_entry3.config(
         bg="#2A3459", fg="#fff", highlightcolor="blue", insertbackground="red"
     )
-    order_type_lbl.config(bg=accent_color_dark, fg="#fff")
+    order_type_lbl.config(bg=THEME["dark"], fg="#fff")
     rb1.config(bg="#fff")
     rb2.config(bg="#fff")
     rb3.config(bg="#fff")
     rb4.config(bg="#fff")
     rb5.config(bg="#fff")
-    notes_lbl.config(bg=accent_color_dark, fg="#fff")
+    notes_lbl.config(bg=THEME["dark"], fg="#fff")
     notes_entry.config(bg="#2A3459", fg="#fff", highlightcolor="blue")
-    notes_popup_menu.config(bg=accent_color_dark, fg="#fff")
-    cost_lbl.config(bg=accent_color_dark, fg="#fff")
+    notes_popup_menu.config(bg=THEME["dark"], fg="#fff")
+    cost_lbl.config(bg=THEME["dark"], fg="#fff")
     cost_entry.config(
         bg="#2A3459", fg="#fff", highlightcolor="blue", insertbackground="red"
     )
-    delivery_date_lbl.config(bg=accent_color_dark, fg="#fff")
-    priority_lbl.config(bg=accent_color_dark, fg="#fff")
+    delivery_date_lbl.config(bg=THEME["dark"], fg="#fff")
+    priority_lbl.config(bg=THEME["dark"], fg="#fff")
     priority_btn.config(bg="#fff")
-    lf33.config(bg=accent_color_dark)
-    lf4.config(bg=accent_color_dark)
-    f41.config(bg=accent_color_dark)
-    tot_customers_lbl4.config(bg=accent_color_dark, fg="#fff")
-    tot_customers_value.config(bg=accent_color_dark, fg="#fff")
-    active_orders_lbl.config(bg=accent_color_dark, fg="#fff")
-    active_orders_value.config(bg=accent_color_dark, fg="#fff")
-    completed_orders_lbl.config(bg=accent_color_dark, fg="#fff")
-    completed_orders_value.config(bg=accent_color_dark, fg="#fff")
-    belated_delivered_lbl.config(bg=accent_color_dark, fg="#fff")
-    belated_delivered_value.config(bg=accent_color_dark, fg="#fff")
-    amount_earned_lbl.config(bg=accent_color_dark, fg="#fff")
-    amount_earned_value.config(bg=accent_color_dark, fg="#fff")
-    pwr_lbl.config(bg=accent_color_dark)
-    time_lbl.config(bg=accent_color_dark, fg="#fff")
-    boot_time_lbl.config(bg=accent_color_dark, fg="#fff")
+    lf33.config(bg=THEME["dark"])
+    lf4.config(bg=THEME["dark"])
+    f41.config(bg=THEME["dark"])
+    tot_customers_lbl4.config(bg=THEME["dark"], fg="#fff")
+    tot_customers_value.config(bg=THEME["dark"], fg="#fff")
+    active_orders_lbl.config(bg=THEME["dark"], fg="#fff")
+    active_orders_value.config(bg=THEME["dark"], fg="#fff")
+    completed_orders_lbl.config(bg=THEME["dark"], fg="#fff")
+    completed_orders_value.config(bg=THEME["dark"], fg="#fff")
+    belated_delivered_lbl.config(bg=THEME["dark"], fg="#fff")
+    belated_delivered_value.config(bg=THEME["dark"], fg="#fff")
+    amount_earned_lbl.config(bg=THEME["dark"], fg="#fff")
+    amount_earned_value.config(bg=THEME["dark"], fg="#fff")
+    pwr_lbl.config(bg=THEME["dark"])
+    time_lbl.config(bg=THEME["dark"], fg="#fff")
+    boot_time_lbl.config(bg=THEME["dark"], fg="#fff")
     tree_style.configure(
         style="Treeview",
         background="#2A3459",
         foreground="#fff",
-        fieldbackground=accent_color_dark,
+        fieldbackground=THEME["dark"],
     )
 
 
 def switch2light() -> None:  # This is the main light theme function
-    tm.config(bg=accent_color_light)
+    tm.config(bg=THEME["light"])
     menubar.config(bg="#d9d9d9", fg="#000")
     file_menu.config(bg="#d9d9d9", fg="#000")
     options_menu.config(bg="#d9d9d9", fg="#000")
@@ -3256,57 +3247,57 @@ def switch2light() -> None:  # This is the main light theme function
     theme_menu.config(bg="#d9d9d9", fg="#000")
     links_menu.config(bg="#d9d9d9", fg="#000")
     help_menu.config(bg="#d9d9d9", fg="#000")
-    orders_frame.config(bg=accent_color_light)
-    customers_frame.config(bg=accent_color_light)
-    items_frame.config(bg=accent_color_light)
-    stats_frame.config(bg=accent_color_light)
-    greetings_lbl.config(bg=accent_color_light, fg="#000")
-    lf11.config(bg=accent_color_light)
-    treeview_frame1.config(bg=accent_color_light)
+    orders_frame.config(bg=THEME["light"])
+    customers_frame.config(bg=THEME["light"])
+    items_frame.config(bg=THEME["light"])
+    stats_frame.config(bg=THEME["light"])
+    greetings_lbl.config(bg=THEME["light"], fg="#000")
+    lf11.config(bg=THEME["light"])
+    treeview_frame1.config(bg=THEME["light"])
     orders_db.tag_configure(
-        tagname="odd", background=accent_color_light, foreground="#000"
+        tagname="odd", background=THEME["light"], foreground="#000"
     )
     orders_db.tag_configure(tagname="even", background="#fff", foreground="#000")
-    tot_orders_lbl.config(bg=accent_color_light)
-    f11.config(bg=accent_color_light)
+    tot_orders_lbl.config(bg=THEME["light"])
+    f11.config(bg=THEME["light"])
     mark_as_completed_btn.config(activebackground="green", bg="#20C020")
     product_delivered_btn.config(activebackground="#000080", bg="#2020C0")
-    lf12.config(bg=accent_color_light)
+    lf12.config(bg=THEME["light"])
     order_btn.config(activebackground="#000", bg="#404040", activeforeground="#fff")
     exit_btn1.config(bg="#C02020", activebackground="#800000")
-    lf21.config(bg=accent_color_light)
-    lf22.config(bg=accent_color_light)
-    lf23.config(bg=accent_color_light)
-    lf24.config(bg=accent_color_light)
-    treeview_frame2.config(bg=accent_color_light)
+    lf21.config(bg=THEME["light"])
+    lf22.config(bg=THEME["light"])
+    lf23.config(bg=THEME["light"])
+    lf24.config(bg=THEME["light"])
+    treeview_frame2.config(bg=THEME["light"])
     customers_db.tag_configure(tagname="even", background="#fff", foreground="#000")
     customers_db.tag_configure(
-        tagname="odd", background=accent_color_light, foreground="#000"
+        tagname="odd", background=THEME["light"], foreground="#000"
     )
-    tot_customers_lbl.config(bg=accent_color_light)
-    search_lbl.config(bg=accent_color_light, fg="#000")
+    tot_customers_lbl.config(bg=THEME["light"])
+    search_lbl.config(bg=THEME["light"], fg="#000")
     search_entry.config(
         bg="#fff", fg="#000", highlightcolor="#000", insertbackground="#000"
     )
-    runtime_search_lbl.config(bg=accent_color_light, fg="#000")
+    runtime_search_lbl.config(bg=THEME["light"], fg="#000")
     search_btn.config(bg="#C02020", activebackground="#800000")
-    f2.config(bg=accent_color_light)
-    f21.config(bg=accent_color_light)
-    f22.config(bg=accent_color_light)
-    name_lbl.config(bg=accent_color_light, fg="#000")
+    f2.config(bg=THEME["light"])
+    f21.config(bg=THEME["light"])
+    f22.config(bg=THEME["light"])
+    name_lbl.config(bg=THEME["light"], fg="#000")
     name_entry.config(
         bg="#fff", fg="#000", highlightcolor="#000", insertbackground="#000"
     )
-    ph_lbl2.config(bg=accent_color_light, fg="#000")
+    ph_lbl2.config(bg=THEME["light"], fg="#000")
     ph_entry.config(
         bg="#fff", fg="#000", highlightcolor="#000", insertbackground="#000"
     )
-    email_lbl.config(bg=accent_color_light, fg="#000")
+    email_lbl.config(bg=THEME["light"], fg="#000")
     email_entry.config(
         bg="#fff", fg="#000", highlightcolor="#000", insertbackground="#000"
     )
-    dob_lbl.config(bg=accent_color_light, fg="#000")
-    gender_lbl.config(bg=accent_color_light, fg="#000")
+    dob_lbl.config(bg=THEME["light"], fg="#000")
+    gender_lbl.config(bg=THEME["light"], fg="#000")
     create_btn.config(bg="#20C020", activebackground="green")
     update_btn.config(bg="#FF8020", activebackground="#C08000")
     delete_btn.config(bg="#C02020", activebackground="#800000")
@@ -3314,66 +3305,66 @@ def switch2light() -> None:  # This is the main light theme function
     clear_inputs_btn.config(bg="#404040", activebackground="#000")
     select_btn.config(bg="#404040", activebackground="#000")
     exit_btn2.config(bg="#C02020", activebackground="#800000")
-    lf31.config(bg=accent_color_light)
-    treeview_frame3.config(bg=accent_color_light)
+    lf31.config(bg=THEME["light"])
+    treeview_frame3.config(bg=THEME["light"])
     items_db.tag_configure(
-        tagname="odd", background=accent_color_light, foreground="#000"
+        tagname="odd", background=THEME["light"], foreground="#000"
     )
     items_db.tag_configure(tagname="even", background="#fff", foreground="#000")
-    info_lbl.config(bg=accent_color_light)
-    lf32.config(bg=accent_color_light)
-    f3.config(bg=accent_color_light)
-    f31.config(bg=accent_color_light)
-    f32.config(bg=accent_color_light)
-    name_lbl3.config(bg=accent_color_light, fg="#000")
+    info_lbl.config(bg=THEME["light"])
+    lf32.config(bg=THEME["light"])
+    f3.config(bg=THEME["light"])
+    f31.config(bg=THEME["light"])
+    f32.config(bg=THEME["light"])
+    name_lbl3.config(bg=THEME["light"], fg="#000")
     name_entry3.config(
         bg="#fff", fg="#000", highlightcolor="#000", insertbackground="#000"
     )
-    ph_lbl3.config(bg=accent_color_light, fg="#000")
+    ph_lbl3.config(bg=THEME["light"], fg="#000")
     ph_entry3.config(
         bg="#fff", fg="#000", highlightcolor="#000", insertbackground="#000"
     )
-    email_lbl3.config(bg=accent_color_light, fg="#000")
+    email_lbl3.config(bg=THEME["light"], fg="#000")
     email_entry3.config(
         bg="#fff", fg="#000", highlightcolor="#000", insertbackground="#000"
     )
-    order_type_lbl.config(bg=accent_color_light, fg="#000")
-    rb1.config(bg=accent_color_light)
-    rb2.config(bg=accent_color_light)
-    rb3.config(bg=accent_color_light)
-    rb4.config(bg=accent_color_light)
-    rb5.config(bg=accent_color_light)
-    notes_lbl.config(bg=accent_color_light, fg="#000")
+    order_type_lbl.config(bg=THEME["light"], fg="#000")
+    rb1.config(bg=THEME["light"])
+    rb2.config(bg=THEME["light"])
+    rb3.config(bg=THEME["light"])
+    rb4.config(bg=THEME["light"])
+    rb5.config(bg=THEME["light"])
+    notes_lbl.config(bg=THEME["light"], fg="#000")
     notes_entry.config(bg="#fff", fg="#000", highlightcolor="#000")
     notes_popup_menu.config(bg="#d9d9d9", fg="#000")
-    cost_lbl.config(bg=accent_color_light, fg="#000")
+    cost_lbl.config(bg=THEME["light"], fg="#000")
     cost_entry.config(
         bg="#fff", fg="#000", highlightcolor="#000", insertbackground="#000"
     )
-    delivery_date_lbl.config(bg=accent_color_light, fg="#000")
-    priority_lbl.config(bg=accent_color_light, fg="#000")
-    priority_btn.config(bg=accent_color_light)
-    lf33.config(bg=accent_color_light)
-    lf4.config(bg=accent_color_light)
-    f41.config(bg=accent_color_light)
-    tot_customers_lbl4.config(bg=accent_color_light, fg="#000")
-    tot_customers_value.config(bg=accent_color_light, fg="#000")
-    active_orders_lbl.config(bg=accent_color_light, fg="#000")
-    active_orders_value.config(bg=accent_color_light, fg="#000")
-    completed_orders_lbl.config(bg=accent_color_light, fg="#000")
-    completed_orders_value.config(bg=accent_color_light, fg="#000")
-    belated_delivered_lbl.config(bg=accent_color_light, fg="#000")
-    belated_delivered_value.config(bg=accent_color_light, fg="#000")
-    amount_earned_lbl.config(bg=accent_color_light, fg="#000")
-    amount_earned_value.config(bg=accent_color_light, fg="#000")
-    pwr_lbl.config(bg=accent_color_light)
-    time_lbl.config(bg=accent_color_light, fg="#000")
-    boot_time_lbl.config(bg=accent_color_light, fg="#000")
+    delivery_date_lbl.config(bg=THEME["light"], fg="#000")
+    priority_lbl.config(bg=THEME["light"], fg="#000")
+    priority_btn.config(bg=THEME["light"])
+    lf33.config(bg=THEME["light"])
+    lf4.config(bg=THEME["light"])
+    f41.config(bg=THEME["light"])
+    tot_customers_lbl4.config(bg=THEME["light"], fg="#000")
+    tot_customers_value.config(bg=THEME["light"], fg="#000")
+    active_orders_lbl.config(bg=THEME["light"], fg="#000")
+    active_orders_value.config(bg=THEME["light"], fg="#000")
+    completed_orders_lbl.config(bg=THEME["light"], fg="#000")
+    completed_orders_value.config(bg=THEME["light"], fg="#000")
+    belated_delivered_lbl.config(bg=THEME["light"], fg="#000")
+    belated_delivered_value.config(bg=THEME["light"], fg="#000")
+    amount_earned_lbl.config(bg=THEME["light"], fg="#000")
+    amount_earned_value.config(bg=THEME["light"], fg="#000")
+    pwr_lbl.config(bg=THEME["light"])
+    time_lbl.config(bg=THEME["light"], fg="#000")
+    boot_time_lbl.config(bg=THEME["light"], fg="#000")
     tree_style.configure(
         style="Treeview",
         background="#fff",
         foreground="#000",
-        fieldbackground=accent_color_light,
+        fieldbackground=THEME["light"],
     )
 
 
@@ -3878,17 +3869,17 @@ def stain_solutions():
     if theme_var.get() == "light" or (
         theme_var.get() == "system_default" and isLight()
     ):
-        stain_solutions_window.config(bg=accent_color_light)
-        stain_solutions_info.config(bg=accent_color_light, fg="#000")
-        lf0.config(bg=accent_color_light)
+        stain_solutions_window.config(bg=THEME["light"])
+        stain_solutions_info.config(bg=THEME["light"], fg="#000")
+        lf0.config(bg=THEME["light"])
         st0.config(bg="#fff", fg="#000")
 
     elif theme_var.get() == "dark" or (
         theme_var.get() == "system_default" and isDark()
     ):
-        stain_solutions_window.config(bg=accent_color_dark)
-        stain_solutions_info.config(bg=accent_color_dark, fg="#fff")
-        lf0.config(bg=accent_color_dark)
+        stain_solutions_window.config(bg=THEME["dark"])
+        stain_solutions_info.config(bg=THEME["dark"], fg="#fff")
+        lf0.config(bg=THEME["dark"])
         st0.config(bg="#2A3459", fg="#fff")
 
     stain_solutions_window.mainloop()
@@ -4001,23 +3992,23 @@ IFSC: LAVB0000740""",
     if theme_var.get() == "light" or (
         theme_var.get() == "system_default" and isLight()
     ):
-        donation_app.config(bg=accent_color_light)
-        lf0.config(bg=accent_color_light)
+        donation_app.config(bg=THEME["light"])
+        lf0.config(bg=THEME["light"])
         tw0.config(bg="#fff", fg="#000")
-        scan_lbl.config(bg=accent_color_light)
-        upi_lbl.config(bg=accent_color_light)
-        bank_detail_lbl.config(bg=accent_color_light)
+        scan_lbl.config(bg=THEME["light"])
+        upi_lbl.config(bg=THEME["light"])
+        bank_detail_lbl.config(bg=THEME["light"])
         close_btn.config(activebackground="#800000", bg="#C02020")
 
     elif theme_var.get() == "dark" or (
         theme_var.get() == "system_default" and isDark()
     ):
-        donation_app.config(bg=accent_color_dark)
-        lf0.config(bg=accent_color_dark)
+        donation_app.config(bg=THEME["dark"])
+        lf0.config(bg=THEME["dark"])
         tw0.config(bg="#000", fg="#fff")
-        scan_lbl.config(bg=accent_color_dark)
-        upi_lbl.config(bg=accent_color_dark)
-        bank_detail_lbl.config(bg=accent_color_dark)
+        scan_lbl.config(bg=THEME["dark"])
+        upi_lbl.config(bg=THEME["dark"])
+        bank_detail_lbl.config(bg=THEME["dark"])
         close_btn.config(bg="#800000", activebackground="#C02020")
 
     donation_app.mainloop()
@@ -4163,30 +4154,27 @@ try:
         encrypt_smtp_passwd,
         gen_private_key,
     )
+    from constants import BUSINESS_TYPES
+    from constants import THEMES_LIST
+    from constants import ORDERS_HEADER
+    from constants import CUSTOMERS_HEADER
+    from constants import THEME
 
     print(F_GREEN + "[INFO]\tImporting hidden modules, Please wait...")
     import PIL._tkinter_finder
     from babel import numbers
 
     country_names: list = list()
-    # isd_codes: list = list()
-
     for _ in country_list:
         country_names.append(f"{_[0]} ({_[1]})")
-        # isd_codes.append(_[1])
-
-    # isd_codes: set = set(isd_codes)
-    # isd_codes: list = sorted(isd_codes)
 
     if os_env == "Linux":
         config_path: str = f"/home/{whoami}/.config/TailorMate/"
-
         if not isdir(s=config_path):
             mkdir(path=config_path)
 
     elif os_env == "Windows":
         config_path: str = f"C:\\Users\\{whoami}\\TailorMate\\"
-
         if not isdir(s=config_path):
             mkdir(path=config_path)
 
@@ -4198,40 +4186,7 @@ try:
     private_key_file: str = join(config_path, "secret.key")
 
     __version__: str = "v.20221209 (Alpha-LTS)"
-    accent_color_light: str = "lightsteelblue2"
-    accent_color_dark: str = "#212946"
 
-    business_types: list = [
-        "Limited liability partnership",
-        "Sole proprietorship",
-        "Partnership",
-        "Public Company",
-        "Private Company",
-        "Other",
-    ]
-    themes_list: list = ["Light theme", "Dark theme", "Use device theme"]
-    header_list1: list = [
-        "S.No",
-        "Order No.",
-        "Name",
-        "Created On",
-        "Phone No.",
-        "Item",
-        "Stitching Type",
-        "Cost ($)",
-        "Delivery Date",
-        "Priority",
-        "Status",
-    ]
-    header_list2: list = [
-        "S.No",
-        "Name",
-        "Created On",
-        "Phone No.",
-        "Email Address",
-        "D.O.B",
-        "Gender",
-    ]
     gender_options: list = ["Female", "Male", "Other"]
     header_list3: list = ["S.No", "All Items", "Categories"]
 
@@ -4246,10 +4201,11 @@ try:
 
         ca: Tk = Tk()
         ca.withdraw()
-        ca.title(string=f"TailorMate {__version__}")
+        ca.title(string=f"Configure TailorMate {__version__}")
         ca.iconphoto(False, TkPhotoImage(file=join(BASE_PATH, "assets/sewing.png")))
         ca.resizable(width=False, height=False)
-        ca.config(bg=accent_color_light)
+        ca.config(bg=THEME["light"])
+
         ca.protocol(name="WM_DELETE_WINDOW", func=exit_ca)
         ca.bind(sequence="<Escape>", func=lambda event: exit_ca())
         ca.bind(sequence="<Control-Q>", func=lambda event: exit_ca())
@@ -4257,32 +4213,44 @@ try:
 
         eula_var: BooleanVar = BooleanVar()
         eula_var.set(value=False)
+
         business_name_var: StringVar = StringVar()
+
         business_type_var: StringVar = StringVar()
-        business_type_var.set(value=business_types[0])
+        business_type_var.set(value=BUSINESS_TYPES[0])
+
         ca_ph_var: StringVar = StringVar()
         ca_website_var: StringVar = StringVar()
         ca_country_var: StringVar = StringVar()
         ca_passwd_var1: StringVar = StringVar()
         ca_passwd_var2: StringVar = StringVar()
+
         toggle_root_passwd_var: BooleanVar = BooleanVar()
         toggle_root_passwd_var.set(value=False)
+
         ca_hibp_var: BooleanVar = BooleanVar()
         ca_hibp_var.set(value=True)
+
         smtp_email_var: StringVar = StringVar()
         smtp_passwd_var: StringVar = StringVar()
+
         toggle_smtp_passwd_var: BooleanVar = BooleanVar()
         toggle_smtp_passwd_var.set(value=False)
+
         ca_weeks_number_var: BooleanVar = BooleanVar()
         ca_weeks_number_var.set(value=False)
+
         ca_other_month_days_var: BooleanVar = BooleanVar()
         ca_other_month_days_var.set(value=False)
+
         ca_bell_var: BooleanVar = BooleanVar()
         ca_bell_var.set(value=True)
+
         ca_mxdns_var: BooleanVar = BooleanVar()
         ca_mxdns_var.set(value=True)
+
         ca_theme_var: StringVar = StringVar()
-        ca_theme_var.set(value=themes_list[2])
+        ca_theme_var.set(value=THEMES_LIST[2])
 
         _: Image = Image.open(fp=join(BASE_PATH, "assets/right-arrow.png")).resize(
             size=(20, 20)
@@ -4314,22 +4282,22 @@ try:
         ca_tab_view: Notebook = Notebook(master=ca)
         ca_tab_view.pack(fill=BOTH, expand=1)
 
-        ca_eula_frame: Frame = Frame(master=ca_tab_view, bg=accent_color_light)
+        ca_eula_frame: Frame = Frame(master=ca_tab_view, bg=THEME["light"])
         ca_eula_frame.pack()
 
-        ca_business_frame: Frame = Frame(master=ca_tab_view, bg=accent_color_light)
+        ca_business_frame: Frame = Frame(master=ca_tab_view, bg=THEME["light"])
         ca_business_frame.pack()
 
-        ca_passwd_frame: Frame = Frame(master=ca_tab_view, bg=accent_color_light)
+        ca_passwd_frame: Frame = Frame(master=ca_tab_view, bg=THEME["light"])
         ca_passwd_frame.pack()
 
-        ca_smtp_frame: Frame = Frame(master=ca_tab_view, bg=accent_color_light)
+        ca_smtp_frame: Frame = Frame(master=ca_tab_view, bg=THEME["light"])
         ca_smtp_frame.pack()
 
-        ca_social_media_frame: Frame = Frame(master=ca_tab_view, bg=accent_color_light)
+        ca_social_media_frame: Frame = Frame(master=ca_tab_view, bg=THEME["light"])
         ca_social_media_frame.pack()
 
-        ca_other_settings: Frame = Frame(master=ca_tab_view, bg=accent_color_light)
+        ca_other_settings: Frame = Frame(master=ca_tab_view, bg=THEME["light"])
         ca_other_settings.pack()
 
         ca_tab_view.add(child=ca_eula_frame, text="License Agreement")
@@ -4361,7 +4329,7 @@ try:
         lf01: LabelFrame = LabelFrame(
             master=ca_eula_frame,
             text="License Agreement",
-            bg=accent_color_light,
+            bg=THEME["light"],
             fg="red",
         )
         lf01.pack(padx=10, pady=5, fill=BOTH, expand=1)
@@ -4378,13 +4346,13 @@ try:
         eula_btn: Checkbutton = Checkbutton(
             master=lf01,
             text="I accept the license agreement",
-            bg=accent_color_light,
-            activebackground=accent_color_light,
+            bg=THEME["light"],
+            activebackground=THEME["light"],
             variable=eula_var,
         )
         eula_btn.pack(padx=10, anchor=E)
 
-        ca_bottom_frame1: Frame = Frame(master=lf01, bg=accent_color_light)
+        ca_bottom_frame1: Frame = Frame(master=lf01, bg=THEME["light"])
         ca_bottom_frame1.pack(side=BOTTOM, pady=5, fill=X)
 
         ca_next_btn1: Button = Button(
@@ -4412,16 +4380,16 @@ try:
         lf02: LabelFrame = LabelFrame(
             master=ca_business_frame,
             text="Configure your Business",
-            bg=accent_color_light,
+            bg=THEME["light"],
             fg="red",
         )
         lf02.pack(padx=10, pady=5, fill=BOTH, expand=1)
 
-        f02: Frame = Frame(master=lf02, bg=accent_color_light)
+        f02: Frame = Frame(master=lf02, bg=THEME["light"])
         f02.pack(pady=5)
 
         ca_name_lbl: Label = Label(
-            master=f02, text="Legal Name of Business:", bg=accent_color_light
+            master=f02, text="Legal Name of Business:", bg=THEME["light"]
         )
         ca_name_lbl.grid(row=0, column=0, padx=5, sticky=W)
         ca_name_entry: Entry = Entry(
@@ -4432,43 +4400,20 @@ try:
         )
         ca_name_entry.grid(row=0, column=1, padx=5, sticky=W)
 
-        Label(master=f02, text="Business Type:", bg=accent_color_light).grid(
+        Label(master=f02, text="Business Type:", bg=THEME["light"]).grid(
             row=1, column=0, padx=5, sticky=W
         )
         business_type_om: OptionMenu = OptionMenu(
-            f02, business_type_var, *business_types
+            f02, business_type_var, *BUSINESS_TYPES
         )
         business_type_om.config(bg="purple", fg="#fff")
         business_type_om["menu"].config(bg="purple")
         business_type_om.grid(row=1, column=1, padx=5, sticky=NSEW)
 
         ca_country_lbl: Label = Label(
-            master=f02, text="Country and Dialing Code:", bg=accent_color_light
+            master=f02, text="Country and Dialing Code:", bg=THEME["light"]
         )
         ca_country_lbl.grid(row=2, column=0, padx=5, sticky=W)
-
-        # country_list: tuple = load_pickle_file(file=join(base_path, "country.pkl"))
-
-        # try:
-        #     print(
-        #         F_GREEN + "[INFO]\tConnecting to https://ipinfo.io/ Please wait..."
-        #     )
-        #     ipinfo_response = get(url="https://ipinfo.io/").json()
-
-        #     iso_code: str = ipinfo_response["country"]
-        #     print(F_GREEN + f"[INFO]\tCountry ISO Code: {iso_code}")
-
-        #     country_list_length: int = len(country_list)
-
-        #     for index in range(country_list_length):
-        #         if iso_code == iso_codes[index]:
-        #             ca_country_var.set(value=country_names[index])
-
-        # except ConnectionError:
-        #     pass
-
-        # country_names_entry: AutocompleteEntry = AutocompleteEntry(master=f02, width=30, completevalues=country_names)
-        # country_names_entry.grid(row=2, column=1, padx=5)
 
         country_name_cb: Combobox = Combobox(
             master=f02, textvariable=ca_country_var, values=country_names
@@ -4476,7 +4421,7 @@ try:
         country_name_cb.grid(row=2, column=1, padx=5, sticky=NSEW)
 
         ca_ph_lbl: Label = Label(
-            master=f02, text="Phone Number:", bg=accent_color_light
+            master=f02, text="Phone Number:", bg=THEME["light"]
         )
         ca_ph_lbl.grid(row=3, column=0, padx=5, sticky=W)
 
@@ -4486,7 +4431,7 @@ try:
         ca_ph_entry.grid(row=3, column=1, padx=5, sticky=W)
 
         ca_website_lbl: Label = Label(
-            master=f02, text="Website (Optional):", bg=accent_color_light
+            master=f02, text="Website (Optional):", bg=THEME["light"]
         )
         ca_website_lbl.grid(row=4, column=0, padx=5, sticky=W)
         ca_website_entry: Entry = Entry(
@@ -4512,10 +4457,10 @@ try:
             master=lf02,
             text="Note: Internet connection required to verify your website is active and running.",
             fg="red",
-            bg=accent_color_light,
+            bg=THEME["light"],
         ).pack()
 
-        ca_bottom_frame2: Frame = Frame(master=lf02, bg=accent_color_light)
+        ca_bottom_frame2: Frame = Frame(master=lf02, bg=THEME["light"])
         ca_bottom_frame2.pack(side=BOTTOM, pady=5, fill=X)
 
         ca_previous_btn2: Button = Button(
@@ -4575,16 +4520,16 @@ try:
         lf03: LabelFrame = LabelFrame(
             master=ca_passwd_frame,
             text="Root Password",
-            bg=accent_color_light,
+            bg=THEME["light"],
             fg="red",
         )
         lf03.pack(padx=10, pady=5, fill=BOTH, expand=1, ipady=3)
 
-        f03: Frame = Frame(master=lf03, bg=accent_color_light)
+        f03: Frame = Frame(master=lf03, bg=THEME["light"])
         f03.pack(pady=5)
 
         ca_passwd_lbl1: Label = Label(
-            master=f03, text="Create a Strong Password:", bg=accent_color_light
+            master=f03, text="Create a Strong Password:", bg=THEME["light"]
         )
         ca_passwd_lbl1.grid(row=0, column=0, padx=5, sticky=W)
         ca_passwd_entry1: Entry = Entry(
@@ -4597,7 +4542,7 @@ try:
         ca_passwd_entry1.grid(row=0, column=1, padx=5, sticky=W)
 
         ca_passwd_lbl2: Label = Label(
-            master=f03, text="Re-type your Password:", bg=accent_color_light
+            master=f03, text="Re-type your Password:", bg=THEME["light"]
         )
         ca_passwd_lbl2.grid(row=1, column=0, padx=5, sticky=W)
         ca_passwd_entry2: Entry = Entry(
@@ -4612,8 +4557,8 @@ try:
         ca_show_root_passwd: Checkbutton = Checkbutton(
             master=f03,
             text="Show root password",
-            bg=accent_color_light,
-            activebackground=accent_color_light,
+            bg=THEME["light"],
+            activebackground=THEME["light"],
             variable=toggle_root_passwd_var,
             command=toggle_root_passwd,
         )
@@ -4646,42 +4591,26 @@ try:
             master=lf03,
             text="Check your password strength and security:",
             fg="red",
-            bg=accent_color_light,
+            bg=THEME["light"],
         ).pack(padx=5, anchor=W)
 
         Checkbutton(
             master=lf03,
             text="Use HIBP API to check for pwned password *",
-            bg=accent_color_light,
-            activebackground=accent_color_light,
+            bg=THEME["light"],
+            activebackground=THEME["light"],
             variable=ca_hibp_var,
         ).pack(padx=5, anchor=W)
 
         entropy_lbl: Label = Label(
             master=lf03,
             text="* Entropy: 0.00 bit(s)",
-            bg=accent_color_light,
+            bg=THEME["light"],
         )
         entropy_lbl.pack(padx=5, anchor=W)
 
-        # Label(
-        #     master=lf03,
-        #     text="Formula for Password Entropy: E = L * log(R) / log(2)",
-        #     bg=accent_color_light,
-        # ).pack()
-        # Label(
-        #     master=lf03,
-        #     text="Where L = Password length, i.e., the number of characters in the password;",
-        #     bg=accent_color_light,
-        # ).pack()
-        # Label(
-        #     master=lf03,
-        #     text="Where R = Size of pool, unique characters from which we build the password;",
-        #     bg=accent_color_light,
-        # ).pack()
-
         passwd_strength_lbl: Label = Label(
-            master=lf03, text="* Strength: NA", bg=accent_color_light
+            master=lf03, text="* Strength: NA", bg=THEME["light"]
         )
         passwd_strength_lbl.pack(padx=5, anchor=W)
 
@@ -4710,38 +4639,38 @@ try:
             master=lf03,
             text="Note: HIBP API requires internet connection.",
             fg="red",
-            bg=accent_color_light,
+            bg=THEME["light"],
         ).pack()
         Label(
-            master=lf03, text="Master Password Tips:", bg=accent_color_light, fg="red"
+            master=lf03, text="Master Password Tips:", bg=THEME["light"], fg="red"
         ).pack(padx=5, anchor=W)
         Label(
             master=lf03,
             text="* The master password is the only password, that you have to remember.",
-            bg=accent_color_light,
+            bg=THEME["light"],
         ).pack(padx=5, anchor=W)
         Label(
             master=lf03,
             text="* Do not include personal data (like birthdays).",
-            bg=accent_color_light,
+            bg=THEME["light"],
         ).pack(padx=5, anchor=W)
         Label(
             master=lf03,
             text="* Do not use character sequences from the keyboard.",
-            bg=accent_color_light,
+            bg=THEME["light"],
         ).pack(padx=5, anchor=W)
         Label(
             master=lf03,
             text="* Try to make it as long as possible for you.",
-            bg=accent_color_light,
+            bg=THEME["light"],
         ).pack(padx=5, anchor=W)
         Label(
             master=lf03,
             text="* If you wish you can write it down and keep it in a safe place.",
-            bg=accent_color_light,
+            bg=THEME["light"],
         ).pack(padx=5, anchor=W)
 
-        ca_bottom_frame3: Frame = Frame(master=lf03, bg=accent_color_light)
+        ca_bottom_frame3: Frame = Frame(master=lf03, bg=THEME["light"])
         ca_bottom_frame3.pack(side=BOTTOM, pady=5, fill=X)
 
         ca_previous_btn3: Button = Button(
@@ -4795,18 +4724,18 @@ try:
         )
 
         lf04: LabelFrame = LabelFrame(
-            bg=accent_color_light,
+            bg=THEME["light"],
             fg="red",
             master=ca_smtp_frame,
             text="Configure SMTP Server",
         )
         lf04.pack(padx=10, pady=5, fill=BOTH, expand=1, ipady=3)
 
-        f04: Frame = Frame(master=lf04, bg=accent_color_light)
+        f04: Frame = Frame(master=lf04, bg=THEME["light"])
         f04.pack(pady=5)
 
         smtp_email_lbl: Label = Label(
-            master=f04, text="Gmail Address:", bg=accent_color_light
+            master=f04, text="Gmail Address:", bg=THEME["light"]
         )
         smtp_email_lbl.grid(row=0, column=0, padx=5, sticky=W)
         smtp_email_entry: Entry = Entry(
@@ -4815,7 +4744,7 @@ try:
         smtp_email_entry.grid(row=0, column=1, padx=5, sticky=W)
 
         smtp_passwd_lbl: Label = Label(
-            master=f04, text="SMTP App Password:", bg=accent_color_light
+            master=f04, text="SMTP App Password:", bg=THEME["light"]
         )
         smtp_passwd_lbl.grid(row=1, column=0, padx=5, sticky=W)
         smtp_passwd_entry: Entry = Entry(
@@ -4830,8 +4759,8 @@ try:
         ca_show_smtp_passwd: Checkbutton = Checkbutton(
             master=f04,
             text="Show SMTP password",
-            bg=accent_color_light,
-            activebackground=accent_color_light,
+            bg=THEME["light"],
+            activebackground=THEME["light"],
             variable=toggle_smtp_passwd_var,
             command=toggle_smtp_passwd,
         )
@@ -4859,56 +4788,37 @@ try:
             sequence="<Down>", func=lambda event: smtp_email_entry.focus()
         )
 
-        # Label(
-        #     master=lf03,
-        #     text=" What is SMTP server? Why do we ask for your email address and password?",
-        #     bg=accent_color_light,
-        #     fg="red",
-        # ).pack(padx=5, anchor=W)
-        # Label(
-        #     master=lf03,
-        #     text="SMTP stands for Simple Mail Transfer Protocol. It helps you to send automatic emails like "
-        #     "greetings, order status, and offer messages to your client seamlessly.",
-        #     bg="red",
-        #     fg="#fff",
-        #     wraplength=485,
-        #     anchor=W,
-        # ).pack(padx=5, fill=X)
-
         Label(
             master=lf04,
             text="Note: Internet connection required to configure the SMTP server",
             fg="red",
-            bg=accent_color_light,
+            bg=THEME["light"],
         ).pack()
 
-        f041: Frame = Frame(master=lf04, bg=accent_color_light)
-        f041.pack(padx=5, pady=5, anchor=W)
+        Label(
+            master=lf04, text="Steps to follow:", fg="red", bg=THEME["light"]
+        ).pack(padx=5, anchor=W)
 
         Label(
-            master=f041, text="Steps to follow:", fg="red", bg=accent_color_light
-        ).grid(row=0, column=0, sticky=W, columnspan=2)
-
-        Label(
-            master=f041,
+            master=lf04,
             text="Step 1: Don't forget to turn ON 2-Step Verification",
-            bg=accent_color_light,
-        ).grid(row=1, column=0, padx=2, sticky=W, columnspan=2)
+            bg=THEME["light"],
+        ).pack(padx=5, anchor=W)
 
         Label(
-            master=f041,
+            master=lf04,
             text="Step 2: Generate the new SMTP App Password",
-            bg=accent_color_light,
-        ).grid(row=2, column=0, padx=2, sticky=W, columnspan=2)
+            bg=THEME["light"],
+        ).pack(padx=5, anchor=W)
 
         Label(
-            master=f041,
+            master=lf04,
             text="Step 3: Select the mail app and Create the custom device name.",
-            bg=accent_color_light,
-        ).grid(row=3, column=0, padx=2, sticky=W, columnspan=2)
+            bg=THEME["light"],
+        ).pack(padx=5, anchor=W)
 
-        ca_btn_frame_4: Frame = Frame(master=lf04, bg=accent_color_light)
-        ca_btn_frame_4.pack()
+        ca_btn_frame_4: Frame = Frame(master=lf04, bg=THEME["light"])
+        ca_btn_frame_4.pack(pady=5)
 
         two_step_verification_btn: Button = Button(
             master=ca_btn_frame_4,
@@ -4968,26 +4878,26 @@ try:
         Label(
             master=lf04,
             text="We Respect your Privacy:",
-            bg=accent_color_light,
+            bg=THEME["light"],
             fg="red",
         ).pack(padx=5, anchor=W)
         Label(
             master=lf04,
             text="*  We only handles Gmail address for now.",
-            bg=accent_color_light,
+            bg=THEME["light"],
         ).pack(padx=5, anchor=W)
         Label(
             master=lf04,
             text="*  We never share your password with anyone.",
-            bg=accent_color_light,
+            bg=THEME["light"],
         ).pack(padx=5, anchor=W)
         Label(
             master=lf04,
             text="*  Don't worry, We don't send spam messages.",
-            bg=accent_color_light,
+            bg=THEME["light"],
         ).pack(padx=5, anchor=W)
 
-        ca_bottom_frame4: Frame = Frame(master=lf04, bg=accent_color_light)
+        ca_bottom_frame4: Frame = Frame(master=lf04, bg=THEME["light"])
         ca_bottom_frame4.pack(side=BOTTOM, pady=5, fill=X)
 
         ca_previous_btn4: Button = Button(
@@ -5044,14 +4954,14 @@ try:
             master=ca_social_media_frame,
             text="Social Media Accounts (Optional)",
             fg="red",
-            bg=accent_color_light,
+            bg=THEME["light"],
         )
         lf05.pack(padx=10, pady=5, fill=BOTH, expand=1, ipady=3)
 
-        f05: Frame = Frame(master=lf05, bg=accent_color_light)
+        f05: Frame = Frame(master=lf05, bg=THEME["light"])
         f05.pack()
 
-        fb_lbl: Label = Label(master=f05, text="Facebook URL:", bg=accent_color_light)
+        fb_lbl: Label = Label(master=f05, text="Facebook URL:", bg=THEME["light"])
         fb_lbl.grid(row=0, column=0, padx=5, sticky=W)
         fb_entry: Entry = Entry(master=f05, width=25, selectbackground="orange")
         fb_entry.grid(row=0, column=1, padx=5, sticky=W)
@@ -5070,7 +4980,7 @@ try:
         )
         fb_btn.grid(row=0, column=2, padx=5, sticky=W)
 
-        github_lbl: Label = Label(master=f05, text="GitHub URL:", bg=accent_color_light)
+        github_lbl: Label = Label(master=f05, text="GitHub URL:", bg=THEME["light"])
         github_lbl.grid(row=1, column=0, padx=5, sticky=W)
         github_entry: Entry = Entry(master=f05, width=25, selectbackground="orange")
         github_entry.grid(row=1, column=1, padx=5, sticky=W)
@@ -5089,7 +4999,7 @@ try:
         )
         github_btn.grid(row=1, column=2, padx=5, sticky=W)
 
-        ig_lbl: Label = Label(master=f05, text="Instagram URL:", bg=accent_color_light)
+        ig_lbl: Label = Label(master=f05, text="Instagram URL:", bg=THEME["light"])
         ig_lbl.grid(row=2, column=0, padx=5, sticky=W)
         ig_entry: Entry = Entry(master=f05, width=25, selectbackground="orange")
         ig_entry.grid(row=2, column=1, padx=5, sticky=W)
@@ -5109,7 +5019,7 @@ try:
         ig_btn.grid(row=2, column=2, padx=5, sticky=W)
 
         linkedin_lbl: Label = Label(
-            master=f05, text="LinkedIn URL:", bg=accent_color_light
+            master=f05, text="LinkedIn URL:", bg=THEME["light"]
         )
         linkedin_lbl.grid(row=3, column=0, padx=5, sticky=W)
         linkedin_entry: Entry = Entry(master=f05, width=25, selectbackground="orange")
@@ -5129,7 +5039,7 @@ try:
         )
         linkedin_btn.grid(row=3, column=2, padx=5, sticky=W)
 
-        reddit_lbl: Label = Label(master=f05, text="Reddit URL:", bg=accent_color_light)
+        reddit_lbl: Label = Label(master=f05, text="Reddit URL:", bg=THEME["light"])
         reddit_lbl.grid(row=4, column=0, padx=5, sticky=W)
         reddit_entry: Entry = Entry(master=f05, width=25, selectbackground="orange")
         reddit_entry.grid(row=4, column=1, padx=5, sticky=W)
@@ -5149,7 +5059,7 @@ try:
         reddit_btn.grid(row=4, column=2, padx=5, sticky=W)
 
         twitter_lbl: Label = Label(
-            master=f05, text="Twitter URL:", bg=accent_color_light
+            master=f05, text="Twitter URL:", bg=THEME["light"]
         )
         twitter_lbl.grid(row=5, column=0, padx=5, sticky=W)
         twitter_entry: Entry = Entry(master=f05, width=25, selectbackground="orange")
@@ -5170,7 +5080,7 @@ try:
         twitter_btn.grid(row=5, column=2, padx=5, sticky=W)
 
         wa_lbl: Label = Label(
-            master=f05, text="Whatsapp Number:", bg=accent_color_light
+            master=f05, text="Whatsapp Number:", bg=THEME["light"]
         )
         wa_lbl.grid(row=6, column=0, padx=5, sticky=W)
         wa_entry: Entry = Entry(master=f05, width=25, selectbackground="orange")
@@ -5190,7 +5100,7 @@ try:
         )
         wa_btn.grid(row=6, column=2, padx=5, sticky=W)
 
-        yt_lbl: Label = Label(master=f05, text="YouTube URL:", bg=accent_color_light)
+        yt_lbl: Label = Label(master=f05, text="YouTube URL:", bg=THEME["light"])
         yt_lbl.grid(row=7, column=0, padx=5, sticky=W)
         yt_entry: Entry = Entry(master=f05, width=25, selectbackground="orange")
         yt_entry.grid(row=7, column=1, padx=5, sticky=W)
@@ -5299,7 +5209,7 @@ try:
         yt_btn.bind(sequence="<Left>", func=lambda event: yt_entry.focus())
         yt_btn.bind(sequence="<Right>", func=lambda event: yt_entry.focus())
 
-        ca_bottom_frame5: Frame = Frame(master=lf05, bg=accent_color_light)
+        ca_bottom_frame5: Frame = Frame(master=lf05, bg=THEME["light"])
         ca_bottom_frame5.pack(side=BOTTOM, pady=5, fill=X)
 
         ca_previous_btn5: Button = Button(
@@ -5354,21 +5264,21 @@ try:
         lf06: LabelFrame = LabelFrame(
             master=ca_other_settings,
             text="Other Settings",
-            bg=accent_color_light,
+            bg=THEME["light"],
             fg="red",
         )
         lf06.pack(padx=10, pady=5, fill=BOTH, expand=1, ipady=3)
 
-        f06: Frame = Frame(master=lf06, bg=accent_color_light)
+        f06: Frame = Frame(master=lf06, bg=THEME["light"])
         f06.pack(pady=5)
 
-        f061: Frame = Frame(master=f06, bg=accent_color_light)
+        f061: Frame = Frame(master=f06, bg=THEME["light"])
         f061.pack()
 
         ca_cb1: Checkbutton = Checkbutton(
             master=f061,
             text="Show Weeks Number on Calendar",
-            bg=accent_color_light,
+            bg=THEME["light"],
             variable=ca_weeks_number_var,
         )
         ca_cb1.grid(row=0, column=0, sticky=W)
@@ -5376,7 +5286,7 @@ try:
         ca_cb2: Checkbutton = Checkbutton(
             master=f061,
             text="Show Other Month Days on Calendar",
-            bg=accent_color_light,
+            bg=THEME["light"],
             variable=ca_other_month_days_var,
         )
         ca_cb2.grid(row=1, column=0, sticky=W)
@@ -5384,7 +5294,7 @@ try:
         ca_cb3: Checkbutton = Checkbutton(
             master=f061,
             text="Check MX DNS record on email validation *",
-            bg=accent_color_light,
+            bg=THEME["light"],
             variable=ca_mxdns_var,
         )
         ca_cb3.grid(row=2, column=0, sticky=W)
@@ -5392,7 +5302,7 @@ try:
         ca_cb4: Checkbutton = Checkbutton(
             master=f061,
             text="Play Alert Sound",
-            bg=accent_color_light,
+            bg=THEME["light"],
             variable=ca_bell_var,
         )
         ca_cb4.grid(row=3, column=0, sticky=W)
@@ -5409,17 +5319,17 @@ try:
         ca_cb4.bind(sequence="<Up>", func=lambda event: ca_cb3.focus())
         ca_cb4.bind(sequence="<Down>", func=lambda event: ca_cb1.focus())
 
-        f062: Frame = Frame(master=f06, bg=accent_color_light)
+        f062: Frame = Frame(master=f06, bg=THEME["light"])
         f062.pack()
 
-        Label(master=f062, text="Theme Appearance:", bg=accent_color_light).grid(
+        Label(master=f062, text="Theme Appearance:", bg=THEME["light"]).grid(
             row=0, column=0, padx=5
         )
 
         ca_theme_table: OptionMenu = OptionMenu(
             f062,
             ca_theme_var,
-            *themes_list,
+            *THEMES_LIST,
             command=lambda event: update_theme_color(),
         )
         ca_theme_table.config(width=15)
@@ -5438,10 +5348,10 @@ try:
             master=lf06,
             text="Note: Internet connection required to check MX DNS record.",
             fg="red",
-            bg=accent_color_light,
+            bg=THEME["light"],
         ).pack()
 
-        ca_bottom_frame6: Frame = Frame(master=lf06, bg=accent_color_light)
+        ca_bottom_frame6: Frame = Frame(master=lf06, bg=THEME["light"])
         ca_bottom_frame6.pack(side=BOTTOM, pady=5, fill=X)
 
         ca_previous_btn6: Button = Button(
@@ -6121,36 +6031,36 @@ try:
     elapsed_time: float = elapsed_time + delta_time
 
     if current_theme == "light" or (current_theme == "system_default" and isLight()):
-        sa.config(bg=accent_color_light)
-        sa_frame1.config(bg=accent_color_light)
-        sa_passwd_lbl.config(bg=accent_color_light, fg="#000")
+        sa.config(bg=THEME["light"])
+        sa_frame1.config(bg=THEME["light"])
+        sa_passwd_lbl.config(bg=THEME["light"], fg="#000")
         sa_passwd_entry.config(bg="#fff", fg="#000", insertbackground="#000")
-        sa_frame2.config(bg=accent_color_light)
+        sa_frame2.config(bg=THEME["light"])
         sa_login_btn.config(bg="#20C020", activebackground="green")
         sa_exit_btn.config(bg="#C02020", activebackground="#800000")
-        vklf.config(bg=accent_color_light)
-        vkf1.config(bg=accent_color_light)
-        vkf2.config(bg=accent_color_light)
-        vkf3.config(bg=accent_color_light)
-        vkf4.config(bg=accent_color_light)
-        vkf5.config(bg=accent_color_light)
-        vkf6.config(bg=accent_color_light)
+        vklf.config(bg=THEME["light"])
+        vkf1.config(bg=THEME["light"])
+        vkf2.config(bg=THEME["light"])
+        vkf3.config(bg=THEME["light"])
+        vkf4.config(bg=THEME["light"])
+        vkf5.config(bg=THEME["light"])
+        vkf6.config(bg=THEME["light"])
 
     elif current_theme == "dark" or (current_theme == "system_default" and isDark()):
-        sa.config(bg=accent_color_dark)
-        sa_frame1.config(bg=accent_color_dark)
-        sa_passwd_lbl.config(bg=accent_color_dark, fg="#fff")
+        sa.config(bg=THEME["dark"])
+        sa_frame1.config(bg=THEME["dark"])
+        sa_passwd_lbl.config(bg=THEME["dark"], fg="#fff")
         sa_passwd_entry.config(bg="#2A3459", fg="#fff", insertbackground="red")
-        sa_frame2.config(bg=accent_color_dark)
+        sa_frame2.config(bg=THEME["dark"])
         sa_login_btn.config(activebackground="#20C020", bg="green")
         sa_exit_btn.config(activebackground="#C02020", bg="#800000")
-        vklf.config(bg=accent_color_dark)
-        vkf1.config(bg=accent_color_dark)
-        vkf2.config(bg=accent_color_dark)
-        vkf3.config(bg=accent_color_dark)
-        vkf4.config(bg=accent_color_dark)
-        vkf5.config(bg=accent_color_dark)
-        vkf6.config(bg=accent_color_dark)
+        vklf.config(bg=THEME["dark"])
+        vkf1.config(bg=THEME["dark"])
+        vkf2.config(bg=THEME["dark"])
+        vkf3.config(bg=THEME["dark"])
+        vkf4.config(bg=THEME["dark"])
+        vkf5.config(bg=THEME["dark"])
+        vkf6.config(bg=THEME["dark"])
 
     sa.deiconify()
     sa.mainloop()
@@ -6330,19 +6240,19 @@ try:
     theme_menu: Menu = Menu(master=options_menu, tearoff=False)
 
     theme_menu.add_radiobutton(
-        label=themes_list[0],
+        label=THEMES_LIST[0],
         value="light",
         variable=theme_var,
         command=configure_theme_color,
     )
     theme_menu.add_radiobutton(
-        label=themes_list[1],
+        label=THEMES_LIST[1],
         value="dark",
         variable=theme_var,
         command=configure_theme_color,
     )
     theme_menu.add_radiobutton(
-        label=themes_list[2],
+        label=THEMES_LIST[2],
         value="system_default",
         variable=theme_var,
         command=configure_theme_color,
@@ -6852,13 +6762,13 @@ try:
     orders_db: Treeview = Treeview(
         master=treeview_frame1,
         show="headings",
-        columns=header_list1,
+        columns=ORDERS_HEADER,
         selectmode=BROWSE,
         xscrollcommand=x_axis_scrollbar.set,
         yscrollcommand=y_axis_scrollbar.set,
     )
 
-    for _ in header_list1:
+    for _ in ORDERS_HEADER:
         orders_db.heading(column=_, text=_)
 
     orders_db.column(column=0, width=70, minwidth=70, anchor=CENTER)  # Serial Number
@@ -6991,29 +6901,22 @@ try:
     customers_db: Treeview = Treeview(
         master=treeview_frame2,
         show="headings",
-        columns=header_list2,
+        columns=CUSTOMERS_HEADER,
         selectmode=BROWSE,
         yscrollcommand=y_axis_scrollbar.set,
         xscrollcommand=x_axis_scrollbar.set,
     )
 
-    for _ in header_list2:
+    for _ in CUSTOMERS_HEADER:
         customers_db.heading(column=_, text=_)
 
-    # Serial Number
-    customers_db.column(column=0, width=70, minwidth=70, anchor=CENTER)
-    # Name
-    customers_db.column(column=1, width=150, minwidth=150, anchor=W)
-    # Created on
-    customers_db.column(column=2, width=155, minwidth=155, anchor=CENTER)
-    # Phone Number
-    customers_db.column(column=3, width=130, minwidth=130, anchor=CENTER)
-    # Email
-    customers_db.column(column=4, width=315, minwidth=315, anchor=CENTER)
-    # Date of Birth
-    customers_db.column(column=5, width=95, minwidth=95, anchor=CENTER)
-    # Gender
-    customers_db.column(column=6, width=75, minwidth=75, anchor=W)
+    customers_db.column(column=0, width=70, minwidth=70, anchor=CENTER)  # Serial Number
+    customers_db.column(column=1, width=150, minwidth=150, anchor=W)  # Name
+    customers_db.column(column=2, width=155, minwidth=155, anchor=CENTER)  # Created on
+    customers_db.column(column=3, width=130, minwidth=130, anchor=CENTER)  # Phone Number
+    customers_db.column(column=4, width=315, minwidth=315, anchor=CENTER)  # Email
+    customers_db.column(column=5, width=95, minwidth=95, anchor=CENTER)  # Date of Birth
+    customers_db.column(column=6, width=75, minwidth=75, anchor=W)  # Gender
 
     customers_db.bind(sequence="<Double-1>", func=lambda event: fetch_data())
     customers_db.bind(sequence="<Return>", func=lambda event: select_customer())
