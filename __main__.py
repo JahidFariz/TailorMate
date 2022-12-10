@@ -382,6 +382,10 @@ def update_theme_color() -> None:  # This static function only works on setting 
         ca_theme_table["menu"].config(bg="#000", fg="#fff")
 
 
+def smtp_login():
+    pass
+
+
 def create_configuration() -> None:
     ca_save_btn.config(text="Saving...", state=DISABLED)
     ca_save_btn.update()
@@ -4140,14 +4144,14 @@ try:
     print(F_GREEN + "[INFO]\tImporting custom modules, Please wait...")
     from constants import (
         BUSINESS_TYPES,
+        COUNTRY_LIST,
         CUSTOMERS_HEADER,
+        GENDER_OPTIONS,
+        ITEMS_HEADER,
         ORDERS_HEADER,
         THEME,
         THEMES_LIST,
     )
-    from constants import GENDER_OPTIONS
-    from constants import ITEMS_HEADER
-    from constants import COUNTRY_LIST
     from private import (
         InvalidToken,
         decrypt_smtp_passwd,
@@ -4508,15 +4512,15 @@ try:
             sequence="<Right>", func=lambda event: ca_previous_btn2.focus()
         )
 
-        lf03: LabelFrame = LabelFrame(
+        ca_lf03: LabelFrame = LabelFrame(
             master=ca_passwd_frame,
             text="Root Password",
             bg=THEME["light"],
             fg="red",
         )
-        lf03.pack(padx=10, pady=5, fill=BOTH, expand=1, ipady=3)
+        ca_lf03.pack(padx=10, pady=5, fill=BOTH, expand=1, ipady=3)
 
-        f03: Frame = Frame(master=lf03, bg=THEME["light"])
+        f03: Frame = Frame(master=ca_lf03, bg=THEME["light"])
         f03.pack(pady=5)
 
         ca_passwd_lbl1: Label = Label(
@@ -4579,14 +4583,14 @@ try:
         )
 
         Label(
-            master=lf03,
+            master=ca_lf03,
             text="Check your password strength and security:",
             fg="red",
             bg=THEME["light"],
         ).pack(padx=5, anchor=W)
 
         Checkbutton(
-            master=lf03,
+            master=ca_lf03,
             text="Use HIBP API to check for pwned password *",
             bg=THEME["light"],
             activebackground=THEME["light"],
@@ -4594,14 +4598,14 @@ try:
         ).pack(padx=5, anchor=W)
 
         entropy_lbl: Label = Label(
-            master=lf03,
+            master=ca_lf03,
             text="* Entropy: 0.00 bit(s)",
             bg=THEME["light"],
         )
         entropy_lbl.pack(padx=5, anchor=W)
 
         passwd_strength_lbl: Label = Label(
-            master=lf03, text="* Strength: NA", bg=THEME["light"]
+            master=ca_lf03, text="* Strength: NA", bg=THEME["light"]
         )
         passwd_strength_lbl.pack(padx=5, anchor=W)
 
@@ -4610,7 +4614,7 @@ try:
         )
         key_ico: PhotoImage = PhotoImage(image=_)
         passwd_strength_btn: Button = Button(
-            master=lf03,
+            master=ca_lf03,
             text="Check Strength",
             activebackground="green",
             fg="#fff",
@@ -4627,41 +4631,41 @@ try:
         passwd_strength_btn.pack()
 
         Label(
-            master=lf03,
+            master=ca_lf03,
             text="Note: HIBP API requires internet connection.",
             fg="red",
             bg=THEME["light"],
         ).pack()
         Label(
-            master=lf03, text="Master Password Tips:", bg=THEME["light"], fg="red"
+            master=ca_lf03, text="Master Password Tips:", bg=THEME["light"], fg="red"
         ).pack(padx=5, anchor=W)
         Label(
-            master=lf03,
+            master=ca_lf03,
             text="* The master password is the only password, that you have to remember.",
             bg=THEME["light"],
         ).pack(padx=5, anchor=W)
         Label(
-            master=lf03,
+            master=ca_lf03,
             text="* Do not include personal data (like birthdays).",
             bg=THEME["light"],
         ).pack(padx=5, anchor=W)
         Label(
-            master=lf03,
+            master=ca_lf03,
             text="* Do not use character sequences from the keyboard.",
             bg=THEME["light"],
         ).pack(padx=5, anchor=W)
         Label(
-            master=lf03,
+            master=ca_lf03,
             text="* Try to make it as long as possible for you.",
             bg=THEME["light"],
         ).pack(padx=5, anchor=W)
         Label(
-            master=lf03,
+            master=ca_lf03,
             text="* If you wish you can write it down and keep it in a safe place.",
             bg=THEME["light"],
         ).pack(padx=5, anchor=W)
 
-        ca_bottom_frame3: Frame = Frame(master=lf03, bg=THEME["light"])
+        ca_bottom_frame3: Frame = Frame(master=ca_lf03, bg=THEME["light"])
         ca_bottom_frame3.pack(side=BOTTOM, pady=5, fill=X)
 
         ca_previous_btn3: Button = Button(
@@ -4778,6 +4782,17 @@ try:
         ca_show_smtp_passwd.bind(
             sequence="<Down>", func=lambda event: smtp_email_entry.focus()
         )
+
+        sign_in_bth: Button = Button(
+            master=f04,
+            text="Sign in",
+            bg="#C02020",
+            activebackground="#800000",
+            activeforeground="#FFF",
+            fg="#fff",
+            width=10,
+        )
+        sign_in_bth.grid(row=3, column=1, padx=5, pady=5, sticky=W)
 
         Label(
             master=lf04,
