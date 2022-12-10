@@ -1313,7 +1313,7 @@ def add_order():
         date=date(year=today.year - 18, month=today.month, day=today.day)
     )
     day_selection.selection_clear()
-    gender_var.set(value=gender_options[0])
+    gender_var.set(value=GENDER_OPTIONS[0])
     update_gender_color()
 
     name_entry3.delete(first=0, last=END)
@@ -1416,7 +1416,7 @@ def navigate_search_customer():
         date=date(year=today.year - 18, month=today.month, day=today.day)
     )
     day_selection.selection_clear()
-    gender_var.set(value=gender_options[0])
+    gender_var.set(value=GENDER_OPTIONS[0])
     update_gender_color()
 
     name_entry3.delete(first=0, last=END)
@@ -1974,16 +1974,16 @@ def fetch_data() -> None:
 
     selected_gender: str = customer_data[6]
 
-    if selected_gender == gender_options[0]:
-        gender_var.set(value=gender_options[0])
+    if selected_gender == GENDER_OPTIONS[0]:
+        gender_var.set(value=GENDER_OPTIONS[0])
         update_gender_color()
 
-    elif selected_gender == gender_options[1]:
-        gender_var.set(value=gender_options[1])
+    elif selected_gender == GENDER_OPTIONS[1]:
+        gender_var.set(value=GENDER_OPTIONS[1])
         update_gender_color()
 
     else:
-        gender_var.set(value=gender_options[2])
+        gender_var.set(value=GENDER_OPTIONS[2])
         update_gender_color()
 
 
@@ -2026,7 +2026,7 @@ def search_record() -> None:
         date=date(year=today.year - 18, month=today.month, day=today.day)
     )
     day_selection.selection_clear()
-    gender_var.set(value=gender_options[0])
+    gender_var.set(value=GENDER_OPTIONS[0])
     update_gender_color()
 
     name_entry3.delete(first=0, last=END)
@@ -2109,11 +2109,11 @@ def clear_date() -> None:
 def update_gender_color() -> None:
     gender: str = gender_var.get()
 
-    if gender == gender_options[0]:
+    if gender == GENDER_OPTIONS[0]:
         gender_table.config(bg="#C01493", activebackground="#FF1493")
         gender_table["menu"].config(bg="#C01493", activebackground="#FF1493")
 
-    elif gender == gender_options[1]:
+    elif gender == GENDER_OPTIONS[1]:
         gender_table.config(bg="#000080", activebackground="#2020C0")
         gender_table["menu"].config(bg="#000080", activebackground="#2020C0")
 
@@ -2307,7 +2307,7 @@ def create_entry() -> None:
         date=date(year=today.year - 18, month=today.month, day=today.day)
     )
     day_selection.selection_clear()
-    gender_var.set(value=gender_options[0])
+    gender_var.set(value=GENDER_OPTIONS[0])
     update_gender_color()
     name_entry.focus()
 
@@ -2439,7 +2439,7 @@ def update_entry() -> None:
         date=date(year=today.year - 18, month=today.month, day=today.day)
     )
     day_selection.selection_clear()
-    gender_var.set(value=gender_options[0])
+    gender_var.set(value=GENDER_OPTIONS[0])
     update_gender_color()
 
     print(F_GREEN + "[INFO]\tDatabase updated successfully...")
@@ -2493,7 +2493,7 @@ def delete_entry() -> None:
         date=date(year=today.year - 18, month=today.month, day=today.day)
     )
     day_selection.selection_clear()
-    gender_var.set(value=gender_options[0])
+    gender_var.set(value=GENDER_OPTIONS[0])
     update_gender_color()
 
     name_entry3.delete(first=0, last=END)
@@ -2574,7 +2574,7 @@ def clear_entry() -> None:
     )
     day_selection.selection_clear()
 
-    gender_var.set(gender_options[0])
+    gender_var.set(GENDER_OPTIONS[0])
     update_gender_color()
 
 
@@ -2604,7 +2604,7 @@ def select_customer() -> None:
         date=date(year=today.year - 18, month=today.month, day=today.day)
     )
     day_selection.selection_clear()
-    gender_var.set(value=gender_options[0])
+    gender_var.set(value=GENDER_OPTIONS[0])
     update_gender_color()
 
     stitch_var.set(value=1)
@@ -2741,7 +2741,7 @@ def save_order():
         date=date(year=today.year - 18, month=today.month, day=today.day)
     )
     day_selection.selection_clear()
-    gender_var.set(value=gender_options[0])
+    gender_var.set(value=GENDER_OPTIONS[0])
     update_gender_color()
 
     selected_item: str = items_db.focus()
@@ -3123,9 +3123,7 @@ def switch2dark() -> None:  # This is the main dark theme function
     greetings_lbl.config(bg=THEME["dark"], fg="#fff")
     lf11.config(bg=THEME["dark"])
     treeview_frame1.config(bg=THEME["dark"])
-    orders_db.tag_configure(
-        tagname="odd", background=THEME["dark"], foreground="#fff"
-    )
+    orders_db.tag_configure(tagname="odd", background=THEME["dark"], foreground="#fff")
     orders_db.tag_configure(tagname="even", background="#2A3459", foreground="#fff")
     tot_orders_lbl.config(bg=THEME["dark"])
     f11.config(bg=THEME["dark"])
@@ -3176,9 +3174,7 @@ def switch2dark() -> None:  # This is the main dark theme function
     exit_btn2.config(activebackground="#C02020", bg="#800000")
     lf31.config(bg=THEME["dark"])
     treeview_frame3.config(bg=THEME["dark"])
-    items_db.tag_configure(
-        tagname="odd", background=THEME["dark"], foreground="#fff"
-    )
+    items_db.tag_configure(tagname="odd", background=THEME["dark"], foreground="#fff")
     items_db.tag_configure(tagname="even", background="#2A3459", foreground="#fff")
     info_lbl.config(bg=THEME["dark"])
     lf32.config(bg=THEME["dark"])
@@ -3254,9 +3250,7 @@ def switch2light() -> None:  # This is the main light theme function
     greetings_lbl.config(bg=THEME["light"], fg="#000")
     lf11.config(bg=THEME["light"])
     treeview_frame1.config(bg=THEME["light"])
-    orders_db.tag_configure(
-        tagname="odd", background=THEME["light"], foreground="#000"
-    )
+    orders_db.tag_configure(tagname="odd", background=THEME["light"], foreground="#000")
     orders_db.tag_configure(tagname="even", background="#fff", foreground="#000")
     tot_orders_lbl.config(bg=THEME["light"])
     f11.config(bg=THEME["light"])
@@ -3307,9 +3301,7 @@ def switch2light() -> None:  # This is the main light theme function
     exit_btn2.config(bg="#C02020", activebackground="#800000")
     lf31.config(bg=THEME["light"])
     treeview_frame3.config(bg=THEME["light"])
-    items_db.tag_configure(
-        tagname="odd", background=THEME["light"], foreground="#000"
-    )
+    items_db.tag_configure(tagname="odd", background=THEME["light"], foreground="#000")
     items_db.tag_configure(tagname="even", background="#fff", foreground="#000")
     info_lbl.config(bg=THEME["light"])
     lf32.config(bg=THEME["light"])
@@ -4146,7 +4138,16 @@ try:
     S_BRIGHT: str = Style.BRIGHT
 
     print(F_GREEN + "[INFO]\tImporting custom modules, Please wait...")
-    from countrycodes import country_list
+    from constants import (
+        BUSINESS_TYPES,
+        CUSTOMERS_HEADER,
+        ORDERS_HEADER,
+        THEME,
+        THEMES_LIST,
+    )
+    from constants import GENDER_OPTIONS
+    from constants import ITEMS_HEADER
+    from constants import COUNTRY_LIST
     from private import (
         InvalidToken,
         decrypt_smtp_passwd,
@@ -4154,18 +4155,13 @@ try:
         encrypt_smtp_passwd,
         gen_private_key,
     )
-    from constants import BUSINESS_TYPES
-    from constants import THEMES_LIST
-    from constants import ORDERS_HEADER
-    from constants import CUSTOMERS_HEADER
-    from constants import THEME
 
     print(F_GREEN + "[INFO]\tImporting hidden modules, Please wait...")
     import PIL._tkinter_finder
     from babel import numbers
 
     country_names: list = list()
-    for _ in country_list:
+    for _ in COUNTRY_LIST:
         country_names.append(f"{_[0]} ({_[1]})")
 
     if os_env == "Linux":
@@ -4186,9 +4182,6 @@ try:
     private_key_file: str = join(config_path, "secret.key")
 
     __version__: str = "v.20221209 (Alpha-LTS)"
-
-    gender_options: list = ["Female", "Male", "Other"]
-    header_list3: list = ["S.No", "All Items", "Categories"]
 
     if os_env == "Linux":
         terminal(command="xtitle -q -t TailorMate")
@@ -4297,15 +4290,15 @@ try:
         ca_social_media_frame: Frame = Frame(master=ca_tab_view, bg=THEME["light"])
         ca_social_media_frame.pack()
 
-        ca_other_settings: Frame = Frame(master=ca_tab_view, bg=THEME["light"])
-        ca_other_settings.pack()
+        ca_settings_frame: Frame = Frame(master=ca_tab_view, bg=THEME["light"])
+        ca_settings_frame.pack()
 
         ca_tab_view.add(child=ca_eula_frame, text="License Agreement")
         ca_tab_view.add(child=ca_business_frame, text="User Configuration")
         ca_tab_view.add(child=ca_passwd_frame, text="Password Configuration")
         ca_tab_view.add(child=ca_smtp_frame, text="SMTP Configuration")
         ca_tab_view.add(child=ca_social_media_frame, text="Social Media")
-        ca_tab_view.add(child=ca_other_settings, text="Other Settings")
+        ca_tab_view.add(child=ca_settings_frame, text="Other Settings")
 
         ca.bind(
             sequence="<Alt-KeyPress-1>", func=lambda event: ca_tab_view.select(tab_id=0)
@@ -4326,25 +4319,25 @@ try:
             sequence="<Alt-KeyPress-6>", func=lambda event: ca_tab_view.select(tab_id=5)
         )
 
-        lf01: LabelFrame = LabelFrame(
+        ca_lf01: LabelFrame = LabelFrame(
             master=ca_eula_frame,
             text="License Agreement",
             bg=THEME["light"],
             fg="red",
         )
-        lf01.pack(padx=10, pady=5, fill=BOTH, expand=1)
+        ca_lf01.pack(padx=10, pady=5, fill=BOTH, expand=1)
 
-        ca_license_text: ScrolledText = ScrolledText(
-            master=lf01, selectbackground="orange"
+        ca_lic_st: ScrolledText = ScrolledText(
+            master=ca_lf01, selectbackground="orange"
         )
-        license_file = open(file=join(BASE_PATH, "LICENSE"), mode="r")
-        ca_license_text.insert(index=1.0, chars=license_file.read())
-        license_file.close()
-        ca_license_text.config(state=DISABLED)
-        ca_license_text.pack(padx=10, pady=5, fill=BOTH, expand=1)
+        lic_file = open(file=join(BASE_PATH, "LICENSE"), mode="r")
+        ca_lic_st.insert(index=1.0, chars=lic_file.read())
+        lic_file.close()
+        ca_lic_st.config(state=DISABLED)
+        ca_lic_st.pack(padx=10, pady=5, fill=BOTH, expand=1)
 
         eula_btn: Checkbutton = Checkbutton(
-            master=lf01,
+            master=ca_lf01,
             text="I accept the license agreement",
             bg=THEME["light"],
             activebackground=THEME["light"],
@@ -4352,7 +4345,7 @@ try:
         )
         eula_btn.pack(padx=10, anchor=E)
 
-        ca_bottom_frame1: Frame = Frame(master=lf01, bg=THEME["light"])
+        ca_bottom_frame1: Frame = Frame(master=ca_lf01, bg=THEME["light"])
         ca_bottom_frame1.pack(side=BOTTOM, pady=5, fill=X)
 
         ca_next_btn1: Button = Button(
@@ -4377,15 +4370,15 @@ try:
             sequence="<Return>", func=lambda event: ca_tab_view.select(tab_id=1)
         )
 
-        lf02: LabelFrame = LabelFrame(
+        ca_lf02: LabelFrame = LabelFrame(
             master=ca_business_frame,
             text="Configure your Business",
             bg=THEME["light"],
             fg="red",
         )
-        lf02.pack(padx=10, pady=5, fill=BOTH, expand=1)
+        ca_lf02.pack(padx=10, pady=5, fill=BOTH, expand=1)
 
-        f02: Frame = Frame(master=lf02, bg=THEME["light"])
+        f02: Frame = Frame(master=ca_lf02, bg=THEME["light"])
         f02.pack(pady=5)
 
         ca_name_lbl: Label = Label(
@@ -4420,9 +4413,7 @@ try:
         )
         country_name_cb.grid(row=2, column=1, padx=5, sticky=NSEW)
 
-        ca_ph_lbl: Label = Label(
-            master=f02, text="Phone Number:", bg=THEME["light"]
-        )
+        ca_ph_lbl: Label = Label(master=f02, text="Phone Number:", bg=THEME["light"])
         ca_ph_lbl.grid(row=3, column=0, padx=5, sticky=W)
 
         ca_ph_entry: Entry = Entry(
@@ -4454,13 +4445,13 @@ try:
         )
 
         Label(
-            master=lf02,
+            master=ca_lf02,
             text="Note: Internet connection required to verify your website is active and running.",
             fg="red",
             bg=THEME["light"],
         ).pack()
 
-        ca_bottom_frame2: Frame = Frame(master=lf02, bg=THEME["light"])
+        ca_bottom_frame2: Frame = Frame(master=ca_lf02, bg=THEME["light"])
         ca_bottom_frame2.pack(side=BOTTOM, pady=5, fill=X)
 
         ca_previous_btn2: Button = Button(
@@ -4795,9 +4786,9 @@ try:
             bg=THEME["light"],
         ).pack()
 
-        Label(
-            master=lf04, text="Steps to follow:", fg="red", bg=THEME["light"]
-        ).pack(padx=5, anchor=W)
+        Label(master=lf04, text="Steps to follow:", fg="red", bg=THEME["light"]).pack(
+            padx=5, anchor=W
+        )
 
         Label(
             master=lf04,
@@ -5018,9 +5009,7 @@ try:
         )
         ig_btn.grid(row=2, column=2, padx=5, sticky=W)
 
-        linkedin_lbl: Label = Label(
-            master=f05, text="LinkedIn URL:", bg=THEME["light"]
-        )
+        linkedin_lbl: Label = Label(master=f05, text="LinkedIn URL:", bg=THEME["light"])
         linkedin_lbl.grid(row=3, column=0, padx=5, sticky=W)
         linkedin_entry: Entry = Entry(master=f05, width=25, selectbackground="orange")
         linkedin_entry.grid(row=3, column=1, padx=5, sticky=W)
@@ -5058,9 +5047,7 @@ try:
         )
         reddit_btn.grid(row=4, column=2, padx=5, sticky=W)
 
-        twitter_lbl: Label = Label(
-            master=f05, text="Twitter URL:", bg=THEME["light"]
-        )
+        twitter_lbl: Label = Label(master=f05, text="Twitter URL:", bg=THEME["light"])
         twitter_lbl.grid(row=5, column=0, padx=5, sticky=W)
         twitter_entry: Entry = Entry(master=f05, width=25, selectbackground="orange")
         twitter_entry.grid(row=5, column=1, padx=5, sticky=W)
@@ -5079,9 +5066,7 @@ try:
         )
         twitter_btn.grid(row=5, column=2, padx=5, sticky=W)
 
-        wa_lbl: Label = Label(
-            master=f05, text="Whatsapp Number:", bg=THEME["light"]
-        )
+        wa_lbl: Label = Label(master=f05, text="Whatsapp Number:", bg=THEME["light"])
         wa_lbl.grid(row=6, column=0, padx=5, sticky=W)
         wa_entry: Entry = Entry(master=f05, width=25, selectbackground="orange")
         wa_entry.grid(row=6, column=1, padx=5, sticky=W)
@@ -5262,7 +5247,7 @@ try:
         )
 
         lf06: LabelFrame = LabelFrame(
-            master=ca_other_settings,
+            master=ca_settings_frame,
             text="Other Settings",
             bg=THEME["light"],
             fg="red",
@@ -6143,7 +6128,7 @@ try:
     email_var1: StringVar = StringVar()
     email_var2: StringVar = StringVar()
     gender_var: StringVar = StringVar()
-    gender_var.set(value=gender_options[0])
+    gender_var.set(value=GENDER_OPTIONS[0])
     stitch_var: IntVar = IntVar()
     cost_var: DoubleVar = DoubleVar()
     cost_var.set(value=0.0)
@@ -6913,7 +6898,9 @@ try:
     customers_db.column(column=0, width=70, minwidth=70, anchor=CENTER)  # Serial Number
     customers_db.column(column=1, width=150, minwidth=150, anchor=W)  # Name
     customers_db.column(column=2, width=155, minwidth=155, anchor=CENTER)  # Created on
-    customers_db.column(column=3, width=130, minwidth=130, anchor=CENTER)  # Phone Number
+    customers_db.column(
+        column=3, width=130, minwidth=130, anchor=CENTER
+    )  # Phone Number
     customers_db.column(column=4, width=315, minwidth=315, anchor=CENTER)  # Email
     customers_db.column(column=5, width=95, minwidth=95, anchor=CENTER)  # Date of Birth
     customers_db.column(column=6, width=75, minwidth=75, anchor=W)  # Gender
@@ -7047,7 +7034,7 @@ try:
     gender_lbl: Label = Label(master=f21, text="Gender:")
     gender_lbl.grid(row=4, column=0, sticky=W)
     gender_table: OptionMenu = OptionMenu(
-        f21, gender_var, *gender_options, command=lambda event: update_gender_color()
+        f21, gender_var, *GENDER_OPTIONS, command=lambda event: update_gender_color()
     )
     gender_table.config(
         bg="#C01493",
@@ -7180,12 +7167,12 @@ try:
     items_db: Treeview = Treeview(
         master=treeview_frame3,
         show="headings",
-        columns=header_list3,
+        columns=ITEMS_HEADER,
         selectmode=BROWSE,
         yscrollcommand=treeview_scroll.set,
     )
 
-    for _ in header_list3:
+    for _ in ITEMS_HEADER:
         items_db.heading(column=_, text=_)
 
     items_db.column(column=0, width=70, minwidth=70, anchor=CENTER)
