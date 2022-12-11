@@ -382,10 +382,6 @@ def update_theme_color() -> None:  # This static function only works on setting 
         ca_theme_table["menu"].config(bg="#000", fg="#fff")
 
 
-def smtp_login():
-    pass
-
-
 def create_configuration() -> None:
     ca_save_btn.config(text="Saving...", state=DISABLED)
     ca_save_btn.update()
@@ -1502,9 +1498,10 @@ def send_email(to_addr: str, subject: str, message):
     msg["Subject"] = subject
     msg.set_content(MIMEText(message, "html"))
 
+    setdefaulttimeout(10.0)
+
     try:
         print(F_YELLOW + "[INFO]\tConnecting to smtp.gmail.com:587, Please wait...")
-        setdefaulttimeout(10.0)
         server: SMTP = SMTP(host="smtp.gmail.com", port=587)
         server.ehlo()
         print(F_YELLOW + "[INFO]\tStarting TLS Handshake, Please wait...")
@@ -1529,6 +1526,19 @@ def send_email(to_addr: str, subject: str, message):
         showinfo(
             title=f"TailorMate {__version__}",
             message=f"Failed to Login. {smtp_authentication_error}",
+        )
+        tm.deiconify()
+
+    except SMTPServerDisconnected as smtp_server_disconnected:
+        print(F_BLUE + "=" * 80)
+        print(F_RED + "Error Code: smtplib.SMTPServerDisconnectedc")
+        print(F_RED + f"[ERROR]\t{smtp_server_disconnected}!")
+        print(F_BLUE + "=" * 80)
+
+        tm.withdraw()
+        play_bell_sound(master=tm, bell_var=tm_bell_var)
+        showinfo(
+            title=f"TailorMate {__version__}", message=f"{smtp_server_disconnected}!"
         )
         tm.deiconify()
 
@@ -4056,7 +4066,7 @@ try:
     from platform import system as os_environment
     from random import choice
     from shutil import rmtree
-    from smtplib import SMTP, SMTPAuthenticationError
+    from smtplib import SMTP, SMTPAuthenticationError, SMTPServerDisconnected
     from socket import gaierror, setdefaulttimeout
     from sqlite3 import IntegrityError, OperationalError, connect
     from sys import exit as terminate
@@ -4782,17 +4792,6 @@ try:
         ca_show_smtp_passwd.bind(
             sequence="<Down>", func=lambda event: smtp_email_entry.focus()
         )
-
-        sign_in_bth: Button = Button(
-            master=f04,
-            text="Sign in",
-            bg="#C02020",
-            activebackground="#800000",
-            activeforeground="#FFF",
-            fg="#fff",
-            width=10,
-        )
-        sign_in_bth.grid(row=3, column=1, padx=5, pady=5, sticky=W)
 
         Label(
             master=lf04,
