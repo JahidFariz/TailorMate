@@ -1,3 +1,12 @@
+## Changelog for v.20221217 Alpha-LTS:
+
+* Updated darkdetect from v0.7.1 to v0.8.0
+* Updated isort from v5.11.2 to v5.11.3
+
+## Changelog for v.20221214 Alpha-LTS:
+
+* Updated isort from v5.10.1 to v5.11.2
+
 ## Changelog for v.20221210 Alpha-LTS:
 
 * Updated black from v22.10.0 to v22.12.0

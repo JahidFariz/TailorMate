@@ -111,7 +111,11 @@ def validate_root_passwd():
     root_passwd2: str = ca_passwd_var2.get()
 
     if not root_passwd1:
-        print(F_YELLOW + "[INFO]\tPlease create a new root password...")
+        print(F_BLUE + "=" * 80)
+        print(
+            f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Please create a new root password..."
+        )
+        print(F_BLUE + "=" * 80)
 
         ca.withdraw()
         play_bell_sound(master=ca, bell_var=ca_bell_var)
@@ -124,7 +128,11 @@ def validate_root_passwd():
         return None
 
     if len(root_passwd1) < 8:
-        print(F_RED + "[INFO]\tUse 8 characters or more for your password!")
+        print(F_BLUE + "=" * 80)
+        print(
+            f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Use 8 characters or more for your password!"
+        )
+        print(F_BLUE + "=" * 80)
 
         ca.withdraw()
         play_bell_sound(master=ca, bell_var=ca_bell_var)
@@ -138,7 +146,9 @@ def validate_root_passwd():
 
     if root_passwd1 != root_passwd2:
         print(F_BLUE + "=" * 80)
-        print(F_RED + "[ERROR]\tPassword doesn't match, Please try again...")
+        print(
+            f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Password doesn't match, Please try again..."
+        )
         print(F_BLUE + "=" * 80)
 
         ca.withdraw()
@@ -188,10 +198,11 @@ def check_passwd_strength():
                 response_list: list = _.split(sep=":")
 
                 if response_list[0].lower() == remaining_hash:
+                    print(F_BLUE + "=" * 80)
                     print(
-                        F_RED
-                        + f"[WARN]\tOh no — pwned! This password has been seen {response_list[1]} times before"
+                        f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Oh no — pwned! This password has been seen {response_list[1]} times before"
                     )
+                    print(F_BLUE + "=" * 80)
 
                     ca.withdraw()
                     play_bell_sound(master=ca, bell_var=ca_bell_var)
@@ -330,8 +341,7 @@ def check_passwd_strength():
 
     if 28 <= entropy < 36:
         print(
-            F_GREEN
-            + "[INFO]\tReasonable password. It will do for non-vital accounts! 😐"
+            f"[{F_GREEN}{S_BRIGHT}INFO{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Reasonable password. It will do for non-vital accounts! 😐"
         )
 
         passwd_strength_lbl.config(
@@ -340,7 +350,9 @@ def check_passwd_strength():
         passwd_strength_btn.config(text="Check Strength", state=NORMAL)
 
     if 36 <= entropy < 60:
-        print(F_GREEN + "[INFO]\tStrong password. Well done! 🙂")
+        print(
+            f"[{F_GREEN}{S_BRIGHT}INFO{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Strong password. Well done! 🙂"
+        )
 
         passwd_strength_lbl.config(text="* Strength: Strong password. Well done! 🙂")
         passwd_strength_btn.config(text="Check Strength", state=NORMAL)
@@ -383,13 +395,28 @@ def update_theme_color() -> None:  # This static function only works on setting 
 
 
 def create_configuration() -> None:
+    print(
+        f"[{F_YELLOW}{S_BRIGHT}LOG{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Save button clicked!"
+    )
     ca_save_btn.config(text="Saving...", state=DISABLED)
     ca_save_btn.update()
+
+    ca_business_name_lbl.config(fg="#000")
+    ca_country_lbl.config(fg="#000")
+    ca_ph_lbl.config(fg="#000")
+    ca_website_lbl.config(fg="#000")
+    ca_passwd_lbl1.config(fg="#000")
+    smtp_email_lbl.config(fg="#000")
+    smtp_passwd_lbl.config(fg="#000")
 
     ####################################################################################################################
 
     if not eula_var.get():
-        print(F_RED + "[INFO]\tPlease accept the license agreement.")
+        print(F_BLUE + "=" * 80)
+        print(
+            f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Please accept the license agreement!"
+        )
+        print(F_BLUE + "=" * 80)
 
         ca.withdraw()
         play_bell_sound(master=ca, bell_var=ca_bell_var)
@@ -408,16 +435,21 @@ def create_configuration() -> None:
     ####################################################################################################################
 
     if not isfile(path=private_key_file):
-        print(F_GREEN + "[INFO]\tGenerating new private key...")
+        print(
+            f"[{F_GREEN}{S_BRIGHT}INFO{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Generating new private key..."
+        )
         gen_private_key(key_path=private_key_file)
 
     ####################################################################################################################
 
-    ca_name_lbl.config(fg="#000")
     business_name: str = business_name_var.get().strip().upper()
 
     if not business_name:
-        print(F_YELLOW + "[INFO]\tPlease enter your legal business name.")
+        print(F_BLUE + "=" * 80)
+        print(
+            f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Please enter your legal business name."
+        )
+        print(F_BLUE + "=" * 80)
 
         ca.withdraw()
         play_bell_sound(master=ca, bell_var=ca_bell_var)
@@ -429,8 +461,8 @@ def create_configuration() -> None:
 
         ca_tab_view.select(tab_id=1)
 
-        ca_name_lbl.config(fg="red")
-        ca_name_entry.focus()
+        ca_business_name_lbl.config(fg="red")
+        ca_business_name_entry.focus()
 
         ca_save_btn.config(text="Save", state=NORMAL)
 
@@ -442,19 +474,20 @@ def create_configuration() -> None:
 
     ####################################################################################################################
 
-    ca_country_lbl.config(fg="#000")
     ca_selected_country: str = ca_country_var.get()
 
     if not ca_selected_country.lower() in [_.lower() for _ in country_names]:
         print(F_BLUE + "=" * 80)
-        print(F_RED + "[ERROR]\tInvalid country selection, Please try again...")
+        print(
+            f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Invalid country, Please try again..."
+        )
         print(F_BLUE + "=" * 80)
 
         ca.withdraw()
         play_bell_sound(master=ca, bell_var=ca_bell_var)
         showinfo(
             title=f"TailorMate {__version__}",
-            message="Invalid country selection, Please try again...",
+            message="Invalid country, Please try again...",
         )
         ca.deiconify()
 
@@ -468,7 +501,6 @@ def create_configuration() -> None:
 
     ####################################################################################################################
 
-    ca_ph_lbl.config(fg="#000")
     ph: str or None = validate_ph(ph_no_var=ca_ph_var, master=ca, bell_var=ca_bell_var)
 
     if ph is None:
@@ -483,19 +515,23 @@ def create_configuration() -> None:
 
     ####################################################################################################################
 
-    ca_website_lbl.config(fg="#000")
     business_website: str = ca_website_var.get().strip().lower()
 
     if business_website:
         try:
+            # Trying to fetch url response code
             status_code: int = get(url=business_website).status_code
 
             if status_code == 200:
-                print(F_GREEN + "[INFO]\tURL Response Status: 200 (OK)")
+                print(
+                    f"[{F_GREEN}{S_BRIGHT}INFO{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}URL Response Status: 200 (OK)"
+                )
 
             elif status_code == 404:
                 print(F_BLUE + "=" * 80)
-                print(F_RED + "[ERROR]\tURL Response Status: 404 (NOT FOUND)")
+                print(
+                    f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}URL Response Status: 404 (NOT FOUND)"
+                )
                 print(F_BLUE + "=" * 80)
 
                 ca.withdraw()
@@ -517,7 +553,9 @@ def create_configuration() -> None:
 
             else:
                 print(F_BLUE + "=" * 80)
-                print(F_RED + f"[ERROR]\tURL Response Status: {status_code}")
+                print(
+                    f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}URL Response Status: {status_code}"
+                )
                 print(F_BLUE + "=" * 80)
 
                 ca.withdraw()
@@ -539,8 +577,10 @@ def create_configuration() -> None:
 
         except MissingSchema as missing_schema:
             print(F_BLUE + "=" * 80)
-            print(F_RED + "Error Code: requests.exceptions.MissingSchema")
-            print(F_RED + f"[ERROR]\t{missing_schema}")
+            print(F_RED + S_BRIGHT + "Error Code: requests.exceptions.MissingSchema")
+            print(
+                f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}{missing_schema}"
+            )
             print(F_BLUE + "=" * 80)
 
             ca.withdraw()
@@ -586,8 +626,10 @@ def create_configuration() -> None:
 
         except ConnectionError as connection_error:
             print(F_BLUE + "=" * 80)
-            print(F_RED + "Error Code: requests.exceptions.ConnectionError")
-            print(F_RED + f"[ERROR]\t{connection_error}")
+            print(F_RED + S_BRIGHT + "Error Code: requests.exceptions.ConnectionError")
+            print(
+                f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}{connection_error}"
+            )
             print(F_BLUE + "=" * 80)
 
             ca.withdraw()
@@ -629,7 +671,6 @@ def create_configuration() -> None:
 
     ####################################################################################################################
 
-    smtp_email_lbl.config(fg="#000")
     ca_smtp_email: str = smtp_email_var.get().strip().lower()
 
     if not ca_smtp_email:
@@ -777,7 +818,6 @@ def create_configuration() -> None:
 
     ####################################################################################################################
 
-    smtp_passwd_lbl.config(fg="#000")
     ca_smtp_passwd: str = smtp_passwd_var.get()
 
     if not ca_smtp_passwd:
@@ -1593,7 +1633,11 @@ def validate_ph(ph_no_var, master, bell_var) -> (str or None):
     ph_no: str = ph_no_var.get().strip()
 
     if not ph_no:
-        print(F_RED + "[INFO]\tPlease enter the phone number.")
+        print(F_BLUE + "=" * 80)
+        print(
+            f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Please enter the phone number."
+        )
+        print(F_BLUE + "=" * 80)
 
         master.withdraw()
         play_bell_sound(master=master, bell_var=bell_var)
@@ -1608,8 +1652,14 @@ def validate_ph(ph_no_var, master, bell_var) -> (str or None):
 
     except NumberParseException as number_parse_exception:
         print(F_BLUE + "=" * 80)
-        print(F_RED + "Error Code: phonenumbers.phonenumberutil.NumberParseException")
-        print(F_RED + f"[ERROR]\t{number_parse_exception}")
+        print(
+            F_RED
+            + S_BRIGHT
+            + "Error Code: phonenumbers.phonenumberutil.NumberParseException"
+        )
+        print(
+            f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}{number_parse_exception}"
+        )
         print(F_BLUE + "=" * 80)
 
         master.withdraw()
@@ -1625,7 +1675,9 @@ def validate_ph(ph_no_var, master, bell_var) -> (str or None):
 
     if not is_valid_number(numobj=number_obj):
         print(F_BLUE + "=" * 80)
-        print(F_RED + "[ERROR]\tInvalid mobile number.")
+        print(
+            f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Invalid mobile number."
+        )
         print(F_BLUE + "=" * 80)
 
         master.withdraw()
@@ -4150,8 +4202,11 @@ try:
     F_BLUE: str = Fore.BLUE
 
     S_BRIGHT: str = Style.BRIGHT
+    S_RESET_ALL: str = Style.RESET_ALL
 
-    print(F_GREEN + "[INFO]\tImporting custom modules, Please wait...")
+    print(
+        f"[{F_GREEN}{S_BRIGHT}INFO{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Importing custom modules, Please wait..."
+    )
     from constants import (
         BUSINESS_TYPES,
         COUNTRY_LIST,
@@ -4170,13 +4225,18 @@ try:
         gen_private_key,
     )
 
-    print(F_GREEN + "[INFO]\tImporting hidden modules, Please wait...")
+    print(
+        f"[{F_GREEN}{S_BRIGHT}INFO{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Importing hidden modules, Please wait..."
+    )
     import PIL._tkinter_finder
     from babel import numbers
 
     country_names: list = list()
     for _ in COUNTRY_LIST:
-        country_names.append(f"{_[0]} ({_[1]})")
+        country_name: str = _[0]
+        country_code: str = _[1]
+
+        country_names.append(f"{country_name} ({country_code})")
 
     if os_env == "Linux":
         config_path: str = f"/home/{whoami}/.config/TailorMate/"
@@ -4204,7 +4264,9 @@ try:
         terminal(command="title TailorMate")
 
     if not isfile(path=config_file):
-        print(F_GREEN + "[INFO]\tLoading configuration app, Please wait...")
+        print(
+            f"[{F_GREEN}{S_BRIGHT}INFO{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Loading configuration app, Please wait..."
+        )
 
         ca: Tk = Tk()
         ca.withdraw()
@@ -4395,17 +4457,17 @@ try:
         f02: Frame = Frame(master=ca_lf02, bg=THEME["light"])
         f02.pack(pady=5)
 
-        ca_name_lbl: Label = Label(
+        ca_business_name_lbl: Label = Label(
             master=f02, text="Legal Name of Business:", bg=THEME["light"]
         )
-        ca_name_lbl.grid(row=0, column=0, padx=5, sticky=W)
-        ca_name_entry: Entry = Entry(
+        ca_business_name_lbl.grid(row=0, column=0, padx=5, sticky=W)
+        ca_business_name_entry: Entry = Entry(
             master=f02,
             width=35,
             textvariable=business_name_var,
             selectbackground="orange",
         )
-        ca_name_entry.grid(row=0, column=1, padx=5, sticky=W)
+        ca_business_name_entry.grid(row=0, column=1, padx=5, sticky=W)
 
         Label(master=f02, text="Business Type:", bg=THEME["light"]).grid(
             row=1, column=0, padx=5, sticky=W
@@ -4447,15 +4509,21 @@ try:
         )
         ca_website_entry.grid(row=4, column=1, padx=5, sticky=W)
 
-        ca_name_entry.bind(sequence="<Up>", func=lambda event: ca_website_entry.focus())
-        ca_name_entry.bind(sequence="<Down>", func=lambda event: ca_ph_entry.focus())
+        ca_business_name_entry.bind(
+            sequence="<Up>", func=lambda event: ca_website_entry.focus()
+        )
+        ca_business_name_entry.bind(
+            sequence="<Down>", func=lambda event: ca_ph_entry.focus()
+        )
 
-        ca_ph_entry.bind(sequence="<Up>", func=lambda event: ca_name_entry.focus())
+        ca_ph_entry.bind(
+            sequence="<Up>", func=lambda event: ca_business_name_entry.focus()
+        )
         ca_ph_entry.bind(sequence="<Down>", func=lambda event: ca_website_entry.focus())
 
         ca_website_entry.bind(sequence="<Up>", func=lambda event: ca_ph_entry.focus())
         ca_website_entry.bind(
-            sequence="<Down>", func=lambda event: ca_name_entry.focus()
+            sequence="<Down>", func=lambda event: ca_business_name_entry.focus()
         )
 
         Label(
@@ -4728,15 +4796,15 @@ try:
             sequence="<Right>", func=lambda event: ca_previous_btn3.focus()
         )
 
-        lf04: LabelFrame = LabelFrame(
+        ca_lf04: LabelFrame = LabelFrame(
             bg=THEME["light"],
             fg="red",
             master=ca_smtp_frame,
             text="Configure SMTP Server",
         )
-        lf04.pack(padx=10, pady=5, fill=BOTH, expand=1, ipady=3)
+        ca_lf04.pack(padx=10, pady=5, fill=BOTH, expand=1, ipady=3)
 
-        f04: Frame = Frame(master=lf04, bg=THEME["light"])
+        f04: Frame = Frame(master=ca_lf04, bg=THEME["light"])
         f04.pack(pady=5)
 
         smtp_email_lbl: Label = Label(
@@ -4794,35 +4862,35 @@ try:
         )
 
         Label(
-            master=lf04,
+            master=ca_lf04,
             text="Note: Internet connection required to configure the SMTP server",
             fg="red",
             bg=THEME["light"],
         ).pack()
 
-        Label(master=lf04, text="Steps to follow:", fg="red", bg=THEME["light"]).pack(
-            padx=5, anchor=W
-        )
+        Label(
+            master=ca_lf04, text="Steps to follow:", fg="red", bg=THEME["light"]
+        ).pack(padx=5, anchor=W)
 
         Label(
-            master=lf04,
+            master=ca_lf04,
             text="Step 1: Don't forget to turn ON 2-Step Verification",
             bg=THEME["light"],
         ).pack(padx=5, anchor=W)
 
         Label(
-            master=lf04,
+            master=ca_lf04,
             text="Step 2: Generate the new SMTP App Password",
             bg=THEME["light"],
         ).pack(padx=5, anchor=W)
 
         Label(
-            master=lf04,
+            master=ca_lf04,
             text="Step 3: Select the mail app and Create the custom device name.",
             bg=THEME["light"],
         ).pack(padx=5, anchor=W)
 
-        ca_btn_frame_4: Frame = Frame(master=lf04, bg=THEME["light"])
+        ca_btn_frame_4: Frame = Frame(master=ca_lf04, bg=THEME["light"])
         ca_btn_frame_4.pack(pady=5)
 
         two_step_verification_btn: Button = Button(
@@ -4881,28 +4949,28 @@ try:
         )
 
         Label(
-            master=lf04,
+            master=ca_lf04,
             text="We Respect your Privacy:",
             bg=THEME["light"],
             fg="red",
         ).pack(padx=5, anchor=W)
         Label(
-            master=lf04,
+            master=ca_lf04,
             text="*  We only handles Gmail address for now.",
             bg=THEME["light"],
         ).pack(padx=5, anchor=W)
         Label(
-            master=lf04,
+            master=ca_lf04,
             text="*  We never share your password with anyone.",
             bg=THEME["light"],
         ).pack(padx=5, anchor=W)
         Label(
-            master=lf04,
+            master=ca_lf04,
             text="*  Don't worry, We don't send spam messages.",
             bg=THEME["light"],
         ).pack(padx=5, anchor=W)
 
-        ca_bottom_frame4: Frame = Frame(master=lf04, bg=THEME["light"])
+        ca_bottom_frame4: Frame = Frame(master=ca_lf04, bg=THEME["light"])
         ca_bottom_frame4.pack(side=BOTTOM, pady=5, fill=X)
 
         ca_previous_btn4: Button = Button(
@@ -4955,27 +5023,27 @@ try:
             sequence="<Right>", func=lambda event: ca_previous_btn4.focus()
         )
 
-        lf05: LabelFrame = LabelFrame(
+        ca_lf05: LabelFrame = LabelFrame(
             master=ca_social_media_frame,
             text="Social Media Accounts (Optional)",
             fg="red",
             bg=THEME["light"],
         )
-        lf05.pack(padx=10, pady=5, fill=BOTH, expand=1, ipady=3)
+        ca_lf05.pack(padx=10, pady=5, fill=BOTH, expand=1, ipady=3)
 
-        f05: Frame = Frame(master=lf05, bg=THEME["light"])
-        f05.pack()
+        ca_f05: Frame = Frame(master=ca_lf05, bg=THEME["light"])
+        ca_f05.pack()
 
-        fb_lbl: Label = Label(master=f05, text="Facebook URL:", bg=THEME["light"])
+        fb_lbl: Label = Label(master=ca_f05, text="Facebook URL:", bg=THEME["light"])
         fb_lbl.grid(row=0, column=0, padx=5, sticky=W)
-        fb_entry: Entry = Entry(master=f05, width=25, selectbackground="orange")
+        fb_entry: Entry = Entry(master=ca_f05, width=25, selectbackground="orange")
         fb_entry.grid(row=0, column=1, padx=5, sticky=W)
         _: Image = Image.open(
             fp=join(BASE_PATH, "assets/facebook-circular-logo.png")
         ).resize(size=(20, 20))
         fb_ico: PhotoImage = PhotoImage(image=_)
         fb_btn: Button = Button(
-            master=f05,
+            master=ca_f05,
             text="Open Facebook",
             bg="#4867AA",
             fg="#fff",
@@ -4985,16 +5053,16 @@ try:
         )
         fb_btn.grid(row=0, column=2, padx=5, sticky=W)
 
-        github_lbl: Label = Label(master=f05, text="GitHub URL:", bg=THEME["light"])
+        github_lbl: Label = Label(master=ca_f05, text="GitHub URL:", bg=THEME["light"])
         github_lbl.grid(row=1, column=0, padx=5, sticky=W)
-        github_entry: Entry = Entry(master=f05, width=25, selectbackground="orange")
+        github_entry: Entry = Entry(master=ca_f05, width=25, selectbackground="orange")
         github_entry.grid(row=1, column=1, padx=5, sticky=W)
         _: Image = Image.open(fp=join(BASE_PATH, "assets/github.png")).resize(
             size=(20, 20)
         )
         github_ico: PhotoImage = PhotoImage(image=_)
         github_btn: Button = Button(
-            master=f05,
+            master=ca_f05,
             text="Open GitHub",
             bg="#000",
             fg="#fff",
@@ -5004,16 +5072,16 @@ try:
         )
         github_btn.grid(row=1, column=2, padx=5, sticky=W)
 
-        ig_lbl: Label = Label(master=f05, text="Instagram URL:", bg=THEME["light"])
+        ig_lbl: Label = Label(master=ca_f05, text="Instagram URL:", bg=THEME["light"])
         ig_lbl.grid(row=2, column=0, padx=5, sticky=W)
-        ig_entry: Entry = Entry(master=f05, width=25, selectbackground="orange")
+        ig_entry: Entry = Entry(master=ca_f05, width=25, selectbackground="orange")
         ig_entry.grid(row=2, column=1, padx=5, sticky=W)
         _: Image = Image.open(fp=join(BASE_PATH, "assets/instagram.png")).resize(
             size=(20, 20)
         )
         ig_ico: PhotoImage = PhotoImage(image=_)
         ig_btn: Button = Button(
-            master=f05,
+            master=ca_f05,
             text="Open Instagram",
             bg="#E0306E",
             fg="#fff",
@@ -5023,16 +5091,20 @@ try:
         )
         ig_btn.grid(row=2, column=2, padx=5, sticky=W)
 
-        linkedin_lbl: Label = Label(master=f05, text="LinkedIn URL:", bg=THEME["light"])
+        linkedin_lbl: Label = Label(
+            master=ca_f05, text="LinkedIn URL:", bg=THEME["light"]
+        )
         linkedin_lbl.grid(row=3, column=0, padx=5, sticky=W)
-        linkedin_entry: Entry = Entry(master=f05, width=25, selectbackground="orange")
+        linkedin_entry: Entry = Entry(
+            master=ca_f05, width=25, selectbackground="orange"
+        )
         linkedin_entry.grid(row=3, column=1, padx=5, sticky=W)
         _: Image = Image.open(fp=join(BASE_PATH, "assets/linkedin.png")).resize(
             size=(20, 20)
         )
         linkedin_ico: PhotoImage = PhotoImage(image=_)
         linkedin_btn: Button = Button(
-            master=f05,
+            master=ca_f05,
             text="Open LinkedIn",
             bg="#0077B5",
             fg="#fff",
@@ -5042,16 +5114,16 @@ try:
         )
         linkedin_btn.grid(row=3, column=2, padx=5, sticky=W)
 
-        reddit_lbl: Label = Label(master=f05, text="Reddit URL:", bg=THEME["light"])
+        reddit_lbl: Label = Label(master=ca_f05, text="Reddit URL:", bg=THEME["light"])
         reddit_lbl.grid(row=4, column=0, padx=5, sticky=W)
-        reddit_entry: Entry = Entry(master=f05, width=25, selectbackground="orange")
+        reddit_entry: Entry = Entry(master=ca_f05, width=25, selectbackground="orange")
         reddit_entry.grid(row=4, column=1, padx=5, sticky=W)
         _: Image = Image.open(fp=join(BASE_PATH, "assets/reddit.png")).resize(
             size=(20, 20)
         )
         reddit_ico: PhotoImage = PhotoImage(image=_)
         reddit_btn: Button = Button(
-            master=f05,
+            master=ca_f05,
             text="Open Reddit",
             bg="#FF4500",
             fg="#fff",
@@ -5061,16 +5133,18 @@ try:
         )
         reddit_btn.grid(row=4, column=2, padx=5, sticky=W)
 
-        twitter_lbl: Label = Label(master=f05, text="Twitter URL:", bg=THEME["light"])
+        twitter_lbl: Label = Label(
+            master=ca_f05, text="Twitter URL:", bg=THEME["light"]
+        )
         twitter_lbl.grid(row=5, column=0, padx=5, sticky=W)
-        twitter_entry: Entry = Entry(master=f05, width=25, selectbackground="orange")
+        twitter_entry: Entry = Entry(master=ca_f05, width=25, selectbackground="orange")
         twitter_entry.grid(row=5, column=1, padx=5, sticky=W)
         _: Image = Image.open(fp=join(BASE_PATH, "assets/twitter.png")).resize(
             size=(20, 20)
         )
         twitter_ico: PhotoImage = PhotoImage(image=_)
         twitter_btn: Button = Button(
-            master=f05,
+            master=ca_f05,
             text="Open Twitter",
             bg="#1DA1F2",
             fg="#fff",
@@ -5080,16 +5154,16 @@ try:
         )
         twitter_btn.grid(row=5, column=2, padx=5, sticky=W)
 
-        wa_lbl: Label = Label(master=f05, text="Whatsapp Number:", bg=THEME["light"])
+        wa_lbl: Label = Label(master=ca_f05, text="Whatsapp Number:", bg=THEME["light"])
         wa_lbl.grid(row=6, column=0, padx=5, sticky=W)
-        wa_entry: Entry = Entry(master=f05, width=25, selectbackground="orange")
+        wa_entry: Entry = Entry(master=ca_f05, width=25, selectbackground="orange")
         wa_entry.grid(row=6, column=1, padx=5, sticky=W)
         _: Image = Image.open(fp=join(BASE_PATH, "assets/whatsapp.png")).resize(
             size=(20, 20)
         )
         wa_ico: PhotoImage = PhotoImage(image=_)
         wa_btn: Button = Button(
-            master=f05,
+            master=ca_f05,
             text="Open Whatsapp",
             bg="green",
             fg="#fff",
@@ -5099,16 +5173,16 @@ try:
         )
         wa_btn.grid(row=6, column=2, padx=5, sticky=W)
 
-        yt_lbl: Label = Label(master=f05, text="YouTube URL:", bg=THEME["light"])
+        yt_lbl: Label = Label(master=ca_f05, text="YouTube URL:", bg=THEME["light"])
         yt_lbl.grid(row=7, column=0, padx=5, sticky=W)
-        yt_entry: Entry = Entry(master=f05, width=25, selectbackground="orange")
+        yt_entry: Entry = Entry(master=ca_f05, width=25, selectbackground="orange")
         yt_entry.grid(row=7, column=1, padx=5, sticky=W)
         _: Image = Image.open(fp=join(BASE_PATH, "assets/youtube.png")).resize(
             size=(20, 20)
         )
         yt_ico: PhotoImage = PhotoImage(image=_)
         yt_btn: Button = Button(
-            master=f05,
+            master=ca_f05,
             text="Open YouTube",
             bg="red",
             fg="#fff",
@@ -5208,7 +5282,7 @@ try:
         yt_btn.bind(sequence="<Left>", func=lambda event: yt_entry.focus())
         yt_btn.bind(sequence="<Right>", func=lambda event: yt_entry.focus())
 
-        ca_bottom_frame5: Frame = Frame(master=lf05, bg=THEME["light"])
+        ca_bottom_frame5: Frame = Frame(master=ca_lf05, bg=THEME["light"])
         ca_bottom_frame5.pack(side=BOTTOM, pady=5, fill=X)
 
         ca_previous_btn5: Button = Button(
@@ -5260,18 +5334,18 @@ try:
             sequence="<Right>", func=lambda event: ca_previous_btn5.focus()
         )
 
-        lf06: LabelFrame = LabelFrame(
+        ca_lf06: LabelFrame = LabelFrame(
             master=ca_settings_frame,
             text="Other Settings",
             bg=THEME["light"],
             fg="red",
         )
-        lf06.pack(padx=10, pady=5, fill=BOTH, expand=1, ipady=3)
+        ca_lf06.pack(padx=10, pady=5, fill=BOTH, expand=1, ipady=3)
 
-        f06: Frame = Frame(master=lf06, bg=THEME["light"])
-        f06.pack(pady=5)
+        ca_f06: Frame = Frame(master=ca_lf06, bg=THEME["light"])
+        ca_f06.pack(pady=5)
 
-        f061: Frame = Frame(master=f06, bg=THEME["light"])
+        f061: Frame = Frame(master=ca_f06, bg=THEME["light"])
         f061.pack()
 
         ca_cb1: Checkbutton = Checkbutton(
@@ -5318,7 +5392,7 @@ try:
         ca_cb4.bind(sequence="<Up>", func=lambda event: ca_cb3.focus())
         ca_cb4.bind(sequence="<Down>", func=lambda event: ca_cb1.focus())
 
-        f062: Frame = Frame(master=f06, bg=THEME["light"])
+        f062: Frame = Frame(master=ca_f06, bg=THEME["light"])
         f062.pack()
 
         Label(master=f062, text="Theme Appearance:", bg=THEME["light"]).grid(
@@ -5344,13 +5418,13 @@ try:
         ca_theme_table.grid(row=0, column=1, padx=5)
 
         Label(
-            master=lf06,
+            master=ca_lf06,
             text="Note: Internet connection required to check MX DNS record.",
             fg="red",
             bg=THEME["light"],
         ).pack()
 
-        ca_bottom_frame6: Frame = Frame(master=lf06, bg=THEME["light"])
+        ca_bottom_frame6: Frame = Frame(master=ca_lf06, bg=THEME["light"])
         ca_bottom_frame6.pack(side=BOTTOM, pady=5, fill=X)
 
         ca_previous_btn6: Button = Button(
