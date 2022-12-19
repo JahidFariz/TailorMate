@@ -59,7 +59,7 @@ def play_bell_sound(master, bell_var):
         master.bell()
 
 
-def clrscr():
+def clear_screen():
     if os_env == "Linux":
         terminal(command="clear")
 
@@ -113,7 +113,8 @@ def validate_root_passwd():
     if not root_passwd1:
         print(F_BLUE + "=" * 80)
         print(
-            f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Please create a new root password..."
+            f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}"
+            "Please create a new root password..."
         )
         print(F_BLUE + "=" * 80)
 
@@ -130,7 +131,8 @@ def validate_root_passwd():
     if len(root_passwd1) < 8:
         print(F_BLUE + "=" * 80)
         print(
-            f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Use 8 characters or more for your password!"
+            f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}"
+            "Use 8 characters or more for your password!"
         )
         print(F_BLUE + "=" * 80)
 
@@ -147,7 +149,8 @@ def validate_root_passwd():
     if root_passwd1 != root_passwd2:
         print(F_BLUE + "=" * 80)
         print(
-            f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Password doesn't match, Please try again..."
+            f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}"
+            "Password doesn't match, Please try again..."
         )
         print(F_BLUE + "=" * 80)
 
@@ -200,7 +203,8 @@ def check_passwd_strength():
                 if response_list[0].lower() == remaining_hash:
                     print(F_BLUE + "=" * 80)
                     print(
-                        f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Oh no — pwned! This password has been seen {response_list[1]} times before"
+                        f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t"
+                        f"{S_BRIGHT}Oh no — pwned! This password has been seen {response_list[1]} times before"
                     )
                     print(F_BLUE + "=" * 80)
 
@@ -341,7 +345,8 @@ def check_passwd_strength():
 
     if 28 <= entropy < 36:
         print(
-            f"[{F_GREEN}{S_BRIGHT}INFO{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Reasonable password. It will do for non-vital accounts! 😐"
+            f"[{F_GREEN}{S_BRIGHT}INFO{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}"
+            "Reasonable password. It will do for non-vital accounts! 😐"
         )
 
         passwd_strength_lbl.config(
@@ -351,7 +356,8 @@ def check_passwd_strength():
 
     if 36 <= entropy < 60:
         print(
-            f"[{F_GREEN}{S_BRIGHT}INFO{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Strong password. Well done! 🙂"
+            f"[{F_GREEN}{S_BRIGHT}INFO{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}"
+            "Strong password. Well done! 🙂"
         )
 
         passwd_strength_lbl.config(text="* Strength: Strong password. Well done! 🙂")
@@ -396,7 +402,8 @@ def update_theme_color() -> None:  # This static function only works on setting 
 
 def create_configuration() -> None:
     print(
-        f"[{F_YELLOW}{S_BRIGHT}LOG{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Save button clicked!"
+        f"[{F_YELLOW}{S_BRIGHT}LOG{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}"
+        "Save button clicked!"
     )
     ca_save_btn.config(text="Saving...", state=DISABLED)
     ca_save_btn.update()
@@ -414,7 +421,8 @@ def create_configuration() -> None:
     if not eula_var.get():
         print(F_BLUE + "=" * 80)
         print(
-            f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Please accept the license agreement!"
+            f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}"
+            "Please accept the license agreement!"
         )
         print(F_BLUE + "=" * 80)
 
@@ -436,7 +444,8 @@ def create_configuration() -> None:
 
     if not isfile(path=private_key_file):
         print(
-            f"[{F_GREEN}{S_BRIGHT}INFO{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Generating new private key..."
+            f"[{F_GREEN}{S_BRIGHT}INFO{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}"
+            "Generating new private key..."
         )
         gen_private_key(key_path=private_key_file)
 
@@ -447,7 +456,8 @@ def create_configuration() -> None:
     if not business_name:
         print(F_BLUE + "=" * 80)
         print(
-            f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Please enter your legal business name."
+            f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}"
+            "Please enter your legal business name."
         )
         print(F_BLUE + "=" * 80)
 
@@ -479,7 +489,8 @@ def create_configuration() -> None:
     if not ca_selected_country.lower() in [_.lower() for _ in country_names]:
         print(F_BLUE + "=" * 80)
         print(
-            f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Invalid country, Please try again..."
+            f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}"
+            "Invalid country, Please try again..."
         )
         print(F_BLUE + "=" * 80)
 
@@ -524,13 +535,15 @@ def create_configuration() -> None:
 
             if status_code == 200:
                 print(
-                    f"[{F_GREEN}{S_BRIGHT}INFO{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}URL Response Status: 200 (OK)"
+                    f"[{F_GREEN}{S_BRIGHT}INFO{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t"
+                    f"{S_BRIGHT}URL Response Status: 200 (OK)"
                 )
 
             elif status_code == 404:
                 print(F_BLUE + "=" * 80)
                 print(
-                    f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}URL Response Status: 404 (NOT FOUND)"
+                    f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t"
+                    f"{S_BRIGHT}URL Response Status: 404 (NOT FOUND)"
                 )
                 print(F_BLUE + "=" * 80)
 
@@ -554,7 +567,8 @@ def create_configuration() -> None:
             else:
                 print(F_BLUE + "=" * 80)
                 print(
-                    f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}URL Response Status: {status_code}"
+                    f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t"
+                    f"{S_BRIGHT}URL Response Status: {status_code}"
                 )
                 print(F_BLUE + "=" * 80)
 
@@ -579,7 +593,8 @@ def create_configuration() -> None:
             print(F_BLUE + "=" * 80)
             print(F_RED + S_BRIGHT + "Error Code: requests.exceptions.MissingSchema")
             print(
-                f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}{missing_schema}"
+                f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}"
+                f"{missing_schema}"
             )
             print(F_BLUE + "=" * 80)
 
@@ -628,7 +643,8 @@ def create_configuration() -> None:
             print(F_BLUE + "=" * 80)
             print(F_RED + S_BRIGHT + "Error Code: requests.exceptions.ConnectionError")
             print(
-                f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}{connection_error}"
+                f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}"
+                f"{connection_error}"
             )
             print(F_BLUE + "=" * 80)
 
@@ -934,12 +950,8 @@ def create_configuration() -> None:
 
 def exit_ca() -> None:
     ca.destroy()
-
     clear_cache()
-
     print(F_RED + "Bye...")
-
-    clrscr()
     terminate()
 
 
@@ -1283,12 +1295,8 @@ def check_root_passwd() -> None:
 
 def exit_sa():
     sa.destroy()
-
     clear_cache()
-
     print(F_RED + "Bye...")
-
-    clrscr()
     terminate()
 
 
@@ -1635,7 +1643,8 @@ def validate_ph(ph_no_var, master, bell_var) -> (str or None):
     if not ph_no:
         print(F_BLUE + "=" * 80)
         print(
-            f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Please enter the phone number."
+            f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}"
+            "Please enter the phone number."
         )
         print(F_BLUE + "=" * 80)
 
@@ -1658,7 +1667,8 @@ def validate_ph(ph_no_var, master, bell_var) -> (str or None):
             + "Error Code: phonenumbers.phonenumberutil.NumberParseException"
         )
         print(
-            f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}{number_parse_exception}"
+            f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}"
+            f"{number_parse_exception}"
         )
         print(F_BLUE + "=" * 80)
 
@@ -1676,7 +1686,8 @@ def validate_ph(ph_no_var, master, bell_var) -> (str or None):
     if not is_valid_number(numobj=number_obj):
         print(F_BLUE + "=" * 80)
         print(
-            f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Invalid mobile number."
+            f"[{F_RED}{S_BRIGHT}ERROR{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}"
+            "Invalid mobile number."
         )
         print(F_BLUE + "=" * 80)
 
@@ -4087,8 +4098,6 @@ def exit_app() -> None:
     tm.destroy()
     clear_cache()
     print(F_RED + "Bye...")
-
-    clrscr()
     terminate()
 
 
@@ -4205,7 +4214,8 @@ try:
     S_RESET_ALL: str = Style.RESET_ALL
 
     print(
-        f"[{F_GREEN}{S_BRIGHT}INFO{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Importing custom modules, Please wait..."
+        f"[{F_GREEN}{S_BRIGHT}INFO{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}"
+        "Importing custom modules, Please wait..."
     )
     from constants import (
         BUSINESS_TYPES,
@@ -4226,7 +4236,8 @@ try:
     )
 
     print(
-        f"[{F_GREEN}{S_BRIGHT}INFO{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Importing hidden modules, Please wait..."
+        f"[{F_GREEN}{S_BRIGHT}INFO{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}"
+        "Importing hidden modules, Please wait..."
     )
     import PIL._tkinter_finder
     from babel import numbers
@@ -4265,7 +4276,8 @@ try:
 
     if not isfile(path=config_file):
         print(
-            f"[{F_GREEN}{S_BRIGHT}INFO{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}Loading configuration app, Please wait..."
+            f"[{F_GREEN}{S_BRIGHT}INFO{S_RESET_ALL}]\t[{F_BLUE}{S_BRIGHT}{datetime.now()}{S_RESET_ALL}]\t{S_BRIGHT}"
+            "Loading configuration app, Please wait..."
         )
 
         ca: Tk = Tk()
@@ -6151,37 +6163,29 @@ try:
         )
 
     except InvalidToken as invalid_token:
+        clear_screen()
         print(F_BLUE + "=" * 80)
         print(F_RED + "Error Code: private.InvalidToken")
         print(F_RED + f"[ERROR]\tInvalidToken: {invalid_token}")
         print(F_BLUE + "=" * 80)
-
         showinfo(
             title=f"TailorMate {__version__}", message=f"InvalidToken: {invalid_token}"
         )
-
         clear_cache()
-
         print(F_RED + "Bye...")
-
-        clrscr()
         terminate()
 
     except ValueError as value_error:
+        clear_screen()
         print(F_BLUE + "=" * 80)
         print(F_RED + "Error Code: ValueError")
         print(F_RED + f"[ERROR]\tValueError: {value_error}")
         print(F_BLUE + "=" * 80)
-
         showinfo(
             title=f"TailorMate {__version__}", message=f"ValueError: {value_error}"
         )
-
         clear_cache()
-
         print(F_RED + "Bye...")
-
-        clrscr()
         terminate()
 
     ####################################################################################################################
@@ -7584,23 +7588,19 @@ try:
         conn.commit()
 
     except OperationalError as operational_error:  # Unknown exception ??
+        clear_screen()
         print(F_BLUE + "=" * 80)
         print(F_RED + "Error Code: sqlite3.OperationalError")
         print(F_RED + f"[ERROR]\t{operational_error}")
         print(F_BLUE + "=" * 80)
-
         play_bell_sound(master=tm, bell_var=tm_bell_var)
         showinfo(
             title=f"TailorMate {__version__}",
             message=f"Sorry, an error occurred! {operational_error}",
         )
         tm.destroy()
-
         clear_cache()
-
         print(F_RED + "Bye...")
-
-        clrscr()
         terminate()
 
     update_orders()
